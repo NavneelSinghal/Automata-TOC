@@ -1,0 +1,223 @@
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{import}
+\usepackage{pdfpages}
+\usepackage{transparent}
+\usepackage{xcolor}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+
+\setlength{\parindent}{0pt}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}{Lemma}
+\newtheorem{claim}{Claim}
+\newtheorem{defn}{Definition}
+\newtheorem{notn}{Notation}
+\newtheorem{obs}{Observation}
+\newtheorem{eg}{Example}
+
+\renewcommand\qedsymbol{$\blacksquare$}
+\newcommand{\nl}{\vspace{0.2cm}\\}
+
+\newcommand{\incfig}[1]{%
+    \def\svgwidth{\columnwidth}
+    \import{./figures/}{#1.pdf_tex}
+}
+\pdfsuppresswarningpagegroup=1
+
+\title{\textbf{COL352 Lecture 2}}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\iffalse
+
+\section{Logistics}
+\subsection{Lectures}
+\begin{enumerate}
+    \item Timings - Monday 11AM, Wednesday 11AM, Thursday 12PM
+    \item Mode - synchronous, MS Teams
+\end{enumerate}
+\section{The Halting Problem}
+\subsection{Statement}
+Does there exist a program $H$ that always halts, and given inputs a program $P$ and an input $i$, determine whether $P$ terminates/halts on $i$?
+\subsection{Answer}
+No, there does not exist such a program.
+\subsection{Proof}
+Suppose there does exist such a program $H$.\nl
+Consider the following program $C$:
+\begin{algorithmic}[1]
+    \Function{$C$}{$P$}
+        \If{\Call{$H$}{$P, P$}}
+            \State run an infinite loop
+        \Else
+            \State \Return
+        \EndIf
+    \EndFunction
+\end{algorithmic}
+Now consider what happens when we call $C$ on the input $C$.\nl
+Suppose $C(C)$ doesn't halt. Then this means that $H(C, C)$ is false (by the definition of $H$).
+Hence, by line 2, $C(C)$ must run forever, and this gives a contradiction.\nl
+Hence $C(C)$ must halt. But in that case, we have $H(C, C)$ to be true, and by line $2$, we have a contradiction yet again.\nl
+Hence our assumption that such a program $H$ exists is false, and we have proved the claim. $\blacksquare$.
+
+\fi
+
+% start here
+
+\section{Goal of this lecture}
+
+To mathematically define a computational problem
+
+\section{Deterministic Finite Automata}
+
+\begin{notn}
+    An alphabet is a finite set $\Sigma$ of symbols.
+\end{notn}
+
+\begin{notn}
+By $\Sigma^n$, we the set of strings of length $n$ constructed from symbols in $\Sigma$.
+\end{notn}
+
+When $n = 0$, just to maintain consistency, we define $\epsilon$ to be an empty string, and $\Sigma^0 = \{\epsilon\}$.\\
+
+\begin{notn}
+$\Sigma^*$ is defined to be $\bigcup_{i = 0}^\infty \Sigma^i$.
+\end{notn}
+
+\begin{claim}
+    The set $\Sigma^*$ is in fact countably infinite.
+\end{claim}
+
+\begin{proof}
+    Note that there are precisely $|\Sigma|^n$ strings of length $n$.\\
+
+    Consider any ordering of strings in $\Sigma^n$ and map one string each to each element in the set $\{1 + \sum_{i = 0}^{n - 1}|\Sigma|^i, \ldots, \sum_{i = 0}^m |\Sigma|^i\}$ (it helps to
+    visualize this as chunks of the integer number line).\\
+
+    Note that the range is a partition of $\mathbb{N}$, and thus, this map is a bijection from $\Sigma^*$ to $\mathbb{N}$, whence we are done.\\
+
+    Constructing an injective map from $\Sigma^*$ to $\mathbb{N}$ is enough though.
+\end{proof}
+
+\begin{defn}
+    A language over $\Sigma$ is any subset of $\Sigma^*$.
+\end{defn}
+
+\begin{notn}
+    If $x, y$ are strings in $\Sigma^*$ (i.e. over $\Sigma$), we denote by $x \cdot y$ (or more simply, $xy$), the concatenation of $x$ and $y$.
+\end{notn}
+\begin{notn}
+    If $L_1, L_2$ are languages over $\Sigma$, then by $L_1 \cdot L_2$ (or more simply $L_1 L_2$) we denote the set $\{s_1 s_2 \mid s_1 \in L_1, s_2 \in L_2\}$.
+\end{notn}
+
+\begin{defn}
+    Let $\Gamma, \Sigma$ be any two finite non-empty sets. A computational problem is defined as a function $f : \Gamma^* \to \Sigma^*$.
+\end{defn}
+
+\begin{eg}
+    Suppose $\Sigma = \{0, 1, \ldots, 9\}$, and $\Gamma = \{0, 1, \ldots, 9, \times\}$.
+    Define $f(x)$ to be the prime factorization of a number here (lexicographically maximal, with least length), considering $0$ to be a prime.
+    Then $f$ is a computational problem.
+\end{eg}
+
+\begin{eg}
+    Let $\Sigma = \Gamma = \{0, 1\}$. Define 
+    \begin{align*}
+        f(x) = \begin{cases}
+            1 \quad \text{ if } $x$ \text{ represents the adjacency matrix of a connected graph in row major order}\\
+            0 \quad \text{ otherwise}
+        \end{cases}
+    \end{align*}
+    Then $f$ is a computational problem.
+\end{eg}
+
+\begin{eg}
+    A Python program is also a computational problem (output is the set of all possible bytecodes and syntax errors)
+\end{eg}
+
+\begin{defn}
+    A decision problem is a function from $\Sigma^*$ to $\{0, 1\}$.
+\end{defn}
+
+\begin{eg}
+    The second last example in the previous definition is a decision problem.
+\end{eg}
+
+Associate with any decision problem $f : \Sigma^* \to \{0, 1\}$ the language $L = \{x \in \Sigma^* \mid f(x) = 1\}$.\\
+Conversely, we can associate a decision problem with every language (does $x$ belong to the language $L$?).\\
+Hence decision problems are equivalent to languages (in some sense).
+
+\begin{eg}
+    $\Sigma = \{0, 1\}$, $f(x) = 1$ if $x$ is the binary representation of a number divisible by $5$, and 0 otherwise. $L = \{x \in \Sigma^* \mid f(x) = 1\}$.
+\end{eg}
+
+How do we solve this problem?\\
+
+Suppose $x = x[1 \ldots n]$. Then we can just keep track of $x[1 \ldots i] \pmod 5$ as follows:
+
+\begin{algorithmic}
+    \Function{Solve}{$x[1 \ldots n]$}
+        \State $q \gets 0$
+        \For{$i \in \{1 \ldots n\}$}
+            \If{$x[i] = 0$}
+                \State $q \gets 2q \pmod 5$
+            \Else
+                \State $q \gets 2q + 1 \pmod 5$
+            \EndIf
+        \EndFor
+        \If{$q = 0$}
+            \State \Return True
+        \Else
+            \State \Return False
+        \EndIf
+    \EndFunction
+\end{algorithmic}
+
+Another way of looking at this is to construct a node for all possible values of $q$, the set of which is $\mathbb{Z}_5$. 
+
+\begin{figure}[ht]
+    \centering
+    \incfig{modfsm}
+    \caption{Automaton for the modulo 5 check}
+    \label{fig:modfsm}
+\end{figure}
+
+\begin{eg}
+    $\Sigma = \{a, b\}, L = \{x \in \Sigma^* \mid x \text{ ends in } ab\}$.
+\end{eg}
+
+Idea: keep track of last two characters used.
+
+\newpage
+
+\begin{figure}[ht]
+    \centering
+    \incfig{lasttwofsm}
+    \caption{Automaton for checking last two characters}
+    \label{fig:lasttwofsm}
+\end{figure}
+
+\begin{defn}
+    A deterministic finite automaton (DFA) is a 5-tuple $(Q, \Sigma, \delta, q_0, A)$ where
+    \begin{itemize}
+        \item $Q$ is a finite nonempty set, called the \underline{set of states}.
+        \item $\Sigma$ is a finite nonempty alphabet.
+        \item $\delta$ is a function $\delta : Q \times \Sigma \to Q$, called the \underline{transition function}.
+        \item $q_0$ is the \underline{initial state}.
+        \item $A$ is the set of all \underline{accepting states}. 
+    \end{itemize}
+\end{defn}
+
+\end{document}

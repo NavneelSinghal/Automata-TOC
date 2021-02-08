@@ -1,0 +1,80 @@
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{color}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+
+\newcommand{\nl}{\vspace{0.2cm}\\}
+\setlength{\parindent}{0pt}
+
+\title{\textbf{COL352 Lecture 1}}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Logistics}
+
+\subsection{Lectures}
+
+\begin{enumerate}
+    \item Timings - Monday 11AM, Wednesday 11AM, Thursday 12PM
+    \item Mode - synchronous, MS Teams
+\end{enumerate}
+
+\subsection{Grading}
+
+\begin{center}
+\begin{tabular}{|c|c|}
+    \hline
+    Class participation     &  5\% \\
+    \hline
+    Quizzes (best 3 of 4-5) & 30\% \\
+    \hline
+    HW (best 25 out of 30+) & 25\% \\
+    \hline
+    Major exam	            & 40\% \\
+    \hline
+\end{tabular}
+\end{center}
+
+\section{The Halting Problem}
+
+\subsection{Statement}
+
+Does there exist a program $H$ that always halts, and given inputs a program $P$ and an input $i$, determine whether $P$ terminates/halts on $i$?
+
+\subsection{Answer}
+
+No, there does not exist such a program.
+
+\subsection{Proof}
+
+Suppose there does exist such a program $H$.\nl
+Consider the following program $C$:
+
+\begin{algorithmic}[1]
+    \Function{$C$}{$P$}
+        \If{\Call{$H$}{$P, P$}}
+            \State run an infinite loop
+        \Else
+            \State \Return
+        \EndIf
+    \EndFunction
+\end{algorithmic}
+
+Now consider what happens when we call $C$ on the input $C$.\nl
+Suppose $C(C)$ doesn't halt. Then this means that $H(C, C)$ is false (by the definition of $H$).
+Hence, by line 2, $C(C)$ must run forever, and this gives a contradiction.\nl
+Hence $C(C)$ must halt. But in that case, we have $H(C, C)$ to be true, and by line $2$, we have a contradiction yet again.\nl
+Hence our assumption that such a program $H$ exists is false, and we have proved the claim. $\blacksquare$.
+
+\end{document}

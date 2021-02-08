@@ -1,0 +1,225 @@
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{import}
+\usepackage{pdfpages}
+\usepackage{transparent}
+\usepackage{xcolor}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+
+\setlength{\parindent}{0pt}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}{Lemma}
+\newtheorem{claim}{Claim}
+\newtheorem{subclaim}{Subclaim}
+\newtheorem{defn}{Definition}
+\newtheorem{notn}{Notation}
+\newtheorem{obs}{Observation}
+\newtheorem{eg}{Example}
+\newtheorem{cor}{Corollary}
+\newtheorem{note}{Note}
+
+\renewcommand\qedsymbol{$\blacksquare$}
+\newcommand{\nl}{\vspace{0.2cm}\\}
+\newcommand{\mc}{\mathcal}
+\newcommand{\mi}{\mathit}
+\newcommand{\mf}{\mathbf}
+\newcommand{\mb}{\mathbb}
+
+\newcommand{\incfig}[1]{%
+    \def\svgwidth{0.9\columnwidth}
+    \import{./figures/}{#1.pdf_tex}
+}
+\pdfsuppresswarningpagegroup=1
+
+\title{\textbf{COL352 Lecture 3}}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\iffalse
+
+\section{Logistics}
+\subsection{Lectures}
+\begin{enumerate}
+    \item Timings - Monday 11AM, Wednesday 11AM, Thursday 12PM
+    \item Mode - synchronous, MS Teams
+\end{enumerate}
+\section{Grading}
+\begin{center}
+\begin{tabular}{|c|c|}
+    \hline
+    Class participation     &  5\% \\
+    \hline
+    Quizzes (best 3 of 4-5) & 30\% \\
+    \hline
+    HW (best 25 out of 30+) & 25\% \\
+    \hline
+    Major exam	            & 40\% \\
+    \hline
+\end{tabular}
+\end{center}
+\section{The Halting Problem}
+\subsection{Statement}
+Does there exist a program $H$ that always halts, and given inputs a program $P$ and an input $i$, determine whether $P$ terminates/halts on $i$?
+\subsection{Answer}
+No, there does not exist such a program.
+\subsection{Proof}
+Suppose there does exist such a program $H$.\nl
+Consider the following program $C$:
+\begin{algorithmic}[1]
+    \Function{$C$}{$P$}
+        \If{\Call{$H$}{$P, P$}}
+            \State run an infinite loop
+        \Else
+            \State \Return
+        \EndIf
+    \EndFunction
+\end{algorithmic}
+Now consider what happens when we call $C$ on the input $C$.\nl
+Suppose $C(C)$ doesn't halt. Then this means that $H(C, C)$ is false (by the definition of $H$).
+Hence, by line 2, $C(C)$ must run forever, and this gives a contradiction.\nl
+Hence $C(C)$ must halt. But in that case, we have $H(C, C)$ to be true, and by line $2$, we have a contradiction yet again.\nl
+Hence our assumption that such a program $H$ exists is false, and we have proved the claim. $\blacksquare$.
+
+\fi
+
+% start here
+
+\section{Regular Languages}
+
+Recall the definition of a DFA from the last lecture - and consider $\delta$.\\
+
+We'll try to extend $\delta$ to a certain $\hat{\delta}$, so that we get a function from $Q \times \Sigma^*$ to $Q$, such that $\hat{\delta}(q, w)$ is the state reached by starting from $q$ and
+following transitions labelled by symbols in $w$.
+
+Formally, let
+
+\[
+    \hat{\delta}(q, \epsilon) = q \quad \forall q \in Q
+.\]
+\[
+    \hat{\delta}(q, xa) = \delta(\hat{\delta}(q, x), a) \quad \forall q \in Q, x \in \Sigma^*, a \in \Sigma
+.\] 
+
+\begin{defn}
+    A DFA $(Q, \Sigma, \delta, q_0, A)$ is said to accept a string $w$ if $\hat{\delta}(q_0, w) \in A$.\\
+    It is said to reject a string $w$ if $\hat{\delta}(q_0, w) \not\in A$.
+\end{defn}
+
+\begin{defn}
+    The language recognised by $D$ is the set $\{w \in \Sigma^* \mid D \text{ accepts } w\}$, and is denoted by $\mc{L}(D)$, and is also sometimes called the language of $D$.
+\end{defn}
+
+\begin{defn}
+    A language is said to be regular if it is recognised by some DFA.
+\end{defn}
+
+\begin{eg}
+    $\Sigma = \{0, 1\}$, $L_k = \{w \mid w \text{ is the binary representation of a multiple of }k\}$
+    Then $L_k$ is regular for all $k \in \mb{N}$.
+\end{eg}
+
+\begin{eg}
+    $\Sigma = \{a, b\}$, $END_w = \{x \mid x \text{ ends in } w\}$ for some $w \in \Sigma^*$. Then $END_w$ is regular for all $w \in \Sigma^*$.
+\end{eg}
+
+\begin{claim}
+    Let $L \subseteq \Sigma^*$ be a regular language. Then $\Sigma^* \setminus L$ is also regular.
+\end{claim}
+\begin{proof}
+    Suppose $D = (Q, \Sigma, \delta, q_0, A)$ be a DFA that accepts $L$. Then consider the DFA $D' = (Q, \Sigma, \delta, q_0, Q \setminus A)$. Consider the language $\mc{L}(D')$.
+
+
+    $w \in L \iff \hat{\delta}(q_0, w) \in A \iff \hat{\delta}(q_0, w) \not\in Q \setminus A \iff w \not\in \mc{L}(D')$.
+
+        So we have $\mc{L}(D') = \Sigma^* \setminus L$, and hence we are done.
+\end{proof}
+In other words, the class of regular languages is closed under complementation.
+\begin{claim}
+If $L_1, L_2 \in \Sigma^*$ are regular languages, then $L_1 \cap L_2$ is also regular. 
+\end{claim}
+\begin{proof}
+    Suppose $D_1 = (Q_1, \Sigma, \delta_1, q_1, A_1)$ is a DFA recognising $L_1$.
+    Suppose $D_2 = (Q_2, \Sigma, \delta_2, q_2, A_2)$ is a DFA recognising $L_2$.
+    Let $D$ be a DFA defined by 
+    \[
+        D = (Q_1 \times Q_2, \Sigma, \delta, (q_1, q_2), A_1 \times A_2)
+    .\] 
+    where $\delta$ is defined as
+    \[
+        \delta((s_1, s_2), a) = (\delta_1(s_1, a), \delta_2(s_2, a))
+    .\] 
+    Now we claim that $D$ recognizes $L_1 \times L_2$.
+    \begin{subclaim}
+        $\hat{\delta}((s_1, s_2), w) = (\hat{\delta_1}(s_1, w), \hat{\delta_2}(s_2, w))$
+    \end{subclaim}
+    \begin{proof}
+        We proceed by induction on $|w|$. When $|w| = 0$, we have $\hat{\delta}((s_1, s_2), \epsilon) = (s_1, s_2) = (\hat{\delta_1}(s_1, w), \hat{\delta_2}(s_2, w))$, so we are done in this
+        case. Now suppose $w = xa$ for some $x \in \Sigma^*, a \in \Sigma$.
+        Then we have
+        \begin{align*}
+            \hat{\delta}((s_1, s_2), xa) &= \delta(\hat{\delta}((s_1, s_2), x)) \\
+                                  &= \delta((\hat{\delta_1}(s_1, x), \hat{\delta_1}(s_1, x)), a)\\
+                                  &= (\delta_1(\hat{\delta_1}(s_1, x), a), \delta_2(\hat{\delta_2}(s_2, x), a))\\
+                                  &= (\hat{\delta_1}(s_1, xa), \hat{\delta_2}(s_2, xa))
+        \end{align*}
+        whence we are done.
+    \end{proof}
+    Now we use this claim to see the following sequence of equivalences:
+
+    \begin{align*}
+        w \in L_1 \cap L_2 &\iff w \in L_1 \land w \in L_2\\
+                    &\iff D_1 \text{ accepts } w \land D_2 \text{ accepts } w\\
+                    &\iff \hat{\delta_1}(q_1, w) \in A_1 \land \hat{\delta_2}(q_2, w) \in A_2\\
+                    &\iff (\hat{\delta_1}(q_1, w), \hat{\delta_2}(q_2, w)) \in A_1 \times A_2\\
+                    &\iff D \text{ accepts } w
+    \end{align*}
+    whence we are done.
+\end{proof}
+
+In other words, the class of regular languages is closed under intersection.
+
+\begin{claim}
+If $L_1, L_2 \in \Sigma^*$ are regular languages, then $L_1 \cup L_2$ is also regular. 
+\end{claim}
+
+\begin{proof}
+    We show two proofs.
+    \begin{enumerate}
+        \item $L_1 \cup L_2 = \Sigma^* \setminus ((\Sigma^* \setminus L_1) \cap (\Sigma^* \setminus L_2))$, so using closure properties under complementation, we are done.
+        \item (sketch) use the same DFA as before, but replace $A$ to $\{(s_1, s_2) \mid s_1 \in A_1 \lor s_2 \in A_2\}$ (which is equivalent to saying that $A = Q_1 \times Q_2 \setminus ((Q_1
+            \setminus A_1)
+            \times (Q_2 \setminus A_2))$)
+    \end{enumerate}
+\end{proof}
+
+\begin{cor}
+    Every finite language $L$ is regular.
+\end{cor}
+\begin{proof}
+\begin{figure}[h]
+    \centering
+    \incfig{word-matching}
+    \caption{Automaton for string matching}
+    \label{fig:word-matching}
+\end{figure}
+    If $|L| = 1$, then we are done (make a DFA to recognize a single word).
+    Else, use closure under union and induction on $|L|$.
+\end{proof}
+\begin{note}
+    Note that this doesn't extend to all languages $L$, since we never said that the union of a countable collection of regular languages is regular.
+\end{note}
+
+\end{document}
