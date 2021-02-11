@@ -1,0 +1,250 @@
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{import}
+\usepackage{pdfpages}
+\usepackage{transparent}
+\usepackage{xcolor}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+
+\setlength{\parindent}{0pt}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}{Lemma}
+\newtheorem{claim}{Claim}
+\newtheorem{defn}{Definition}
+\newtheorem{notn}{Notation}
+\newtheorem{obs}{Observation}
+\newtheorem{eg}{Example}
+\newtheorem{cor}{Corollary}
+\newtheorem{note}{Note}
+
+\renewcommand\qedsymbol{$\blacksquare$}
+\newcommand{\nl}{\vspace{0.2cm}\\}
+\newcommand{\mc}{\mathcal}
+\newcommand{\mi}{\mathit}
+\newcommand{\mf}{\mathbf}
+\newcommand{\mb}{\mathbb}
+
+\newcommand{\incfig}[1]{%
+    \def\svgwidth{\columnwidth}
+    \import{./figures/}{#1.pdf_tex}
+}
+\pdfsuppresswarningpagegroup=1
+
+\title{\textbf{COL352 Lecture 4}}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\iffalse
+
+\section{Logistics}
+\subsection{Lectures}
+\begin{enumerate}
+    \item Timings - Monday 11AM, Wednesday 11AM, Thursday 12PM
+    \item Mode - synchronous, MS Teams
+\end{enumerate}
+\section{Grading}
+\begin{center}
+\begin{tabular}{|c|c|}
+    \hline
+    Class participation     &  5\% \\
+    \hline
+    Quizzes (best 3 of 4-5) & 30\% \\
+    \hline
+    HW (best 25 out of 30+) & 25\% \\
+    \hline
+    Major exam	            & 40\% \\
+    \hline
+\end{tabular}
+\end{center}
+\section{The Halting Problem}
+\subsection{Statement}
+Does there exist a program $H$ that always halts, and given inputs a program $P$ and an input $i$, determine whether $P$ terminates/halts on $i$?
+\subsection{Answer}
+No, there does not exist such a program.
+\subsection{Proof}
+Suppose there does exist such a program $H$.\nl
+Consider the following program $C$:
+\begin{algorithmic}[1]
+    \Function{$C$}{$P$}
+        \If{\Call{$H$}{$P, P$}}
+            \State run an infinite loop
+        \Else
+            \State \Return
+        \EndIf
+    \EndFunction
+\end{algorithmic}
+Now consider what happens when we call $C$ on the input $C$.\nl
+Suppose $C(C)$ doesn't halt. Then this means that $H(C, C)$ is false (by the definition of $H$).
+Hence, by line 2, $C(C)$ must run forever, and this gives a contradiction.\nl
+Hence $C(C)$ must halt. But in that case, we have $H(C, C)$ to be true, and by line $2$, we have a contradiction yet again.\nl
+Hence our assumption that such a program $H$ exists is false, and we have proved the claim. $\blacksquare$.
+
+\fi
+
+% start here
+
+
+\section{Recap}
+
+Recall that regular languages are closed under complementation, $\cap$ and $\cup$.
+
+We also defined $L_1 L_2 = \{x_1 x_2 \mid x_1 \in L_1, x_2 \in L_2\}$.
+
+\begin{claim}
+    The class of regular languages is closed under concatenation.
+\end{claim}
+
+\begin{notn}
+    Let $rev(x)$ denote the reverse of a string $x \in \Sigma^*$.
+\end{notn}
+
+\begin{notn}
+    Let $rev(L)$ denote $\{rev(x) \mid x \i L\}$.
+\end{notn}
+
+\begin{claim}
+    The class of regular languages is closed under reversal.
+\end{claim}
+
+\begin{figure}[ht]
+    \centering
+    \incfig{example}
+    \caption{An example of thing that doesn't work}
+    \label{fig:example}
+\end{figure}
+
+Consideration: $\epsilon$ transition? Gives NFA, not DFA.\\
+
+So let's consider the following language:\\
+
+$\Sigma = \{0, 1\}$, $L_1 = \{x \in \Sigma^* \mid x \text{ begins with } 01\}$.\\
+
+$rev(\Sigma) = \{x \in \Sigma^* | x \text{ ends with } 10\}$.\\
+
+Strategy: reverse all transitions of the DFA, swap accepting and starting states.
+Easy to make DFA for both, but using the reversal strategy, $\delta$ is not a function, and hence not a DFA.\\
+
+Consider \\
+
+$\Sigma = \{0, 1\}$, $L_1 = \Sigma^*$, $L_2 = \{1w \mid |w| = 3\}$.
+Easy to make DFA of both.\\
+
+Using $\epsilon$ transitions, we can create an NFA for the concatenation of these languages.\\
+\begin{figure}[ht]
+    \centering
+    \incfig{lec4-second-example}
+    \caption{NFA example for $L_1 L_2$}
+    \label{fig:lec4-second-example}
+\end{figure}
+
+
+\begin{defn}
+    A non-deterministic finite automaton (NFA) is a 5-tuple $(Q, \Sigma, \Delta, Q_0, A)$, where
+    \begin{enumerate}
+        \item $Q$ is a \underline{finite non-empty set of states}.
+        \item $\Sigma$ is the input alphabet (finite set).
+        \item $\Delta \subseteq Q \times \left(\Sigma \cup \{\epsilon\}\right) \times Q$ is the \underline{set of transitions}. 
+        \item $Q_0 \subseteq Q$ (possibly empty).
+        \item $A \subseteq Q$ is a set of accepting states.
+    \end{enumerate}
+\end{defn}
+
+Use the first reversal example here.
+
+\begin{note}
+    NFA allows you to take/not take a transition.
+\end{note}
+
+\begin{note}
+    Note that point 3 is equivalent to $\Delta : Q \times \left(\Sigma \cup \{\epsilon\}\right) \to 2^Q$; this equivalence arises by considering the set of $z$ such that $(x, y, z) \in
+    \Delta$, and mapping $(x, y)$ to this set, which is a subset of $Q$.
+\end{note}
+
+\begin{note}
+    There might be (possibly 0) many runs of an NFA on an input.
+\end{note}
+
+\begin{note}
+    It might be possible that one run ends in an accepting state and another ends in a rejecting state.
+\end{note}
+
+The corresponding NFA for the reversal problem is as follows:
+
+\begin{figure}[ht]
+    \centering
+    \incfig{example-beginning-with-01}
+    \caption{example beginning with 01}
+    \label{fig:example-beginning-with-01}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \incfig{example-ending-with-10}
+    \caption{example ending with 10}
+    \label{fig:example-ending-with-10}
+\end{figure}
+
+$Q = \{q_0, q_1, q_2, q_e\}$.
+
+$\Sigma = \{0, 1\}$.
+
+$Q_0 = \{q_2\}, A = \{q_0\}$.
+
+$\Delta = \{(q_2, 0, q_2), (q_2, 1, q_2), (q_2, 1, q_1), (q_1, 0, q_0), (q_e, 0, q_e), (q_e, 1, q_e), (q_e, 0, q_1), (q_e, 1, q_e)\}$.\\
+
+Now let's see what happens on a run of this NFA with the input $1010$.\\
+
+Current state $(q_2, 1010)$.\\
+
+Can go to $(q_1, 010)$ or $(q_2, 010)$.\\
+
+From $(q_1, 010)$, forced to go to $(q_0, 10)$, and from $q_2, 010$, forced to stay in $(q_2, 10)$.\\
+
+The first run dies off, since no other possibilities.\\
+
+From $(q_2, 10)$ we can go to $(q_1, 0)$ or $(q_2, 0)$, and from the first, we get to $(q_0, \epsilon)$, and from the second, we get to $(q_2, \epsilon)$.\\
+
+Hence there are 3 possible runs, first rejecting, second accepting, and third rejecting.\\
+
+For the second example, which has an $\epsilon$ transition, let's see how it works as well.\\
+
+Consider the input $x = 00100$.\\
+
+First step\\
+$(A, 00100) \to (A, 0100), (B, 00100)$.\\
+
+Second step\\
+$(B, 00100) \to (error, 0100) \to \cdots$ (stays forever)\\
+$(A, 0100) \to (A, 100), (B, 0100)$\\
+
+Third step\\
+$(A, 100) \to (B, 100) \to (C, 00) \to (D, 0) \to (E, \epsilon)$\\
+$(A, 100) \to (A, 00) \to (B, 00) \to (error, 0) \to (error, \epsilon)$\\
+$(A, 100) \to (A, 00) \to (A, 0)$\\
+
+Fourth step\\
+$(A, 0) \to (A, \epsilon) \to (B, \epsilon)$\\
+$(A, 0) \to (B, 0) \to (error, \epsilon)$\\
+
+So in this case, all runs of the NFA reject $x$.
+
+We say that the NFA accepts a string $x$, if there is at least one accepting run of the NFA, and it rejects $x$ otherwise.
+
+\begin{notn}
+    Informally, we say NFA $N$ accepts string $x$ is $\exists$ an accepting run of $N$ on $x$; $N$ rejects $x$ if all runs of $N$ on $x$ reject.
+\end{notn}
+
+\end{document}
