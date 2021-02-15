@@ -6,3 +6,4 @@ clean:
 	rm -f *.synctex.gz
 	rm -f *.out
 	rm -f *.toc
+	rm -f *.pre

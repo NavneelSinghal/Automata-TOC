@@ -15,17 +15,103 @@
 \usepackage{algorithmicx}
 \usepackage{algpseudocode}
 
+\usepackage{thmtools}
+\usepackage{enumitem}
+\usepackage[framemethod=TikZ]{mdframed}
+
+\usepackage{xpatch}
+
+\makeatletter
+\xpatchcmd{\endmdframed}
+{\aftergroup\endmdf@trivlist\color@endgroup}
+{\endmdf@trivlist\color@endgroup\@doendpe}
+{}{}
+\makeatother
+
+%\usepackage[poster]{tcolorbox}
+%\allowdisplaybreaks
+%\sloppy
+
+\usepackage[many]{tcolorbox}
+
+\xpatchcmd{\proof}{\itshape}{\bfseries\itshape}{}{}
+
+\newenvironment{ans} { 
+    \vspace{12pt}
+    \begin{mdframed}[skipabove=0pt,skipbelow=0pt,innertopmargin=0pt,innerbottommargin=0pt,leftline=false,bottomline=false,topline=false,rightline=false]%
+    \noindent \textit{Answer.}  
+}{%
+    \end{mdframed}
+    \vspace{12pt}
+}
+
+\tcolorboxenvironment{proof}{
+    blanker,
+    before skip=\topsep,
+    after skip=\topsep,
+    borderline={0.4pt}{0.4pt}{black},
+    breakable,
+    left=12pt,
+    right=12pt,
+    top=12pt,
+    bottom=12pt,
+}
+
+\tcolorboxenvironment{ans}{
+    blanker,
+    before skip=\topsep,
+    after skip=\topsep,
+    borderline={0.4pt}{0.4pt}{black},
+    breakable,
+    left=12pt,
+    right=12pt,
+}
+
+\mdfdefinestyle{enclosed}{
+    linecolor=black
+    ,backgroundcolor=none
+    ,apptotikzsetting={\tikzset{mdfbackground/.append style={fill=gray!100,fill opacity=.3}}}
+    ,frametitlefont=\sffamily\bfseries\color{black}
+    ,splittopskip=.5cm
+    ,frametitlebelowskip=.0cm
+    ,topline=true
+    ,bottomline=true
+    ,rightline=true
+    ,leftline=true
+    ,leftmargin=0.01cm
+    ,linewidth=0.02cm
+    ,skipabove=0.01cm
+    ,innerbottommargin=0.1cm
+    ,skipbelow=0.1cm
+}
+
+\mdfsetup{%
+    middlelinecolor=black,
+    middlelinewidth=1pt,
+roundcorner=4pt}
+
 \setlength{\parindent}{0pt}
 
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}{Lemma}
-\newtheorem{claim}{Claim}
-\newtheorem{defn}{Definition}
-\newtheorem{notn}{Notation}
-\newtheorem{obs}{Observation}
-\newtheorem{eg}{Example}
-\newtheorem{cor}{Corollary}
-\newtheorem{note}{Note}
+\mdtheorem[style=enclosed]{theorem}{Theorem}
+\mdtheorem[style=enclosed]{lemma}{Lemma}[theorem]
+\mdtheorem[style=enclosed]{claim}{Claim}[theorem]
+\mdtheorem[style=enclosed]{ques}{Question}
+\mdtheorem[style=enclosed]{defn}{Definition}
+\mdtheorem[style=enclosed]{notn}{Notation}
+\mdtheorem[style=enclosed]{obs}{Observation}
+\mdtheorem[style=enclosed]{eg}{Example}
+\mdtheorem[style=enclosed]{cor}{Corollary}
+\mdtheorem[style=enclosed]{note}{Note}
+
+% \let\thetheorem=\relax
+% \let\thelemma=\relax
+% \let\theclaim=\relax
+% \let\theques=\relax
+% \let\thedefn=\relax
+% \let\thenotn=\relax
+% \let\theobs=\relax
+% \let\thecor=\relax
+% \let\thenote=\relax
 
 \renewcommand\qedsymbol{$\blacksquare$}
 \newcommand{\nl}{\vspace{0.2cm}\\}
@@ -40,66 +126,19 @@
 }
 \pdfsuppresswarningpagegroup=1
 
-\title{\textbf{COL352 Lecture 1}}
+\title{\textbf{COL352 Lecture 6}}
 \date{}
 
 \begin{document}
 \maketitle
 \tableofcontents
 
-\iffalse
-
-\section{Logistics}
-\subsection{Lectures}
-\begin{enumerate}
-    \item Timings - Monday 11AM, Wednesday 11AM, Thursday 12PM
-    \item Mode - synchronous, MS Teams
-\end{enumerate}
-\section{Grading}
-\begin{center}
-\begin{tabular}{|c|c|}
-    \hline
-    Class participation     &  5\% \\
-    \hline
-    Quizzes (best 3 of 4-5) & 30\% \\
-    \hline
-    HW (best 25 out of 30+) & 25\% \\
-    \hline
-    Major exam	            & 40\% \\
-    \hline
-\end{tabular}
-\end{center}
-\section{The Halting Problem}
-\subsection{Statement}
-Does there exist a program $H$ that always halts, and given inputs a program $P$ and an input $i$, determine whether $P$ terminates/halts on $i$?
-\subsection{Answer}
-No, there does not exist such a program.
-\subsection{Proof}
-Suppose there does exist such a program $H$.\nl
-Consider the following program $C$:
-\begin{algorithmic}[1]
-    \Function{$C$}{$P$}
-        \If{\Call{$H$}{$P, P$}}
-            \State run an infinite loop
-        \Else
-            \State \Return
-        \EndIf
-    \EndFunction
-\end{algorithmic}
-Now consider what happens when we call $C$ on the input $C$.\nl
-Suppose $C(C)$ doesn't halt. Then this means that $H(C, C)$ is false (by the definition of $H$).
-Hence, by line 2, $C(C)$ must run forever, and this gives a contradiction.\nl
-Hence $C(C)$ must halt. But in that case, we have $H(C, C)$ to be true, and by line $2$, we have a contradiction yet again.\nl
-Hence our assumption that such a program $H$ exists is false, and we have proved the claim. $\blacksquare$.
-
-\fi
-
-% start here
+\section{Recap}
 
 
+\section{Definitions}
 
 
-
-
+\section{DFA v/s NFA}
 
 \end{document}
