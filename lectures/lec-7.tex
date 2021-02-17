@@ -1,0 +1,243 @@
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{import}
+\usepackage{pdfpages}
+\usepackage{transparent}
+\usepackage{xcolor}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+
+\usepackage{thmtools}
+\usepackage{enumitem}
+\usepackage[framemethod=TikZ]{mdframed}
+
+\usepackage{xpatch}
+
+\makeatletter
+\xpatchcmd{\endmdframed}
+{\aftergroup\endmdf@trivlist\color@endgroup}
+{\endmdf@trivlist\color@endgroup\@doendpe}
+{}{}
+\makeatother
+
+%\usepackage[poster]{tcolorbox}
+%\allowdisplaybreaks
+%\sloppy
+
+\usepackage[many]{tcolorbox}
+
+\xpatchcmd{\proof}{\itshape}{\bfseries\itshape}{}{}
+
+\newenvironment{ans} { 
+    \vspace{12pt}
+    \begin{mdframed}[skipabove=0pt,skipbelow=0pt,innertopmargin=0pt,innerbottommargin=0pt,leftline=false,bottomline=false,topline=false,rightline=false]%
+    \noindent \textit{Answer.}  
+}{%
+    \end{mdframed}
+    \vspace{12pt}
+}
+
+\tcolorboxenvironment{proof}{
+    blanker,
+    before skip=\topsep,
+    after skip=\topsep,
+    borderline={0.4pt}{0.4pt}{black},
+    breakable,
+    left=12pt,
+    right=12pt,
+    top=12pt,
+    bottom=12pt,
+}
+
+\tcolorboxenvironment{ans}{
+    blanker,
+    before skip=\topsep,
+    after skip=\topsep,
+    borderline={0.4pt}{0.4pt}{black},
+    breakable,
+    left=12pt,
+    right=12pt,
+}
+
+\mdfdefinestyle{enclosed}{
+    linecolor=black
+    ,backgroundcolor=none
+    ,apptotikzsetting={\tikzset{mdfbackground/.append style={fill=gray!100,fill opacity=.3}}}
+    ,frametitlefont=\sffamily\bfseries\color{black}
+    ,splittopskip=.5cm
+    ,frametitlebelowskip=.0cm
+    ,topline=true
+    ,bottomline=true
+    ,rightline=true
+    ,leftline=true
+    ,leftmargin=0.01cm
+    ,linewidth=0.02cm
+    ,skipabove=0.01cm
+    ,innerbottommargin=0.1cm
+    ,skipbelow=0.1cm
+}
+
+\mdfsetup{%
+    middlelinecolor=black,
+    middlelinewidth=1pt,
+roundcorner=4pt}
+
+\setlength{\parindent}{0pt}
+
+\mdtheorem[style=enclosed]{theorem}{Theorem}
+\mdtheorem[style=enclosed]{lemma}{Lemma}[theorem]
+\mdtheorem[style=enclosed]{claim}{Claim}[theorem]
+\mdtheorem[style=enclosed]{ques}{Question}
+\mdtheorem[style=enclosed]{defn}{Definition}
+\mdtheorem[style=enclosed]{notn}{Notation}
+\mdtheorem[style=enclosed]{obs}{Observation}
+\mdtheorem[style=enclosed]{eg}{Example}
+\mdtheorem[style=enclosed]{cor}{Corollary}
+\mdtheorem[style=enclosed]{note}{Note}
+
+% \let\thetheorem=\relax
+% \let\thelemma=\relax
+% \let\theclaim=\relax
+% \let\theques=\relax
+% \let\thedefn=\relax
+% \let\thenotn=\relax
+% \let\theobs=\relax
+% \let\thecor=\relax
+% \let\thenote=\relax
+
+\renewcommand\qedsymbol{$\blacksquare$}
+\newcommand{\nl}{\vspace{0.2cm}\\}
+\newcommand{\mc}{\mathcal}
+\newcommand{\mi}{\mathit}
+\newcommand{\mf}{\mathbf}
+\newcommand{\mb}{\mathbb}
+\renewcommand{\L}{\mc{L}}
+
+\newcommand{\incfig}[1]{%
+    \def\svgwidth{\columnwidth}
+    \import{./figures/}{#1.pdf_tex}
+}
+\pdfsuppresswarningpagegroup=1
+
+\title{\textbf{COL352 Lecture 7}}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Recap}
+
+Completion of proof of the second part of the proof of the class of regular languages being closed under concatenation.
+
+\section{Definitions}
+
+\begin{defn}
+    Let $L \in \Sigma^*$ be any language. We define the language $L^*$ as follows:
+    \[
+        L^* = L_0 \cup L_1 \cup \cdots = \bigcup_{n=0}^\infty L^n
+    \]
+    where $L^0 = \{\epsilon\}, L_1 = L, L^n = L\cdot L \cdots L$ where there are $n$ instances of $L$.
+\end{defn}
+
+\begin{defn}
+    Let $\Sigma$ be a finite alphabet. A \underline{regular expression} over $\Sigma$ is any expression that is in one of the following forms:
+    \begin{enumerate}
+        \item $\emptyset$.
+        \item $\epsilon$.
+        \item $a$, where $a \in \Sigma$.
+        \item $(R_1 \cup R_2)$ where $R_1, R_2$ are regular expressions over $\Sigma$.
+        \item $(R)^*$ where $R$ is a regular expression over $\Sigma$.
+    \end{enumerate}
+\end{defn}
+
+\begin{defn}
+    The \underline{language of a regular expression} $R$, denoted by $\mc{L}(R)$ is defined as follows:
+    \begin{enumerate}
+        \item $\mc{L}(\emptyset) = \emptyset$.
+        \item $\mc{L}(\epsilon) = \{\epsilon\}$.
+        \item $\mc{L}(a) = \{a\}$.
+        \item $\mc{(R_1 \cup R_2)} = \mc{L}(R_1) \cup \mc{L}(R_2)$.
+        \item $\mc{L}\left((R)^*\right) = \left(\mc{L}(R)\right)^*$
+    \end{enumerate}
+\end{defn}
+
+\section{Content}
+
+\subsection{Closure under *}
+
+\begin{theorem}
+    The class of regular languages is closed under $*$.
+\end{theorem}
+
+\begin{proof}
+    Let $L$ be regular. Let $D$ be a DFA recognizing $L$. Construct an NFA recognizing $L^*$.\\
+
+    For the DFA $D = (Q, \Sigma, \delta, q_0, A)$, consider the NFA $N = (Q \uplus q^*, \Sigma, \Delta, \{q^*\}, \{q^*\})$.\\
+
+    where $$\Delta = \{(q, a, q') \mid \delta(q, a) = q' \land q, q' \in Q \land a \in A\} \cup \{(q_a, \epsilon, q^*) \mid q_a \in A\} \cup (q^*, \epsilon, q_0)$$
+
+    
+    {
+        \centering
+        \incfig{lec-7-nfs}
+    }
+
+    \begin{claim}
+        If $N$ accepts $x$, then $x \in L^*$.
+    \end{claim}
+
+    \begin{proof}
+        Consider an accepting run of $N$ on $x$ Suppose it visits $q^*$ $n + 1$ times. Then we claim $x \in L^n$.
+        \begin{proof}
+            Induction on $n$.
+            $n = 0 \implies$ empty string.
+
+            Now suppose $n > 0$. Consider the second-last time the run visits $q^*$. After that state, it transitions to $q_0$, and that is a run of $D$ on the substring corresponding to whatever
+            is left in $x$ after that state, and the part of the run before that is an accepting run of $N$ on the prefix of $x$ that was deleted, and it visits $q^*$ exactly $n$ times. Hence $x = x'x''$
+            where $x' \in L^{n-1}$ by the inductive hypothesis and $x'' \in L$ as $D$ accepts $x''$. Hence we have $x \in L^n$, as required.
+        \end{proof}
+        Hence we are done.
+    \end{proof}
+
+    \begin{claim}
+        If $x \in L^*$, then $N$ accepts $x$.
+    \end{claim}
+
+    \begin{proof}
+        $x \in L^* \implies \exists n$ such that $x \in L^n$. Let $n$ be the least integer such that $x \in L^n$. Now we proceed with a proof by induction on $n$.
+
+        Base case: $n = 0$ means empty string, so we are done.
+
+        Now consider $n > 0$. Then $x \in L^n \implies x = x_1 \cdot x_2$ such that $x_1 \in L_{n-1}$ and $x_2 \in L$. By induction hypothesis, $N$ accepts $x_1$. Construct an accepting run
+        of $N$ on $x$ as follows:
+
+        [run of $N$ on $x_1$ starting and ending with $q^*$] $\epsilon$ [accepting run of $D$ on $x_2$ starting at $q_0$ and ending at $q \in A$] $\epsilon$ $q^*$.
+    \end{proof}
+
+\end{proof}
+
+\begin{note}
+    In general, to prove closure of the class of regular languages under some binary operation:
+    \begin{enumerate}
+        \item Assume $L_1, L_2$ are some arbitrary regular languages. Let $D_1, D_2$ be the DFAs recognizing $L_1, L_2$ respectively.
+        \item Construct an \underline{NFA} $N$ recognizing $L_1 \mathrm{op} L_2$.
+        \item Argue that $x \in L_1 \mathrm{op} L_2$ iff $N$ accepts $x$.
+    \end{enumerate}
+\end{note}
+
+\subsection{Regular expressions}
+
+\begin{theorem}
+    Suppose $L \in \Sigma^*$ is a language generated by some regular expression over $\Sigma$. Then $L$ is a regular language.
+\end{theorem}
+
+\end{document}
