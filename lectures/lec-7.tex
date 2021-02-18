@@ -155,6 +155,7 @@ Completion of proof of the second part of the proof of the class of regular lang
         \item $\epsilon$.
         \item $a$, where $a \in \Sigma$.
         \item $(R_1 \cup R_2)$ where $R_1, R_2$ are regular expressions over $\Sigma$.
+        \item $(R_1R_2)$ or $(R_1 \cdot R_2)$ where $R_1, R_2$ are regular expressions over $\Sigma$.
         \item $(R)^*$ where $R$ is a regular expression over $\Sigma$.
     \end{enumerate}
 \end{defn}
@@ -165,7 +166,8 @@ Completion of proof of the second part of the proof of the class of regular lang
         \item $\mc{L}(\emptyset) = \emptyset$.
         \item $\mc{L}(\epsilon) = \{\epsilon\}$.
         \item $\mc{L}(a) = \{a\}$.
-        \item $\mc{(R_1 \cup R_2)} = \mc{L}(R_1) \cup \mc{L}(R_2)$.
+        \item $\mc{L}(R_1 \cup R_2) = \mc{L}(R_1) \cup \mc{L}(R_2)$.
+        \item $\mc{L}(R_1R_2) = \mc{L}(R_1) \cdot \L(R_2)$.
         \item $\mc{L}\left((R)^*\right) = \left(\mc{L}(R)\right)^*$
     \end{enumerate}
 \end{defn}

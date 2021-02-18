@@ -1,0 +1,477 @@
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+% \usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{import}
+\usepackage{pdfpages}
+\usepackage{transparent}
+\usepackage{xcolor}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+
+\usepackage{thmtools}
+\usepackage{enumitem}
+\usepackage[framemethod=TikZ]{mdframed}
+
+\usepackage{xpatch}
+
+\usepackage{boites}
+\makeatletter
+\xpatchcmd{\endmdframed}
+{\aftergroup\endmdf@trivlist\color@endgroup}
+{\endmdf@trivlist\color@endgroup\@doendpe}
+{}{}
+\makeatother
+
+%\usepackage[poster]{tcolorbox}
+%\allowdisplaybreaks
+%\sloppy
+
+\usepackage[many]{tcolorbox}
+
+\xpatchcmd{\proof}{\itshape}{\bfseries\itshape}{}{}
+
+% to set box separation
+\setlength{\fboxsep}{0.8em}
+\def\breakboxskip{7pt}
+\def\breakboxparindent{0em}
+
+\newenvironment{proof}{\begin{breakbox}\textit{Proof.}}{\hfill$\square$\end{breakbox}}
+\newenvironment{ans}{\begin{breakbox}\textit{Answer.}}{\end{breakbox}}
+\newenvironment{soln}{\begin{breakbox}\textit{Solution.}}{\end{breakbox}}
+
+% \tcolorboxenvironment{proof}{
+%     blanker,
+%     before skip=\topsep,
+%     after skip=\topsep,
+%     borderline={0.4pt}{0.4pt}{black},
+%     breakable,
+%     left=12pt,
+%     right=12pt,
+%     top=12pt,
+%     bottom=12pt,
+% }
+% 
+% \tcolorboxenvironment{ans}{
+%     blanker,
+%     before skip=\topsep,
+%     after skip=\topsep,
+%     borderline={0.4pt}{0.4pt}{black},
+%     breakable,
+%     left=12pt,
+%     right=12pt,
+% }
+
+\mdfdefinestyle{enclosed}{
+    linecolor=black
+    ,backgroundcolor=none
+    ,apptotikzsetting={\tikzset{mdfbackground/.append style={fill=gray!100,fill opacity=.3}}}
+    ,frametitlefont=\sffamily\bfseries\color{black}
+    ,splittopskip=.5cm
+    ,frametitlebelowskip=.0cm
+    ,topline=true
+    ,bottomline=true
+    ,rightline=true
+    ,leftline=true
+    ,leftmargin=0.01cm
+    ,linewidth=0.02cm
+    ,skipabove=0.01cm
+    ,innerbottommargin=0.1cm
+    ,skipbelow=0.1cm
+}
+
+\mdfsetup{%
+    middlelinecolor=black,
+    middlelinewidth=1pt,
+roundcorner=4pt}
+
+\setlength{\parindent}{0pt}
+
+\mdtheorem[style=enclosed]{theorem}{Theorem}
+\mdtheorem[style=enclosed]{lemma}{Lemma}[theorem]
+\mdtheorem[style=enclosed]{claim}{Claim}[theorem]
+\mdtheorem[style=enclosed]{ques}{Question}
+\mdtheorem[style=enclosed]{defn}{Definition}
+\mdtheorem[style=enclosed]{notn}{Notation}
+\mdtheorem[style=enclosed]{obs}{Observation}
+\mdtheorem[style=enclosed]{eg}{Example}
+\mdtheorem[style=enclosed]{cor}{Corollary}
+\mdtheorem[style=enclosed]{note}{Note}
+
+% \let\thetheorem=\relax
+% \let\thelemma=\relax
+% \let\theclaim=\relax
+% \let\theques=\relax
+% \let\thedefn=\relax
+% \let\thenotn=\relax
+% \let\theobs=\relax
+% \let\thecor=\relax
+% \let\thenote=\relax
+
+% \renewcommand\qedsymbol{$\blacksquare$}
+\newcommand{\nl}{\vspace{0.2cm}\\}
+\newcommand{\mc}{\mathcal}
+\newcommand{\mi}{\mathit}
+\newcommand{\mf}{\mathbf}
+\newcommand{\mb}{\mathbb}
+\renewcommand{\L}{\mc{L}}
+\newcommand{\hd}{\hat{\delta}}
+
+\newcommand{\incfig}[1]{%
+    \def\svgwidth{\columnwidth}
+    \import{./figures/}{#1.pdf_tex}
+}
+\pdfsuppresswarningpagegroup=1
+
+\title{\textbf{COL352 Lecture 8}}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Recap}
+
+Definitions from last class. See below.
+
+\section{Definitions}
+
+\begin{defn}
+    Let $L \in \Sigma^*$ be any language. We define the language $L^*$ as follows:
+    \[
+        L^* = L_0 \cup L_1 \cup \cdots = \bigcup_{n=0}^\infty L^n
+    \]
+    where $L^0 = \{\epsilon\}, L_1 = L, L^n = L\cdot L \cdots L$ where there are $n$ instances of $L$.
+\end{defn}
+
+\begin{defn}
+    Let $\Sigma$ be a finite alphabet. A \underline{regular expression} over $\Sigma$ is any expression that is in one of the following forms:
+    \begin{enumerate}
+        \item $\emptyset$.
+        \item $\epsilon$.
+        \item $a$, where $a \in \Sigma$.
+        \item $(R_1 \cup R_2)$ where $R_1, R_2$ are regular expressions over $\Sigma$.
+        \item $(R_1R_2)$ or $(R_1 \cdot R_2)$ where $R_1, R_2$ are regular expressions over $\Sigma$.
+        \item $(R^*)$ where $R$ is a regular expression over $\Sigma$.
+    \end{enumerate}
+\end{defn}
+
+\begin{defn}
+    The \underline{language of a regular expression} $R$, denoted by $\mc{L}(R)$ is defined as follows:
+    \begin{enumerate}
+        \item $\mc{L}(\emptyset) = \emptyset$.
+        \item $\mc{L}(\epsilon) = \{\epsilon\}$.
+        \item $\mc{L}(a) = \{a\}$.
+        \item $\mc{L}((R_1 \cup R_2)) = \mc{L}(R_1) \cup \mc{L}(R_2)$.
+        \item $\mc{L}((R_1R_2)) = \mc{L}(R_1) \cdot \L(R_2)$.
+        \item $\mc{L}\left((R^*)\right) = \left(\mc{L}(R)\right)^*$
+    \end{enumerate}
+\end{defn}
+
+\section{Content}
+
+\begin{theorem}
+    Suppose $L \subseteq \Sigma^*$ is the language of some regular expression over $\Sigma$. Then $L$ is a regular language.
+\end{theorem}
+
+\begin{note}
+    \textbf{Sketch of proof by structural induction}\\
+
+    Obvious for cases 1, 2, 3 in the definition of regular expressions. For 4, 5, assume true for $R_1, R_2$, prove the claim for $R_1 \cup R_2$ and $R_1 \cdot R_2$. For 6, assume true for $R$, prove
+    for $(R)^*$.\\
+
+    \textbf{Sketch of proof by normal induction}\\
+
+    Associate a size with every regular expression.
+    Base case: Prove the claim for regular expressions of size 0.
+    Inductive case: Assume claim is true for all regular expressions of size $< n$, and prove the claim for regular expressions of size $= n$.\\
+\end{note}
+
+\begin{proof}
+    Define $\mathit{size}$ of a regular expression as follows:
+    $\mathit{size}(\emptyset) = \mathit{size}(\epsilon) = \mathit{size}(a) = 0 \forall a \in \Sigma$, and $\mathit{size}((R_1 \cup R_2)) = \mathit{size}((R_1 \cdot R_2)) =
+    \mathit{size}(R_1) + \mathit{size}(R_2) + 1$, and $\mathit{size}((R^*)) = \mathit{size}(R) + 1$.
+    Then induct on $\mathit{size}$.
+\end{proof}
+
+\begin{ques}
+    Is the converse true?
+\end{ques}
+
+\begin{ans}
+    Yes, the converse is true.
+\end{ans}
+
+\begin{theorem}
+    Let $L \subseteq \Sigma^*$ be a regular language. Then there exists a regular expression $R$ over $\Sigma$ such that $L = \L(R)$.
+\end{theorem}
+
+\begin{note}
+    \textbf{Sketch of proof:}
+
+    \begin{enumerate}
+        \item Suppose $D = (Q, \Sigma, \delta, q_0, A)$ recognizes $L_0$. Let $m = |Q|$. Wlog, assume $Q = \{1, \ldots, m\}$.
+        \item For now, ignore $q_0, A$, and focus on $\delta$.
+        \item For $i, j \in \{1, \ldots, m\}$ and $k \in \{0, \ldots, m\}$, define the language $L_{i, j, k} \subseteq \Sigma^*$ as follows:
+            \[
+                L_{ijk} = \{x \mid \text{ run of } D \text{ on } x \text{ starts, ends at } i, j \text{ respectively, and each intermediate state is} \le k \}
+            \]
+            It is allowed to have $i, j > k$.
+            Note that this is a regular language for all $i, j, k$ (for states $> k$, make all outgoing edges end on that state, set starting state to $i$, and accepting states = $\{j\}$).
+        \item Then we shall design a regular expression $R_{ijk}$ for each $L_{ijk}$.
+        \item 
+            From $\{R_{ijk} \mid i, j \in \{1, \ldots, m\} \land k \in \{0, \ldots, m\}\}$, construct a regular expression for $L$.
+
+            We can show that $L = \bigcup_{a \in A} L_{q_0am}$ (exercise).
+
+            Then we have $R = \left(\bigcup_{a \in A} R_{q_0am}\right), L = \L(R)$.
+
+    \end{enumerate}
+    It suffices to do step 4, since the rest has been done above already.
+
+    Recall the Floyd-Warshall algorithm for finding shortest walks between every pair of vertices. Define 
+    \begin{align*}
+        D[i, j, k] = \text{length of the shortest } i \to j \text{ walk which passes through } \{1 \ldots k\}.
+    \end{align*}
+    Then we have the following recurrence:
+
+    \begin{align*}
+        D[i, j, k] = \min(D[i, j, k - 1], D[i, k, k - 1] + D[k, j, k - 1])
+    \end{align*}
+
+    Here we break the analysis into two cases: the shortest walk either passes through $k$ or doesn't pass through $k$.
+
+    \begin{algorithmic}[1]
+        \Function{Floyd-Warshall}{$G[m \times m]$} \Comment{$G[i, j]$ contains the weight of an edge $(i, j)$ if it exists, and if it doesn't, it is $\infty$ except when $i = j$, where $G[i, i] = 0$}
+        \State $D := G$
+        \For{$k = 1 \ldots m$}
+        \For{$i = 1 \ldots m$}
+        \For{$j = 1 \ldots m$}
+        \State $D[i, j, k] := \min(D[i, j, k - 1], D[i, k, k - 1] + D[k, j, k - 1])$
+        \EndFor
+        \EndFor
+        \EndFor
+        \EndFunction
+    \end{algorithmic}
+
+    \vspace{1em}
+
+    We can construct $R_{ijk}$ from $R_{ij(k-1)}$, $R_{ik(k-1)}$, $R_{kj(k-1)}$, $R_{kk(k-1)}$ as follows, in a similar fashion.\\
+
+
+\end{note}
+
+\begin{proof}
+
+    Let $D = (Q, \Sigma, \delta, q_0, A)$ be a DFA recognizing $L$. We shall use this DFA throughout the proof.\\
+
+    We start off with some definitions.\\
+
+    For $i, j \in \{1, \ldots, m\}$ and $k \in \{0, \ldots, m\}$, define the language $L_{i, j, k} \subseteq \Sigma^*$ as follows:
+    \[
+        L_{ijk} = \{x \mid \text{ run of } (Q, \Sigma, \delta, i, \{j\}) \text{ on } x \text{ starts, ends at } i, j \text{ respectively, and each intermediate state is} \le k \}
+    \]
+    Note that it is allowed to have $i, j > k$.\\
+
+    \begin{claim}
+        $L_{ijk}$ is a regular language.
+    \end{claim}
+
+    \begin{proof}
+        Consider the DFA $D_{ijk} = (Q \cup \{s_e\}, \Sigma, \delta', i, \{j\})$, where $\delta'$ is defined as:
+        \[
+        \delta'(s, a) = \begin{cases}
+            \delta(s, a) & \text{ if } s = i \lor s \le k\\
+            s_e & \text{ otherwise}
+        \end{cases}
+        \]
+        
+        We shall call this DFA \underline{the} DFA corresponding to $L_{ijk}$.\\
+
+        Now we show the following two subclaims:\\
+
+        \begin{claim}
+            $L_{ijk} \subseteq \L(D_{ijk})$
+        \end{claim}
+
+        \begin{proof}
+            Consider any string $s$ in $L_{ijk}$. Then the result directly follows, since all transitions on the states involved apart from the last state in the run agree with the transitions on the
+            run on $D_{ijk}$, because of the definition of $\delta'$.
+        \end{proof}
+
+        \begin{claim}
+            $\L(D_{ijk}) \subseteq L_{ijk}$
+        \end{claim}
+
+        \begin{proof}
+            Consider any string accepted by $D_{ijk}$. Suppose it has an intermediate state $> k$. Then the next state will be $s_e$, and since $\delta(s_e, a) = s_e$ for all $a$, the last state of
+            the run will be $s_e$, which is not an accepting state of $D_{ijk}$. This implies that the assumption is false, and thus the string is in $L_{ijk}$, whence we are done.
+        \end{proof}
+
+        Using these two claims, it follows that $L_{ijk} = \L(D_{ijk})$, and thus $L$ is regular by definition of a regular language.
+    \end{proof}
+    \begin{note}
+        In the case $k = m$, $s_e$ is an isolated state and $\delta'$ is semantically the extension of $\delta$ on the extra state $s_e$.
+    \end{note}
+
+    Consider the following algorithm that takes as input a DFA $D$ and returns a regular expression.\\
+
+    \begin{algorithmic}[1]
+        \Function{GenerateRegularExpression}{$D = (Q, \Sigma, \delta, q_0, A)$}
+        \State let $R[m \times m \times (m + 1)]$ be a table initialized by $\emptyset$.
+        \For{$i = 1 \ldots m$}
+        \For{$j = 1 \ldots m$}
+        \If{$i = j$}
+        \State $\displaystyle R[i, i, 0] := \left(\epsilon \cup \bigcup_{\delta(i, a) = i} a\right)$ \Comment{Use \texttt{foldl} to formalize this and fix parentheses}
+        \Else
+        \State $\displaystyle R[i, j, 0] := \left(\bigcup_{\delta(i, a) = j} a\right)$
+        \EndIf
+        \EndFor
+        \EndFor
+        \For{$k = 1 \ldots m$}
+        \For{$i = 1 \ldots m$}
+        \For{$j = 1 \ldots m$}
+        \State $R[i, j, k] := \left(R[i, j, k - 1] \cup \left(R[i, k, k - 1] \cdot (R[k, k, k - 1]^*) \cdot R[k, j, k - 1]\right)\right)$
+        \EndFor
+        \EndFor
+        \EndFor
+        \State \Return $\displaystyle \left(\bigcup_{a \in A} R[q_0, a, m]\right)$
+        \EndFunction
+    \end{algorithmic}
+
+    \vspace{1em}
+    Now we show the following claim:\\
+
+    \begin{claim}
+        $L_{ijk} = \L(R[i, j, k])$
+    \end{claim}
+
+    \begin{proof}
+
+        The proof shall proceed via induction on $k$.
+
+        \begin{enumerate}
+
+            \item Base case: $k = 0$. In this case, the run consists of at most 2 states. In the case when $i = j$, there can be runs with one state and two states, and they are precisely those
+                which correspond to strings in $\L(R[i, i, 0])$ by the definition of the language of a regular expression. The case for $i \ne j$ is similar, except that there need to be at
+                least two states, and hence all possible strings in $L_{ij0}$ have length $1$, and correspond to precisely the strings in $\L(R[i, j, 0])$.
+
+            \item Inductive step: Suppose $k > 0$.\\
+
+                Fix $i, j$. We have $\L(R[i, j, k]) = \L(R[i, j, k - 1]) \cup (\L(R[i, k, k - 1]) \cdot \L(R[k, k, k - 1])^* \cdot \L(R[k, j, k - 1]))$, which, by the inductive hypothesis, gives us
+                $$\L(R[i, j, k]) = L_{ij(k-1)} \cup (L_{ik(k-1)} \cdot L_{kk(k-1)}^* \cdot L_{kj(k-1)})$$
+
+                Then we claim the following:\\
+
+                \begin{claim}
+                    $L_{ijk} \subseteq \L(R[i, j, k])$
+                \end{claim}
+                \begin{proof}
+                    Consider any string $x = x[1] x[2] \ldots x[n]$ in $L_{ijk}$. Then any state in the run of the corresponding DFA on $x$ is at most $k$.\\
+
+                    If the state $k$ is never reached in the run, then the string is in $L_{ij(k-1)}$, which is a subset of $\L(R[i, j, k])$ due to the expression above.\\
+
+                    Suppose the state $k$ is reached. Suppose $e = i x[1] i_1 x[2] \ldots i_{n-1} x[n] j$ is the run corresponding to $x$, and let $j_1 < \cdots < j_r$ be such that $i_w = k \iff w
+                        \in \{j_1, \ldots, j_r\}$.
+
+                        Then consider the runs 
+
+                        \begin{align*}
+                            i x[1] i_1 \ldots x[j_1] i_{j_1},\\
+                            i_{j_1} x[j_1 + 1] \ldots i_{j_2},\\
+                            \vdots\\
+                            i_{j_{r-1}} x[j_{r-1}+1] \ldots i_{j_r},\\
+                            i_{j_r} x[j_r + 1] \ldots j\\
+                        \end{align*}
+
+                        The first and the last correspond to runs of the DFAs corresponding to the languages $L_{ik(k-1)}$ and $L_{kj(k-1)}$, and all intermediate runs correspond to the runs of the DFAs
+                        corresponding to the language $L_{kk(k-1)}$.\\
+
+                        Hence, the string $x$ can be decomposed into $r + 2$ possibly empty substrings $x_1 \cdot x_2 \cdots x_{r+2}$, such that $x_1 \in L_{ik(k-1)}, x_{r+2} \in L_{kj(k-1)}$ and
+                        $x_w \in L_{kk(k-1)}$, where $2 \le w \le r + 1$.\\
+
+                        Hence we have $x_2 \cdots x_w \in L_{kk(k-1)}^*$. So we have $x = x_1 \cdot (x_2 \ldots x_{r+1}) \cdot x_{r+2} \in L_{ik(k-1)} \cdot L_{kk(k-1)}^* \cdot L_{kj(k-1)}
+                        \subseteq \L(R[i,
+                        j, k])$.\\
+
+                        Since $x$ was arbitrary, we have shown $L_{ijk} \subseteq \L(R[i, j, k])$, as needed.
+
+                    \end{proof}
+                    \begin{claim}
+                        $L_{ijk} \supseteq \L(R[i, j, k])$
+                    \end{claim}
+                    \begin{proof}
+                        Consider any string $x$ in $\L(R[i, j, k]) = L_{ij(k-1)} \cup (L_{ik(k-1)} \cdot L_{kk(k-1)}^* \cdot L_{kj(k-1))}$.\\
+
+                        Either it is in $L_{ij(k-1)}$, in which case it is already in $L_{ijk}$ since all intermediate states are $\le k - 1 < k$, or it is in $L_{ik(k-1)} \cdot L_{kk(k-1)}^* \cdot
+                        L_{kj(k-1)}$.\\
+
+                        In the second case, it is the result of concatenation of a string in $L_{ik(k-1)}$, some strings in $L_{kk(k-1)}$ and a final string in $L_{kj(k-1)}$. Suppose there are
+                        exactly $r$ strings from $L_{kk(k-1)}$.\\
+
+                        Consider the runs of each of these strings:\\
+
+                        For the first string, let the run be $i x[1] s_{11} x[2] s_{12} \ldots x[l_1] s_{1l_1} = k$.\\
+
+                        For the $d^{th}$ string ($2 \le d \le r + 1$), let the run be $k x[l_{d-1} + 1] s_{d1} \ldots x[l_d] s_{dl_d} = k$.\\
+
+                        For the last string, let the run be $k x[l_{k+1}+1] s_{(r+2)1} \ldots x[l_{k+2}] s_{(r+2)l_{r+2}} = j$.\\
+
+                        Consider the following sequence:
+
+                        $i x[1] s_{11} \ldots x[l_1] k x[l_1+1] \ldots x[l_2] k \ldots k x[l_{k+1}+1] s_{(r+2)1} \ldots x[l_{k+2}] j$.\\
+
+                        It suffices to show that this is a (in fact \textit{the}) valid run for the DFA corresponding to the language $L_{ijk}$ (if it is a valid run, it must be accepting since it ends at $j$).\\
+
+                        Consider any intermediate state in this run; it suffices to show that all such intermediate states are $\le k$ (since all transitions are valid due to them being
+                        accepting runs, and all states are in the same state-space). Note that the states in this sequence are of the following kinds:
+
+                        \begin{enumerate}
+                            \item Intermediate states in the runs of substrings mentioned above.
+                                In this case, it is trivially true that the states are $\le k - 1$.
+                            \item Start states of runs corresponding to the strings $2$ through $k+2$. In this case, it's true since all such states are $k$.
+                            \item End states of runs corresponding to the strings $1$ through $k+1$. In this state, it's true since all such states are $k$.
+                        \end{enumerate}
+
+                        From here, we get the fact that $x$ is accepted by the DFA corresponding to $L_{ijk}$, so $x \in L_{ijk}$. Since $x$ was arbitrary, we get the fact that $\L(R[i, j, k])
+                        \subseteq L_{ijk}$, as needed.
+                    \end{proof}
+                    From these two claims, it follows that $L_{ijk} = \L(R[i, j, k])$ for these particular values of $i, j$. Since $i, j$ were arbitrary, this completes the inductive step.
+            \end{enumerate}
+            Thus, we are done by induction on $k$.
+        \end{proof}
+
+        We shall now claim the following:\\
+
+        \begin{claim}
+            $$L = \bigcup_{a\in A} L_{q_0am}$$
+        \end{claim}
+
+        \begin{proof}
+            This is fairly obvious; for showing that $\displaystyle L \subseteq \bigcup_{a\in A} L_{q_0am}$, consider any string in $L$, and consider the run corresponding to it. The run ends at an
+            accepting state (say $a$), and $x$ is in $L_{q_0am}$ by the definition of $L_{ijk}$, since all states are $\le m$ and the start and end states are $q_0, a$ respectively.
+
+            For showing the other direction, consider any string $x$ in the RHS. Then there exists an $a \in A$ such that there is an accepting run of the DFA corresponding to $L_{q_0am}$ on $x$. It is a
+            valid and accepting run of the DFA of $L$ on $x$ as well, since the run starts on $q_0$, ends at $a$ (an accepting state), and all transitions are the same in $L_{ijm}$ by the construction of the DFA
+            corresponding to it.
+        \end{proof}
+
+        Now moving on to the main proof, note that 
+
+        \begin{align*}
+            L &= \bigcup_{a\in A} L_{q_0am} \\
+              &= \bigcup_{a \in A} \L(R[q_0, a, m])\\
+              &= \L\left(\left(\bigcup_{a \in A} R[q_0, a, m]\right)\right)
+        \end{align*}
+
+        From here, we get that $\displaystyle \left(\bigcup_{a \in A} R[q_0, a, m]\right)$ is a regular expression corresponding to $L$, whence we are done.
+
+    \end{proof}
+
+    \end{document}
