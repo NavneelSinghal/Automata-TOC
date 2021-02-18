@@ -3,7 +3,7 @@
 \usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amsfonts}
-\usepackage{amsthm}
+% \usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage[colorinlistoftodos]{todonotes}
@@ -21,6 +21,7 @@
 
 \usepackage{xpatch}
 
+\usepackage{boites}
 \makeatletter
 \xpatchcmd{\endmdframed}
 {\aftergroup\endmdf@trivlist\color@endgroup}
@@ -36,36 +37,36 @@
 
 \xpatchcmd{\proof}{\itshape}{\bfseries\itshape}{}{}
 
-\newenvironment{ans} { 
-    \vspace{12pt}
-    \begin{mdframed}[skipabove=0pt,skipbelow=0pt,innertopmargin=0pt,innerbottommargin=0pt,leftline=false,bottomline=false,topline=false,rightline=false]%
-    \noindent \textit{Answer.}  
-}{%
-    \end{mdframed}
-    \vspace{12pt}
-}
+% to set box separation
+\setlength{\fboxsep}{0.8em}
+\def\breakboxskip{7pt}
+\def\breakboxparindent{0em}
 
-\tcolorboxenvironment{proof}{
-    blanker,
-    before skip=\topsep,
-    after skip=\topsep,
-    borderline={0.4pt}{0.4pt}{black},
-    breakable,
-    left=12pt,
-    right=12pt,
-    top=12pt,
-    bottom=12pt,
-}
+\newenvironment{proof}{\begin{breakbox}\textit{Proof.}}{\hfill$\square$\end{breakbox}}
+\newenvironment{ans}{\begin{breakbox}\textit{Answer.}}{\end{breakbox}}
+\newenvironment{soln}{\begin{breakbox}\textit{Solution.}}{\end{breakbox}}
 
-\tcolorboxenvironment{ans}{
-    blanker,
-    before skip=\topsep,
-    after skip=\topsep,
-    borderline={0.4pt}{0.4pt}{black},
-    breakable,
-    left=12pt,
-    right=12pt,
-}
+% \tcolorboxenvironment{proof}{
+%     blanker,
+%     before skip=\topsep,
+%     after skip=\topsep,
+%     borderline={0.4pt}{0.4pt}{black},
+%     breakable,
+%     left=12pt,
+%     right=12pt,
+%     top=12pt,
+%     bottom=12pt,
+% }
+% 
+% \tcolorboxenvironment{ans}{
+%     blanker,
+%     before skip=\topsep,
+%     after skip=\topsep,
+%     borderline={0.4pt}{0.4pt}{black},
+%     breakable,
+%     left=12pt,
+%     right=12pt,
+% }
 
 \mdfdefinestyle{enclosed}{
     linecolor=black
@@ -113,12 +114,14 @@ roundcorner=4pt}
 % \let\thecor=\relax
 % \let\thenote=\relax
 
-\renewcommand\qedsymbol{$\blacksquare$}
+% \renewcommand\qedsymbol{$\blacksquare$}
 \newcommand{\nl}{\vspace{0.2cm}\\}
 \newcommand{\mc}{\mathcal}
 \newcommand{\mi}{\mathit}
 \newcommand{\mf}{\mathbf}
 \newcommand{\mb}{\mathbb}
+\renewcommand{\L}{\mc{L}}
+\newcommand{\hd}{\hat{\delta}}
 
 \newcommand{\incfig}[1]{%
     \def\svgwidth{\columnwidth}
@@ -126,7 +129,7 @@ roundcorner=4pt}
 }
 \pdfsuppresswarningpagegroup=1
 
-\title{\textbf{COL352 Lecture \#}}
+\title{\textbf{COL352 Lecture 8}}
 \date{}
 
 \begin{document}
@@ -135,9 +138,7 @@ roundcorner=4pt}
 
 \section{Recap}
 
-
 \section{Definitions}
-
 
 \section{Content}
 
