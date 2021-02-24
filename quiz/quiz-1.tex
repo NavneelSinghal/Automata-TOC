@@ -91,7 +91,7 @@ There are \numquestions\, questions for a total of \numpoints\, points.
         Hence our assumption was wrong, and $f(i) = 0$ for some $1 \le i \le n + 1$. Consider such an $i$.
 
         We have $o[i - 1] = z[i]$. So we have the number of zeros in $x[1 \ldots i - 1]$ equal to the number of ones in $x[i \ldots n]$. This shows that $x$ is in $L$. Since $x$ was arbitrary, we have
-        $\Sigma^* subseteq L$. Now by definition of a language, $L subseteq \Sigma^*$, so $L = \Sigma^*$.
+        $\Sigma^* \subseteq L$. Now by definition of a language, $L \subseteq \Sigma^*$, so $L = \Sigma^*$.
 
         Now it is easy to make a DFA for $L = \Sigma^*$: for instance, consider $(Q, \Sigma, \delta, q_0, A) = (\{q_0\}, \{0, 1\}, \delta, q_0, \{q_0\})$ where $\delta$ is defined as $\delta(q_0, 0)
         = \delta(q_0, 1) = q_0$. (Note: in fact, any DFA with $Q = A$ and $|Q| > 0$ works).
