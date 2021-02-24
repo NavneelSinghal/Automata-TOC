@@ -1,0 +1,276 @@
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+% \usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{import}
+\usepackage{pdfpages}
+\usepackage{transparent}
+\usepackage{xcolor}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+
+\usepackage{thmtools}
+\usepackage{enumitem}
+\usepackage[framemethod=TikZ]{mdframed}
+
+\usepackage{xpatch}
+
+\usepackage{boites}
+\makeatletter
+\xpatchcmd{\endmdframed}
+{\aftergroup\endmdf@trivlist\color@endgroup}
+{\endmdf@trivlist\color@endgroup\@doendpe}
+{}{}
+\makeatother
+
+%\usepackage[poster]{tcolorbox}
+%\allowdisplaybreaks
+%\sloppy
+
+\usepackage[many]{tcolorbox}
+
+\xpatchcmd{\proof}{\itshape}{\bfseries\itshape}{}{}
+
+% to set box separation
+\setlength{\fboxsep}{0.8em}
+\def\breakboxskip{7pt}
+\def\breakboxparindent{0em}
+
+\newenvironment{proof}{\begin{breakbox}\textit{Proof.}}{\hfill$\square$\end{breakbox}}
+\newenvironment{ans}{\begin{breakbox}\textit{Answer.}}{\end{breakbox}}
+\newenvironment{soln}{\begin{breakbox}\textit{Solution.}}{\end{breakbox}}
+
+% \tcolorboxenvironment{proof}{
+%     blanker,
+%     before skip=\topsep,
+%     after skip=\topsep,
+%     borderline={0.4pt}{0.4pt}{black},
+%     breakable,
+%     left=12pt,
+%     right=12pt,
+%     top=12pt,
+%     bottom=12pt,
+% }
+% 
+% \tcolorboxenvironment{ans}{
+%     blanker,
+%     before skip=\topsep,
+%     after skip=\topsep,
+%     borderline={0.4pt}{0.4pt}{black},
+%     breakable,
+%     left=12pt,
+%     right=12pt,
+% }
+
+\mdfdefinestyle{enclosed}{
+    linecolor=black
+    ,backgroundcolor=none
+    ,apptotikzsetting={\tikzset{mdfbackground/.append style={fill=gray!100,fill opacity=.3}}}
+    ,frametitlefont=\sffamily\bfseries\color{black}
+    ,splittopskip=.5cm
+    ,frametitlebelowskip=.0cm
+    ,topline=true
+    ,bottomline=true
+    ,rightline=true
+    ,leftline=true
+    ,leftmargin=0.01cm
+    ,linewidth=0.02cm
+    ,skipabove=0.01cm
+    ,innerbottommargin=0.1cm
+    ,skipbelow=0.1cm
+}
+
+\mdfsetup{%
+    middlelinecolor=black,
+    middlelinewidth=1pt,
+roundcorner=4pt}
+
+\setlength{\parindent}{0pt}
+
+\mdtheorem[style=enclosed]{theorem}{Theorem}
+\mdtheorem[style=enclosed]{lemma}{Lemma}[theorem]
+\mdtheorem[style=enclosed]{claim}{Claim}[theorem]
+\mdtheorem[style=enclosed]{ques}{Question}
+\mdtheorem[style=enclosed]{defn}{Definition}
+\mdtheorem[style=enclosed]{notn}{Notation}
+\mdtheorem[style=enclosed]{obs}{Observation}
+\mdtheorem[style=enclosed]{eg}{Example}
+\mdtheorem[style=enclosed]{cor}{Corollary}
+\mdtheorem[style=enclosed]{note}{Note}
+
+% \let\thetheorem=\relax
+% \let\thelemma=\relax
+% \let\theclaim=\relax
+% \let\theques=\relax
+% \let\thedefn=\relax
+% \let\thenotn=\relax
+% \let\theobs=\relax
+% \let\thecor=\relax
+% \let\thenote=\relax
+
+% \renewcommand\qedsymbol{$\blacksquare$}
+\newcommand{\nl}{\vspace{0.2cm}\\}
+\newcommand{\mc}{\mathcal}
+\newcommand{\mi}{\mathit}
+\newcommand{\mf}{\mathbf}
+\newcommand{\mb}{\mathbb}
+\renewcommand{\L}{\mc{L}}
+\newcommand{\hd}{\hat{\delta}}
+
+\newcommand{\incfig}[1]{%
+    \def\svgwidth{\columnwidth}
+    \import{./figures/}{#1.pdf_tex}
+}
+\pdfsuppresswarningpagegroup=1
+
+\title{\textbf{COL352 Lecture 10}}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Recap}
+Proof of the fact that $\{0^n 1^n \mid n \in \mathbb{N}\}$ is not regular.
+
+We constructed a long enough string depending on $|Q|$, and used pigeonhole principle to claim some state was visited twice in the first $n$ transitions. Then we pumped using the loop, and found a
+$k$ such that pumping $k$ times results in a string not in $L$, which gives a contradiction by the definition of the DFA $D$.
+
+\section{Definitions}
+
+
+\section{Content}
+
+\begin{note}
+    Plan: Abstract out ideas from the last proof to get a necessary condition for $L$ to be regular, or equivalently, a sufficient condition for $L$ to be not regular.
+\end{note}
+
+Suppose $L \subseteq \Sigma^*$ is a regular language, and $D = (Q, \Sigma, \delta, q_0, A)$ be a DFA recognizing $L$.\nl
+Let $p = |Q|$. Consider $s \in L$ with $|s| = n \ge p$. Let $q_i = \hd(q_0, s[1]s[2] \ldots s[i])$.\nl
+By the pigeonhole principle, $\exists i, j$ such that $i < j \le p$ and $q_i = q_j$.\nl
+$\hd(q_i, s[i+1]\ldots s[j]) = q_j = q_i$.\nl
+Let $x = s[1] \ldots s[i], y = s[i+1] \ldots s[j], x = s[j+1] \ldots s[n]$. So we have $s = xyz$, $|y| > 0, |xy| \le p$.\nl
+$\hd(q_i, y) = q_i, \hd(q_0, x) = q_i, \hd(q_i, z) = q_n \in A$.\nl
+$\hd(q_0, xz) = \hd(\hd(q_0, x), z) = \hd(q_i, z) = q_n \in A$. So $xz \in L$.\nl
+$\hd(q_0, xy^kz) = q_n \in A$.\nl
+Thus $\forall k \in \mb{N} \cup \{0\}$, we have $xy^kz \in L$.\nl
+
+\begin{lemma}
+    \textbf{Pumping Lemma for Regular Languages}\nl
+    Let $L \in \Sigma^*$ be a regular language. Then $\exists p \in \mb{N}$ such that $\forall s \in L$ with $|s| \ge p$, $\exists x, y, z \in \Sigma^*$ such that
+    \begin{enumerate}
+        \item $s = xyz$
+        \item $|y| > 0$
+        \item $|xy| < p$
+        \item $\forall i \in \mb{N} \cup \{0\}$, $xy^iz \in L$
+    \end{enumerate}
+\end{lemma}
+\begin{proof}
+    Let $D$ be a DFA for $L$. Set $p = |Q|$ and proceed as in the previous paragraph.
+\end{proof}
+\begin{note}
+    This holds even when $|L|$ is finite, just take $p > $ the length of the longest string in $L$. Then this statement is vacuously true.
+\end{note}
+\begin{lemma}
+    \textbf{Contrapositive of the Pumping Lemma for Regular languages}\nl
+    Let $L \in \Sigma^*$ be any regular language. If $\forall p \in \mb{N}, \exists s \in L$ with $|s| \ge p$, such that $\forall x, y, z \in \Sigma^*$,
+    $$
+    (s = xyz) \land (|y| > 0) \land (|xy| \le p) \implies \exists i \in \mb{N} \cup \{0\} \text{ such that } xy^iz \in L
+    $$
+    Then $L$ is not regular.
+\end{lemma}
+\begin{note}
+    Guideline: Look at it like this sort of a game.\nl
+    $\forall$ corresponds to moves by opponent. $\exists$ corresponds to moves by you.\nl
+    \begin{center}
+    \begin{tabular}{|c|c|}
+        \hline
+        Opponent & You  \\
+        \hline
+        Gives $p \in \mb{N}$ &  \\
+        & $s : s \in L, |s| \ge p$ \\
+        $x, y, z$ such that $s = xyz, y \ne \epsilon, |xy| \le p$ & \\
+        & $i \in \mb{N} \cup \{0\}$\\
+        \hline
+    \end{tabular}
+    \end{center}
+
+    You win if $xy^i \not \in L$, opponent otherwise.\nl
+
+    The pumping lemma says that if $L$ is regular, then the opponent has a winning strategy, i.e., if you have a winning strategy, then $L$ is not regular.
+\end{note}
+
+\begin{eg}
+    Consider $\Sigma = \{0, 1\}, L = \{s \in \Sigma^* \mid \# 0 = \# 1 \text{ in }s\}$.
+\end{eg}
+
+\begin{ans}
+    \begin{center}
+        \begin{tabular}{|c|c|}
+            \hline
+            Opponent  & You \\
+            \hline
+            $p$  &  \\
+                 & $0^p1^p$ \\
+            $0^p 1^p = xyz, y \ne \epsilon, |xy| \le p$ &  \\
+                                                        & $i \ne 1$\\
+                                                        \hline
+        \end{tabular}
+    \end{center}
+    $|xy| = q \le p$, so $xy = 0^q$. Then done.
+\end{ans}
+
+\begin{eg}
+    Consider $\Sigma = \{0, 1\}, L = \{ww \in \Sigma^* \mid w \in \Sigma^*\}$.
+\end{eg}
+
+\begin{ans}
+    \begin{center}
+        \begin{tabular}{|c|c|}
+            \hline
+            Opponent & You \\
+            \hline
+            $p$  &  \\
+                 & $0^p1^p0^p1^p$ \\
+            $x, y, z$...  &  \\
+                          & any $i \ne 1$ \\
+                          \hline
+        \end{tabular}
+
+    \end{center}
+\end{ans}
+
+\begin{eg}
+    Consider $\Sigma = \{0, 1\}, L = \{0^i1^j \in \Sigma^* \mid i > j\}$.
+\end{eg}
+\begin{ans}
+    \begin{center}
+        \begin{tabular}{|c|c|}
+            \hline
+            Opponent & You \\
+            \hline
+            $p$  &  \\
+                 & $0^{p+1}1^p$ \\
+            $x, y, z$...  &  \\
+                          & $i = 0$ \\
+                          \hline
+        \end{tabular}
+    \end{center}
+    Note that when we play this, by a similar argument as above, we have $|y| > 0$, so the length of first prefix of $0$ is $\le p$, which gives a contradiction.
+\end{ans}
+
+\begin{eg}
+    Consider $\Sigma = \{a, b, c\}, L = \{a^{n_1}b^{n_2}c^{n_3} \in \Sigma^* \mid n_1 = 1 \implies n_2 = n_3\}$.
+\end{eg}
+\begin{ans}
+    The opponent always has a winning strategy. If we give $ab^nc^n$, then the opponent gives us $x = \epsilon, y = a, z = b^nc^n$.
+    If we give $a^m b^n c^p$, the opponent gives us $x = \epsilon, y = a^m, z = b^n c^p$.
+\end{ans}
+
+\end{document}
