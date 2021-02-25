@@ -53,7 +53,7 @@ There are \numquestions\, questions for a total of \numpoints\, points.
 \begin{questions}
 
     \question[4] 
-    Let $\Sigma=\{0,1\}$, and let $L=\{xy\in\Sigma^*\text{ }|\text{ \# of 0's in }x=\text{ \# of 1's in }y\}$. Prove that $L$ is a regular language.
+    Let $\Sigma=\{0,1\}$, and let $L=\{xy\in\Sigma^*\text{ }|\text{ \# of 1's in }x=\text{ \# of 0's in }y\}$. Prove that $L$ is a regular language.
 
     \begin{solution}
         We claim that $L = \Sigma^*$.
@@ -103,14 +103,14 @@ There are \numquestions\, questions for a total of \numpoints\, points.
     Let $L\subseteq\Sigma^*$ be any regular language. Prove that the language $L'=\{z\text{ }|\exists x,y\in\Sigma^*\text{ such that }z=xy\text{ and }yx\in L\}$ is regular.
 
     \begin{solution}
-        Suppose the $DFA D = (Q, \Sigma, \delta, q_0, A)$ recognizes $L$.
+        Suppose the DFA $D = (Q, \Sigma, \delta, q_0, A)$ recognizes $L$.
 
         Consider the following languages:
         \[
-            L_q = \{x in \Sigma^* \mid \hd(q, x) \in A\}
+            L_q = \{x \in \Sigma^* \mid \hd(q, x) \in A\}
         \]
         \[
-            M_q = \{x in \Sigma^* \mid \hd(q_0, x) = q\}
+            M_q = \{x \in \Sigma^* \mid \hd(q_0, x) = q\}
         \]
 
         Claim 1: Both $L_q$ and $M_q$ are regular languages.
