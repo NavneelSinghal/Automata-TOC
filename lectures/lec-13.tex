@@ -1,0 +1,272 @@
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+% \usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{import}
+\usepackage{pdfpages}
+\usepackage{transparent}
+\usepackage{xcolor}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+
+\usepackage{thmtools}
+\usepackage{enumitem}
+\usepackage[framemethod=TikZ]{mdframed}
+
+\usepackage{xpatch}
+
+\usepackage{boites}
+\makeatletter
+\xpatchcmd{\endmdframed}
+{\aftergroup\endmdf@trivlist\color@endgroup}
+{\endmdf@trivlist\color@endgroup\@doendpe}
+{}{}
+\makeatother
+
+%\usepackage[poster]{tcolorbox}
+%\allowdisplaybreaks
+%\sloppy
+
+\usepackage[many]{tcolorbox}
+
+\xpatchcmd{\proof}{\itshape}{\bfseries\itshape}{}{}
+
+% to set box separation
+\setlength{\fboxsep}{0.8em}
+\def\breakboxskip{7pt}
+\def\breakboxparindent{0em}
+
+\newenvironment{proof}{\begin{breakbox}\textit{Proof.}}{\hfill$\square$\end{breakbox}}
+\newenvironment{ans}{\begin{breakbox}\textit{Answer.}}{\end{breakbox}}
+\newenvironment{soln}{\begin{breakbox}\textit{Solution.}}{\end{breakbox}}
+
+% \tcolorboxenvironment{proof}{
+%     blanker,
+%     before skip=\topsep,
+%     after skip=\topsep,
+%     borderline={0.4pt}{0.4pt}{black},
+%     breakable,
+%     left=12pt,
+%     right=12pt,
+%     top=12pt,
+%     bottom=12pt,
+% }
+% 
+% \tcolorboxenvironment{ans}{
+%     blanker,
+%     before skip=\topsep,
+%     after skip=\topsep,
+%     borderline={0.4pt}{0.4pt}{black},
+%     breakable,
+%     left=12pt,
+%     right=12pt,
+% }
+
+\mdfdefinestyle{enclosed}{
+    linecolor=black
+    ,backgroundcolor=none
+    ,apptotikzsetting={\tikzset{mdfbackground/.append style={fill=gray!100,fill opacity=.3}}}
+    ,frametitlefont=\sffamily\bfseries\color{black}
+    ,splittopskip=.5cm
+    ,frametitlebelowskip=.0cm
+    ,topline=true
+    ,bottomline=true
+    ,rightline=true
+    ,leftline=true
+    ,leftmargin=0.01cm
+    ,linewidth=0.02cm
+    ,skipabove=0.01cm
+    ,innerbottommargin=0.1cm
+    ,skipbelow=0.1cm
+}
+
+\mdfsetup{%
+    middlelinecolor=black,
+    middlelinewidth=1pt,
+roundcorner=4pt}
+
+\setlength{\parindent}{0pt}
+
+\mdtheorem[style=enclosed]{theorem}{Theorem}
+\mdtheorem[style=enclosed]{lemma}{Lemma}[theorem]
+\mdtheorem[style=enclosed]{claim}{Claim}[theorem]
+\mdtheorem[style=enclosed]{ques}{Question}
+\mdtheorem[style=enclosed]{defn}{Definition}
+\mdtheorem[style=enclosed]{notn}{Notation}
+\mdtheorem[style=enclosed]{obs}{Observation}
+\mdtheorem[style=enclosed]{eg}{Example}
+\mdtheorem[style=enclosed]{cor}{Corollary}
+\mdtheorem[style=enclosed]{note}{Note}
+
+% \let\thetheorem=\relax
+% \let\thelemma=\relax
+% \let\theclaim=\relax
+% \let\theques=\relax
+% \let\thedefn=\relax
+% \let\thenotn=\relax
+% \let\theobs=\relax
+% \let\thecor=\relax
+% \let\thenote=\relax
+
+% \renewcommand\qedsymbol{$\blacksquare$}
+\newcommand{\nl}{\vspace{0.2cm}\\}
+\newcommand{\mc}{\mathcal}
+\newcommand{\mi}{\mathit}
+\newcommand{\mf}{\mathbf}
+\newcommand{\mb}{\mathbb}
+\renewcommand{\L}{\mc{L}}
+\newcommand{\hd}{\hat{\delta}}
+
+\newcommand{\incfig}[1]{%
+    \def\svgwidth{\columnwidth}
+    \import{./figures/}{#1.pdf_tex}
+}
+\pdfsuppresswarningpagegroup=1
+
+\title{\textbf{COL352 Lecture 10}}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Recap}
+
+Discussion in previous class about Myhill-Nerode theorem.
+
+\section{Definitions}
+
+\section{Content}
+
+Given DFA $D = (Q, \Sigma, \delta, q_0, A)$ without unreachable states.
+
+We want DFA $D^* = (Q^*, \Sigma, \delta^*, q_0^*, A^*)$ with min number of states that recognizes $\L(D)$.
+
+We know $\sim_D$ refines $=_{\L(D)}$, and $\sim_{D^*}$ is identical to $=_{\L(D)}$.
+
+\begin{defn}
+$C_q = \{x \in \Sigma^* \mid \hd(q_0, x) = q\}$.
+\end{defn}
+
+Note that none of the $C_q$'s are empty since $D$ has no unreachable states.
+
+We then know that these are equivalence classes of $\sim_D$.
+
+Let $x_q$ be an arbitrary string in $C_q$, i.e., $\hd(q_0, x_q) = q$.
+
+\begin{defn}
+    $\equiv$ is an equivalence relation on $Q$ defined as $q \equiv q'$ if $C_q, C_{q'}$ are in the sam eequivalence class of $=_{\L(D)}$.
+\end{defn}
+
+\begin{claim}
+    $q \equiv q' \iff x_q =_{\L(D)} x_q'$
+\end{claim}
+
+\begin{proof}
+    Forward direction: Obvious by the definition of $\equiv$ and $x_q \in C_q, x_{q'} \in C_{q'}$\nl
+    Backward direction: Follows from the fact that $\sim_D$ refines $=_{\L(D)}$ and the equivalence class of $x_q$ wrt $\sim_D$ is $C_q$, and similarly for $C_{q'}$.
+\end{proof}
+
+\begin{claim}
+    If $q \equiv q'$, then $\forall a \in \Sigma, \delta(q, a) \equiv \delta(q', a)$.
+\end{claim}
+
+\begin{proof}
+    $q \equiv q' \iff x_q =_L x_{q'}$ from the previous claim.\nl
+    $x_q =_L x_{q'} \implies x_q a =_L x_{q'} a$ (as done in last class) $\implies \hd(q_0, x_qa) \equiv \hd(q_0, x_{q'}a) \implies \delta(\hd(q_0, x_q), a) \equiv \delta(\hd(q_0, x_{q'}), a)
+    \implies \delta(q, a) \equiv \delta(q', a)$.
+\end{proof}
+
+\begin{claim}
+    $q \equiv q'$ iff $\forall z \in \Sigma^*, \hd(q, z), \hd(q', z)$ are both in $A$ or both not in $A$.
+\end{claim}
+
+\begin{proof}
+    $q \equiv q' \equiv x_q =_L x_{q'} \iff \forall z$ either both $x_q z, x_{q'}z$ are in $L$ or both not in $L$ $\iff \forall z, \hd(q_0, x_qz), \hd(q_0, x_{q'}z)$ both in $A$ or both not in $A$
+        iff ... iff $\hd(q, z), \hd(q', z)$ both in $A$ or both not in $A$.
+\end{proof}
+
+Having determined $\equiv$, $D^*$ can be constructed as:
+
+\begin{enumerate}
+    \item $Q^*:$ one state from each equivalence class of $\equiv$.
+    \item rep $: Q \to Q'$ rep$(q)$ = the representative fo equivalence class of $q$ under $\equiv$.
+    \item $q_0^* = $ rep$(q_0)$.
+    \item $\delta^*(r, a) = $ rep$(\delta(r, a))$.
+    \item $A^* = \{\mathrm{rep}(q) \mid q \in A\}$.
+\end{enumerate}
+
+The invariant is $\hd^*(q_0^*, x) = \mathrm{rep}(\hd(q, x))$.
+
+\begin{ques}
+    How do we construct this equivalence relation $\equiv$?
+\end{ques}
+
+\begin{ans}
+    Recall that $q \equiv q'$ iff $\forall z \in \Sigma^*, \hd(q, z), \hd(q', z)$ are both in $A$ or both not in $A$.
+\end{ans}
+
+\begin{defn}
+    $q \equiv_n q'$ if for all $z \in \Sigma^*$ of length $\le n$, $\forall z \in \Sigma^*, \hd(q, z), \hd(q', z)$ are both in $A$ or both not in $A$.
+\end{defn}
+
+\begin{note}
+    Note that each $\equiv_n$ refines $\equiv_{n-1}$, and $\equiv$ refines $\equiv_n$. Also, $q \equiv q \iff \forall n, q \equiv_n q'$.\nl
+    Also note that $\equiv_0$ is easy to find: $q \equiv_0 q'$ iff either both $q, q'$ are in $A$ or both are not in $A$, so we can use $\equiv_0$ as an equivalent statement for either both $q, q'$
+    being in $A$ or not being in $A$.
+\end{note}
+
+\begin{claim}
+    $q \equiv_n q'$ iff $q \equiv_{n-1} q' \land \forall a \in \Sigma, \delta(q, a) \equiv_{n-1} \delta(q', a)$.
+\end{claim}
+
+\begin{proof}
+    Forward direction:\nl
+    \begin{align*}    
+        q \equiv_n q' &\implies (\forall z, |z| \le n \implies \hd(q, z) \equiv_0 \hd(q', z))\\
+    \end{align*}
+    Specialising to $|z| \le n - 1$, we have $q \equiv_{n-1} q'$.\nl
+    Now continuing, we have for $z'$ of length $\le n - 1$, $\hd(q, az') = \hd(q', az') \iff \hd(\delta(q, a), z') \equiv_0 \hd(\delta(q', a), z')$, so $\delta(q, a) \equiv_{n-1} \delta(q',
+        a)$.
+    Backward direction:\nl
+    If $|z| \le n - 1$, use $q \equiv_{n-1} q'$ to get $\hd(q, z) \equiv_0 \hd(q', z)$.
+    If $|z| = n$, then $z = az'$ for some $a \in \Sigma$, $z' \in \Sigma^*$, and $|z'| \le n - 1$. So we have $\hd(q, z) = \hd(q, az') = \hd(\delta(q, a), z') \equiv_0 \hd(\delta(q', a), z')
+\text{(either both are or are not in $A$)} = \hd(q', z)$, so $q \equiv_n q'$.
+\end{proof}
+
+\begin{ques}
+    Can we make an algorithm to find the equivalence classes?
+\end{ques}
+
+\begin{ans}
+\begin{algorithmic}
+    \Function{Partition}{$D = (Q, \Sigma, \delta, q_0, A)$}
+        \State $n \gets 0$
+        \State $\equiv_0 = \{(q, q') \in Q \times Q \mid \text{ both } q, q' \in A \text{ or both }q, q' \not\in A\}$
+        \While{True}
+            \State $n \gets n + 1$
+            \State $\equiv_n \gets \{(q, q') \in \equiv_{n-1} \land \forall a \in \Sigma, (\delta(q, a), \delta(q', a)) \in \equiv_{n-1}\}$.
+            \If{$\equiv_n = \equiv_{n-1}$}
+                \State break
+            \EndIf
+        \EndWhile
+        \State \Return $\equiv_n$
+    \EndFunction
+\end{algorithmic}
+\end{ans}
+
+\begin{claim}
+    If $\equiv_n$ is identical to $\equiv_{n-1}$, then they are identical to $\equiv$.
+\end{claim}
+
+\begin{proof}
+    Next class.
+\end{proof}
+
+\end{document}

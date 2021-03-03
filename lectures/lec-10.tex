@@ -181,7 +181,7 @@ Thus $\forall k \in \mb{N} \cup \{0\}$, we have $xy^kz \in L$.\nl
     \textbf{Contrapositive of the Pumping Lemma for Regular languages}\nl
     Let $L \in \Sigma^*$ be any regular language. If $\forall p \in \mb{N}, \exists s \in L$ with $|s| \ge p$, such that $\forall x, y, z \in \Sigma^*$,
     $$
-    (s = xyz) \land (|y| > 0) \land (|xy| \le p) \implies \exists i \in \mb{N} \cup \{0\} \text{ such that } xy^iz \in L
+    (s = xyz) \land (|y| > 0) \land (|xy| \le p) \implies \exists i \in \mb{N} \cup \{0\} \text{ such that } xy^iz \not\in L
     $$
     Then $L$ is not regular.
 \end{lemma}
