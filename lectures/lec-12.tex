@@ -176,7 +176,7 @@ Discussion in previous class.
         By induction on $|x|$. If $|x| = 0$, then $x = \epsilon$, so since $\hd(\epsilon, \epsilon) = \epsilon$, the base case is done.
         Now suppose $x = x'a$ for $x' \in \Sigma^*, a \in \Sigma$. Then we have $\hd(\epsilon, x) = \delta(\hd(\epsilon, x'), a) = \delta(rep(x'), a) = rep(rep(x')a) = rep(x'a) = rep(x)$. The
         second last equality follows from $=_L$, since by definition, $x' =_L rep(x') \implies x'a =_L rep(x')a \implies x =_L rep(x')a \implies rep(x) = rep(rep(x')a)$.
-        First equality from definition of $\hd$, second from induction hypothesis and the third from the definition of $\delta$.
+        The first equality from the definition of $\hd$, the second from the induction hypothesis and the third from the definition of $\delta$.
     \end{proof}
 
     \begin{claim}

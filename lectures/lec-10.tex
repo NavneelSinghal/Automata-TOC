@@ -270,7 +270,8 @@ Thus $\forall k \in \mb{N} \cup \{0\}$, we have $xy^kz \in L$.\nl
 \end{eg}
 \begin{ans}
     The opponent always has a winning strategy. If we give $ab^nc^n$, then the opponent gives us $x = \epsilon, y = a, z = b^nc^n$.
-    If we give $a^m b^n c^p$, the opponent gives us $x = \epsilon, y = a^m, z = b^n c^p$.
+    If we give $a^m b^n c^p$, the opponent gives us $x = \epsilon, y = a^m, z = b^n c^p$. However this language is not regular (apply pumping lemma on the reverse of this language, or show that the
+    language of strings $s$ such that  $as$ is in $L$ is regular if $L$ is regular, and use the pumping lemma on that).
 \end{ans}
 
 \end{document}

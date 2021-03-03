@@ -210,14 +210,30 @@ All DFAs that recognize $L$ and have no more states than $D$ are actually isomor
 \end{claim}
 
 \begin{proof}
-    Exercise.
+    Exercise.\nl
+    We need reflexivity, transitivity and symmetry.
+    \begin{enumerate}
+        \item Reflexivity: follows from $\hd(q_0, x) = \hd(q_0, x)$.
+        \item Symmetry: follows from symmetry of equality.
+        \item Transitivity: follows from the fact that $\hd(q_0, x) = \hd(q_0, y) \land \hd(q_0, y) = \hd(q_0, z) \implies \hd(q_0, x) = \hd(q_0, z)$.
+    \end{enumerate}
 \end{proof}
 
 \begin{claim}
-    $\sim_L$ is an equivalence relation.
+    $=_L$ is an equivalence relation.
 \end{claim}
 \begin{proof}
-    Recall COL202.
+    Recall COL202.\nl
+    \begin{enumerate}
+        \item Reflexivity: follows from the fact that $x = y \implies xz = yz \forall z \in \Sigma^*$.
+        \item Symmetry: follows from the fact that $xz, yz \in A \equiv yz, xz \in A$.
+        \item Transitivity: Let $x =_L y$ and $y =_L z$. Consider some $w \in \Sigma^*$. We have two cases here:
+            \begin{enumerate}
+                \item $xw \in L$. In this case, we have $yw \in L$, which implies $zw \in L$, with both implications following from the definition of $=_L$.
+                \item $xw \not\in L$. In this case, we have $yw \not\in L$, which implies $zw \not\in L$, following from the definition of $=_L$ for both implications.
+            \end{enumerate}
+            From here, we see that $xw \in L \iff zw \in L$, so $x =_L z$.
+    \end{enumerate}
 \end{proof}
 
 \begin{claim}
@@ -225,7 +241,9 @@ All DFAs that recognize $L$ and have no more states than $D$ are actually isomor
 \end{claim}
 
 \begin{proof}
-    Induction on $|z|$.
+
+    Fix $z$, and consider any string $t$. Then the string $zt \in \Sigma^*$. Using the fact that $x =_L y$, we have that $x(zt) \in L \iff y(zt) \in L$. Thus, for any $t \in \Sigma^*$, we have
+        $(xz)t \in L \iff (yz)t \in L$, from where the conclusion follows.
 \end{proof}
 
 \begin{eg}
@@ -251,8 +269,14 @@ All DFAs that recognize $L$ and have no more states than $D$ are actually isomor
 \end{theorem}
 
 \begin{proof}
-    Follows from the previous claim and definition of $=_L$.
+    Follows from the previous claim and definition of $=_L$.\nl
+    For a bit more detail, consider $x, y$ such that $x \sim_D y$. Then using Claim 0.3, $D$ either accepts both $xz, yz$ or rejects both $xz, yz$. Hence, we have either both $xz, yz \in L$, or
+    both not in $L$, from where it follows (by varying $z$ over $\Sigma^*$) that $x =_L y$.
 \end{proof}
+
+\begin{note}
+    This theorem implies that the equivalence classes of $=_L$ are possibly further partitioned by those of $\sim_D$.
+\end{note}
 
 \begin{theorem}
     \textbf{Myhill-Nerode Theorem (John Myhill, Anil Nerode, 1958)}\nl

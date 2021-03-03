@@ -161,7 +161,7 @@ We then know that these are equivalence classes of $\sim_D$.
 Let $x_q$ be an arbitrary string in $C_q$, i.e., $\hd(q_0, x_q) = q$.
 
 \begin{defn}
-    $\equiv$ is an equivalence relation on $Q$ defined as $q \equiv q'$ if $C_q, C_{q'}$ are in the sam eequivalence class of $=_{\L(D)}$.
+    $\equiv$ is an equivalence relation on $Q$ defined as $q \equiv q'$ if $C_q, C_{q'}$ are in the same equivalence class of $=_{\L(D)}$.
 \end{defn}
 
 \begin{claim}
@@ -188,7 +188,7 @@ Let $x_q$ be an arbitrary string in $C_q$, i.e., $\hd(q_0, x_q) = q$.
 \end{claim}
 
 \begin{proof}
-    $q \equiv q' \equiv x_q =_L x_{q'} \iff \forall z$ either both $x_q z, x_{q'}z$ are in $L$ or both not in $L$ $\iff \forall z, \hd(q_0, x_qz), \hd(q_0, x_{q'}z)$ both in $A$ or both not in $A$
+    $q \equiv q' \iff x_q =_L x_{q'} \iff \forall z$ either both $x_q z, x_{q'}z$ are in $L$ or both not in $L$ $\iff \forall z, \hd(q_0, x_qz), \hd(q_0, x_{q'}z)$ both in $A$ or both not in $A$
         iff ... iff $\hd(q, z), \hd(q', z)$ both in $A$ or both not in $A$.
 \end{proof}
 
@@ -196,7 +196,7 @@ Having determined $\equiv$, $D^*$ can be constructed as:
 
 \begin{enumerate}
     \item $Q^*:$ one state from each equivalence class of $\equiv$.
-    \item rep $: Q \to Q'$ rep$(q)$ = the representative fo equivalence class of $q$ under $\equiv$.
+    \item rep $: Q \to Q^*$ where rep$(q)$ = the representative of the equivalence class of $q$ under $\equiv$.
     \item $q_0^* = $ rep$(q_0)$.
     \item $\delta^*(r, a) = $ rep$(\delta(r, a))$.
     \item $A^* = \{\mathrm{rep}(q) \mid q \in A\}$.
@@ -213,7 +213,7 @@ The invariant is $\hd^*(q_0^*, x) = \mathrm{rep}(\hd(q, x))$.
 \end{ans}
 
 \begin{defn}
-    $q \equiv_n q'$ if for all $z \in \Sigma^*$ of length $\le n$, $\forall z \in \Sigma^*, \hd(q, z), \hd(q', z)$ are both in $A$ or both not in $A$.
+    $q \equiv_n q'$ if for all $z \in \Sigma^*$ of length $\le n$, $\hd(q, z), \hd(q', z)$ are both in $A$ or both not in $A$.
 \end{defn}
 
 \begin{note}
@@ -233,7 +233,7 @@ The invariant is $\hd^*(q_0^*, x) = \mathrm{rep}(\hd(q, x))$.
     \end{align*}
     Specialising to $|z| \le n - 1$, we have $q \equiv_{n-1} q'$.\nl
     Now continuing, we have for $z'$ of length $\le n - 1$, $\hd(q, az') = \hd(q', az') \iff \hd(\delta(q, a), z') \equiv_0 \hd(\delta(q', a), z')$, so $\delta(q, a) \equiv_{n-1} \delta(q',
-        a)$.
+        a)$.\nl
     Backward direction:\nl
     If $|z| \le n - 1$, use $q \equiv_{n-1} q'$ to get $\hd(q, z) \equiv_0 \hd(q', z)$.
     If $|z| = n$, then $z = az'$ for some $a \in \Sigma$, $z' \in \Sigma^*$, and $|z'| \le n - 1$. So we have $\hd(q, z) = \hd(q, az') = \hd(\delta(q, a), z') \equiv_0 \hd(\delta(q', a), z')
