@@ -129,12 +129,14 @@ roundcorner=4pt}
 }
 \pdfsuppresswarningpagegroup=1
 
-\title{\textbf{COL352 Lecture 13}}
+\title{\textbf{COL352 Lecture 14}}
 \date{}
 
 \begin{document}
 \maketitle
 \tableofcontents
+
+Continuation of lecture 13.
 
 \section{Recap}
 
@@ -262,11 +264,91 @@ The invariant is $\hd^*(q_0^*, x) = \mathrm{rep}(\hd(q, x))$.
 \end{ans}
 
 \begin{claim}
+    The above algorithm terminates.
+\end{claim}
+\begin{proof}
+    For all $i < n$, number of equivalence classes of $\equiv_i$ is more than the number of equivalence classes of $\equiv{i-1}$. But $\forall i$, the number of equivalence classes of
+    $\equiv_i$ is at most $|Q|$. So we terminate in at most $|Q| + 1$ iterations.
+\end{proof}
+
+\begin{claim}
     If $\equiv_n$ is identical to $\equiv_{n-1}$, then they are identical to $\equiv$.
+\end{claim}
+\begin{proof}
+    Intuition for why we will do this -- the number of equivalence classes is non-decreasing, so there will be an $N$ such that $\equiv = \equiv_N$.\nl
+    Now coming to the proof, we claim the following:
+    \begin{claim}
+        If $\equiv_n$ is identical to $\equiv_{n-1}$ then $\equiv_{n+1}$ is identical to $equiv_n$.
+    \end{claim}
+    \begin{proof}
+        Use the definition $q \equiv_n q'$ iff $(q \equiv_{n-1} q' \text{ and } \forall a \in \Sigma, \delta(q, a) \equiv_{n-1} \delta(q', a)$.\nl
+        So we have
+        \begin{align*}
+            q \equiv_{n+1} q' &\iff (q \equiv_{n} q' \text{ and } \forall a \in \Sigma, \delta(q, a) \equiv_{n} \delta(q', a)
+                              &\iff (q \equiv_{n - 1} q' \text{ and } \forall a \in \Sigma, \delta(q, a) \equiv_{n - 1} \delta(q', a)
+                              &\iff q \equiv_n q'
+        \end{align*}
+    \end{proof}
+    \begin{cor}
+        If $\equiv_n$ is identical to $\equiv_{n-1}$, then $\forall m \ge n, \equiv_m$ is identical to $\equiv_n$
+    \end{cor}
+    \begin{cor}
+        If $\equiv_n$ is identical to $\equiv_{n-1}$, then $\equiv$ is identical to $\equiv_n$.
+    \end{cor}
+    \begin{proof}
+        Intersection of states that stabilize.
+    \end{proof}
+\end{proof}
+
+Example done in class for DFA minimization using this algorithm.
+
+We will need an arbitrarily large number of steps.
+
+For an example, consider the obvious DFA for $\{z \in \Sigma^* \mid |z| \ge n\}$.
+
+\subsection{Context-Free Languages}
+
+Motivating example:
+
+\begin{eg}
+    Inductively define $L$ as the smallest language satisfying the following:
+    \begin{enumerate}
+        \item $\epsilon \in L$.
+        \item If $x, y \in L$ then $x \cdot y \in L$.
+        \item If $x \in L$, then $0x1 \in L$.
+    \end{enumerate}
+\end{eg}
+
+\begin{note}
+    This is something like balanced parenthesized expressions. We needed the smallest language thing because any superset of $L$ also works.
+\end{note}
+
+\begin{claim}
+    $x \in L \iff $ the number of 0s in $x$ = number of 1s in $x$, and for all $y$ (prefixes of $x$), the number of 0s in $y$ is at least the number of 1s in $y$.
 \end{claim}
 
 \begin{proof}
-    Next class.
+    Exercise.
 \end{proof}
+
+\begin{claim}
+    This language is not regular.
+\end{claim}
+
+\begin{proof}
+    Use the pumping lemma on $0^n 1^n$ or give another proof using the Myhill-Nerode theorem.
+\end{proof}
+
+This is something like a grammar.
+
+In what follows, $S$ is the initial non-terminal.
+
+$S \to \epsilon$
+
+$S \to SS$
+
+$S \to 0S1$
+
+We can make parse trees using this.
 
 \end{document}
