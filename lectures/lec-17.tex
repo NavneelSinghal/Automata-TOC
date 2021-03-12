@@ -1,0 +1,281 @@
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+% \usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{import}
+\usepackage{pdfpages}
+\usepackage{transparent}
+\usepackage{xcolor}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+
+\usepackage{thmtools}
+\usepackage{enumitem}
+\usepackage[framemethod=TikZ]{mdframed}
+
+\usepackage{xpatch}
+
+\usepackage{boites}
+\makeatletter
+\xpatchcmd{\endmdframed}
+{\aftergroup\endmdf@trivlist\color@endgroup}
+{\endmdf@trivlist\color@endgroup\@doendpe}
+{}{}
+\makeatother
+
+%\usepackage[poster]{tcolorbox}
+%\allowdisplaybreaks
+%\sloppy
+
+\usepackage[many]{tcolorbox}
+
+\xpatchcmd{\proof}{\itshape}{\bfseries\itshape}{}{}
+
+% to set box separation
+\setlength{\fboxsep}{0.8em}
+\def\breakboxskip{7pt}
+\def\breakboxparindent{0em}
+
+\newenvironment{proof}{\begin{breakbox}\textit{Proof.}}{\hfill$\square$\end{breakbox}}
+\newenvironment{ans}{\begin{breakbox}\textit{Answer.}}{\end{breakbox}}
+\newenvironment{soln}{\begin{breakbox}\textit{Solution.}}{\end{breakbox}}
+
+% \tcolorboxenvironment{proof}{
+%     blanker,
+%     before skip=\topsep,
+%     after skip=\topsep,
+%     borderline={0.4pt}{0.4pt}{black},
+%     breakable,
+%     left=12pt,
+%     right=12pt,
+%     top=12pt,
+%     bottom=12pt,
+% }
+% 
+% \tcolorboxenvironment{ans}{
+%     blanker,
+%     before skip=\topsep,
+%     after skip=\topsep,
+%     borderline={0.4pt}{0.4pt}{black},
+%     breakable,
+%     left=12pt,
+%     right=12pt,
+% }
+
+\mdfdefinestyle{enclosed}{
+    linecolor=black
+    ,backgroundcolor=none
+    ,apptotikzsetting={\tikzset{mdfbackground/.append style={fill=gray!100,fill opacity=.3}}}
+    ,frametitlefont=\sffamily\bfseries\color{black}
+    ,splittopskip=.5cm
+    ,frametitlebelowskip=.0cm
+    ,topline=true
+    ,bottomline=true
+    ,rightline=true
+    ,leftline=true
+    ,leftmargin=0.01cm
+    ,linewidth=0.02cm
+    ,skipabove=0.01cm
+    ,innerbottommargin=0.1cm
+    ,skipbelow=0.1cm
+}
+
+\mdfsetup{%
+    middlelinecolor=black,
+    middlelinewidth=1pt,
+roundcorner=4pt}
+
+\setlength{\parindent}{0pt}
+
+\mdtheorem[style=enclosed]{theorem}{Theorem}
+\mdtheorem[style=enclosed]{lemma}{Lemma}[theorem]
+\mdtheorem[style=enclosed]{claim}{Claim}[theorem]
+\mdtheorem[style=enclosed]{ques}{Question}
+\mdtheorem[style=enclosed]{defn}{Definition}
+\mdtheorem[style=enclosed]{notn}{Notation}
+\mdtheorem[style=enclosed]{obs}{Observation}
+\mdtheorem[style=enclosed]{eg}{Example}
+\mdtheorem[style=enclosed]{cor}{Corollary}
+\mdtheorem[style=enclosed]{note}{Note}
+
+% \let\thetheorem=\relax
+% \let\thelemma=\relax
+% \let\theclaim=\relax
+% \let\theques=\relax
+% \let\thedefn=\relax
+% \let\thenotn=\relax
+% \let\theobs=\relax
+% \let\thecor=\relax
+% \let\thenote=\relax
+
+% \renewcommand\qedsymbol{$\blacksquare$}
+\newcommand{\nl}{\vspace{0.2cm}\\}
+\newcommand{\mc}{\mathcal}
+\newcommand{\mi}{\mathit}
+\newcommand{\mf}{\mathbf}
+\newcommand{\mb}{\mathbb}
+\renewcommand{\L}{\mc{L}}
+\newcommand{\hd}{\hat{\delta}}
+\newcommand{\produces}{\implies}
+\newcommand{\derives}{\stackrel{*}{\implies}}
+\newcommand{\changesto}{\vdash}
+
+
+\newcommand{\incfig}[1]{%
+    \def\svgwidth{\columnwidth}
+    \import{./figures/}{#1.pdf_tex}
+}
+\pdfsuppresswarningpagegroup=1
+
+\title{\textbf{COL352 Lecture 17}}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Recap}
+
+Discussion about grammars, parse trees, yields, and context free languages.
+
+\section{Definitions}
+
+\begin{defn}
+    A (non-deterministic) pushdown automaton ((N)PDA) is a 6-tuple $(Q, \Sigma, \Gamma, \Delta, q_0, A)$ where
+    \begin{enumerate}
+        \item $Q$ -- finite nonempty set of states
+        \item $\Sigma$ -- finite nonempty input alphabet
+        \item $\Gamma$ -- finite stack alphabet
+        \item $q_0 \in Q$ -- initial state
+        \item $A$ -- set of accepting states
+        \item $\Delta \subseteq Q \times \Sigma_\epsilon \times \Gamma_\epsilon \times Q \times \Gamma_\epsilon$, where $X_\epsilon$ is defined as $X \cup \{\epsilon\}$
+    \end{enumerate}
+\end{defn}
+
+Note that in an NFA, $\Delta \subseteq Q \times (\Sigma \cup \{\epsilon\}) \times Q$.
+
+Informally, a string is accepted if $\exists$ a run which reads the entire string and does what ?????\nl
+
+\begin{defn}
+    Let $P = (Q, \Sigma, \Gamma, \Delta, q_0, A)$ be a PDA. An instantaneous description (i.d.) of $P$ is a tuple $(q, x, \alpha)$ where $q \in Q$, $x \in \Sigma^*$, $\alpha \in \Gamma^*$. (The set
+    of instantaneous descriptions is $Q \times \Sigma^* \times \Gamma^*$).
+\end{defn}
+
+Informally, it consists of the current state, the string left to be read, and the description of the current stack.\nl
+
+\begin{defn}
+    Let $P = (Q, \Sigma, \Gamma, \Delta, q_0, A)$ be a PDA. The relation $\changesto_P$ (read as ``changes to") is defined on the set of i.d.s as follows:\nl
+    If $(q, a, B, q', B') \in \Delta$, then $(q, ax, B\alpha) \changesto_P (q', x, B'\alpha)$, and no other pairs of i.d.s are related.\nl
+    In other words:
+    \begin{align*}
+        (q, y, \beta) \changesto_P (q', y', \beta') &\iff\\ &\exists a \in \Sigma_\epsilon, B \in \Gamma_\epsilon, \alpha \in \Gamma^*, B' \in \Gamma_\epsilon \text{ such that } y = ay', \beta =
+    B\alpha, \beta' = B'\alpha, (q, a, B, q', B') \in \Delta
+    \end{align*}
+\end{defn}
+
+\begin{defn}
+    $\changesto^*_P$ is defined as the reflexive transitive closure of $\changesto$ (read as ``changes to in finitely many steps").
+\end{defn}
+
+\begin{defn}
+    $x \in \Sigma^*$ is said to be accepted by PDA $P = (Q, \Sigma^*, \Gamma, \Delta, q_0, A)$ iff
+    $$(q_0, x, \epsilon) \changesto^*_P (q, \epsilon, \alpha)$$
+    for some $q \in A$ and some $\alpha \in \Gamma^*$.
+\end{defn}
+
+\todo[inline]{New}
+
+\begin{defn}
+    The language recognized by PDA $P$ denoted by $\L(P)$ is $\{x \in \Sigma^* \mid P \text{ accepts }x\}$.
+\end{defn}
+
+\section{Content}
+
+Plan for the next 4 lectures is to show that $L$ is generated by the grammar iff $L$ is recognized by a PDA.\nl
+
+The forward implication will be done in the next two lectures.
+
+Recall that $\Delta \subseteq Q \times \Sigma_\epsilon \times \Gamma_\epsilon \times Q \times \Gamma_\epsilon$, $(q, a, B, q', B') \in \Delta$. $q$ stands for the current state, $a$ for current
+input, $B$ for the current stack top to be popped, $q'$ for the next state, and $B'$ for the element to be pushed onto stack.\nl
+
+Suppose that instead, we do $\Delta \in Q \times \Sigma_\epsilon \times \Gamma_\epsilon \times Q \times \Gamma^*$ (i.e., we can push strings onto the stack). Call such a PDA a \underline{fast
+PDA}.
+
+\begin{theorem}
+    $L$ is recognized by a PDA $\iff$ $L$ is recognized by a fast PDA.
+\end{theorem}
+
+\begin{proof}
+    The forward direction is obvious.\nl
+    Now we look at a sketch of the proof of the non-obvious reverse direction.\nl
+    $L$ is recognized by a fast $PDA$, say $P$. A state transition looks like the following:
+    \begin{center}
+        
+    \incfig{pda-state-transition}
+    \end{center}
+    We do the following:
+    \begin{center}
+    \incfig{transformed-pda-state-transition}
+    \end{center}
+    Check that $P$ accepts $x$ iff $P'$ accepts $x$. Now since $\Delta$ was finite, $\Delta'$ is finite too.
+\end{proof}
+
+\begin{cor}
+    In order to show that $L$ generated by grammar $\implies$ $L$ recognized by a PDA, it is sufficient to show that $L$ generated by grammar $\implies$ $L$ recognized by a fast PDA.
+\end{cor}
+
+\begin{theorem}
+    Every language which is generated by a grammar is also recognized by a fast PDA.
+\end{theorem}
+
+\begin{proof}
+    We begin by an example.\nl
+
+    \begin{eg}
+        Consider $N = \{A, B\}$, $\Sigma = \{0, 1\}$, $R = \{A \to 0BB, A \to 1, B \to A1A, B \to 0\}$, with initial nonterminal as $A$.\nl
+        
+        We construct the PDA as follows.\nl
+        
+        $Q = \{q_i, q, q_a\}, A = \{q_a\},$ initial state $= q_i$, $\Sigma = \{0, 1\}, \Gamma = N \cup \Gamma \cup \{\bot\}$.\nl
+
+        $\Delta = \Delta_{special} \cup \Delta_{match} \cup \Delta_{produce}$.\nl
+
+        $\Delta_{match} = \{(q, 0, 0, q, \epsilon), (q, 1, 1, q, \epsilon)\}$. This corresponds to removing $a$ from the stack, where $a \in \Sigma$.\nl
+
+        $\Delta_{produce} = \{(q, \epsilon, A, q, BB0), (q, \epsilon, A, q, 1), (q, \epsilon, B, q, A1A), (q, \epsilon, B, q, 0)\}$. This corresponds to the production rules.\nl
+
+        $\Delta_{special} = \{(q_i, \epsilon, \epsilon, q, \bot, \bot A), (q, \epsilon, \bot, q_a, \epsilon)\}$. This corresponds to initialization and cleanup.\nl
+
+        Consider the following leftmost derivation of $01110$: $A \produces 0BB \produces 0A1AB \produces 011AB \produces 0111B \produces 01110$.\nl
+
+        Then we have
+        \begin{align*}
+            (q_i, 01110, \epsilon) &\changesto (q, 01110, A\bot)\\
+                            &\changesto (q, 01110, A\bot)\\
+                            &\changesto (q, 01110, 0BB\bot)\\
+                            &\changesto (q, 1110, BB\bot)\\
+                            &\changesto (q, 1110, A1AB\bot)\\
+                            &\changesto (q, 1110, 11AB\bot)\\
+                            &\changesto (q, 110, 1AB\bot)\\
+                            &\changesto (q, 10, AB\bot)\\
+                            &\changesto (q, 10, 1B\bot)\\
+                            &\changesto (q, 0, B\bot)\\
+                            &\changesto (q, 0, 0\bot)\\
+                            &\changesto (q, \epsilon, \bot)\\
+                            &\changesto (q_a, \epsilon, \epsilon)
+        \end{align*}
+
+    \end{eg}
+\end{proof}
+
+\begin{cor}
+    Every language which is generated by a grammar is also recognized by a PDA.
+\end{cor}
+
+\end{document}
