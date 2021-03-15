@@ -1,3 +1,7 @@
+%.pdf: %.tex
+	latexmk -pdf -pdflatex="pdflatex -interaction=nonstopmode" -use-make $<
+	$(MAKE) clean
+
 clean:
 	rm -f *.aux
 	rm -f *.log
