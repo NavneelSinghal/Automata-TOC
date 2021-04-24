@@ -1,0 +1,243 @@
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+% \usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{import}
+\usepackage{pdfpages}
+\usepackage{transparent}
+\usepackage{xcolor}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+
+\usepackage{thmtools}
+\usepackage{enumitem}
+\usepackage[framemethod=TikZ]{mdframed}
+
+\usepackage{xpatch}
+
+\usepackage{boites}
+\makeatletter
+\xpatchcmd{\endmdframed}
+{\aftergroup\endmdf@trivlist\color@endgroup}
+{\endmdf@trivlist\color@endgroup\@doendpe}
+{}{}
+\makeatother
+
+%\usepackage[poster]{tcolorbox}
+%\allowdisplaybreaks
+%\sloppy
+
+\usepackage[many]{tcolorbox}
+
+\xpatchcmd{\proof}{\itshape}{\bfseries\itshape}{}{}
+
+% to set box separation
+\setlength{\fboxsep}{0.8em}
+\def\breakboxskip{7pt}
+\def\breakboxparindent{0em}
+
+\newenvironment{proof}{\begin{breakbox}\textit{Proof.}}{\hfill$\square$\end{breakbox}}
+\newenvironment{ans}{\begin{breakbox}\textit{Answer.}}{\end{breakbox}}
+\newenvironment{soln}{\begin{breakbox}\textit{Solution.}}{\end{breakbox}}
+
+% \tcolorboxenvironment{proof}{
+%     blanker,
+%     before skip=\topsep,
+%     after skip=\topsep,
+%     borderline={0.4pt}{0.4pt}{black},
+%     breakable,
+%     left=12pt,
+%     right=12pt,
+%     top=12pt,
+%     bottom=12pt,
+% }
+%
+% \tcolorboxenvironment{ans}{
+%     blanker,
+%     before skip=\topsep,
+%     after skip=\topsep,
+%     borderline={0.4pt}{0.4pt}{black},
+%     breakable,
+%     left=12pt,
+%     right=12pt,
+% }
+
+\mdfdefinestyle{enclosed}{
+    linecolor=black
+    ,backgroundcolor=none
+    ,apptotikzsetting={\tikzset{mdfbackground/.append style={fill=gray!100,fill opacity=.3}}}
+    ,frametitlefont=\sffamily\bfseries\color{black}
+    ,splittopskip=.5cm
+    ,frametitlebelowskip=.0cm
+    ,topline=true
+    ,bottomline=true
+    ,rightline=true
+    ,leftline=true
+    ,leftmargin=0.01cm
+    ,linewidth=0.02cm
+    ,skipabove=0.01cm
+    ,innerbottommargin=0.1cm
+    ,skipbelow=0.1cm
+}
+
+\mdfsetup{%
+    middlelinecolor=black,
+    middlelinewidth=1pt,
+roundcorner=4pt}
+
+\setlength{\parindent}{0pt}
+
+\mdtheorem[style=enclosed]{theorem}{Theorem}
+\mdtheorem[style=enclosed]{lemma}{Lemma}[theorem]
+\mdtheorem[style=enclosed]{claim}{Claim}[theorem]
+\mdtheorem[style=enclosed]{ques}{Question}
+\mdtheorem[style=enclosed]{defn}{Definition}
+\mdtheorem[style=enclosed]{notn}{Notation}
+\mdtheorem[style=enclosed]{obs}{Observation}
+\mdtheorem[style=enclosed]{eg}{Example}
+\mdtheorem[style=enclosed]{cor}{Corollary}
+\mdtheorem[style=enclosed]{note}{Note}
+
+% \let\thetheorem=\relax
+% \let\thelemma=\relax
+% \let\theclaim=\relax
+% \let\theques=\relax
+% \let\thedefn=\relax
+% \let\thenotn=\relax
+% \let\theobs=\relax
+% \let\thecor=\relax
+% \let\thenote=\relax
+
+% \renewcommand\qedsymbol{$\blacksquare$}
+\newcommand{\nl}{\vspace{0.2cm}\\}
+\newcommand{\mc}{\mathcal}
+\newcommand{\mi}{\mathit}
+\newcommand{\mf}{\mathbf}
+\newcommand{\mb}{\mathbb}
+\renewcommand{\L}{\mc{L}}
+\newcommand{\hd}{\hat{\delta}}
+\newcommand{\produces}{\implies}
+\newcommand{\derives}{\stackrel{*}{\implies}}
+\newcommand{\changesto}{\vdash}
+\newcommand\Vtextvisiblespace[1][.3em]{%
+    \mbox{\kern.06em\vrule height.3ex}%
+    \vbox{\hrule width#1}%
+    \hbox{\vrule height.3ex}
+}
+\newcommand{\blank}{{\Vtextvisiblespace[0.7em]}}
+\newcommand{\leftend}{\triangleright}
+
+\newcommand{\incfig}[1]{%
+    \def\svgwidth{\columnwidth}
+    \import{./figures/}{#1.pdf_tex}
+}
+\pdfsuppresswarningpagegroup=1
+
+\title{\textbf{COL352 Lecture 27}}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Recap}
+
+Started closure properties last time.
+
+\section{Definitions}
+
+\begin{defn}
+    A language $L$ is said to be co-Turing recognizable if its complement is Turing recognizable.
+\end{defn}
+
+\section{Content}
+
+\section{Closure properties}
+\paragraph{Decidable languages} The class of decidable languages is closed under $\cap, \cup, \cdot, *$ and complementation.
+        \begin{enumerate}
+            \item $\cap$ -- copy $x$ to tape $2$, simulate $M_1$ on tape $1$, $M_2$ on tape $2$, and if both accept $x$, accept $x$ else reject $x$.
+            \item $\cup$ -- similar.
+            \item $\cdot$ -- construct 2-tape NTM for $L_1 \cdot L_2$: Non-deterministically cut a suffix of $x$ from tape 1, and paste on tape $2$, and then simulate both.
+            \item $*$ -- while $x \ne \epsilon$: non-deterministically cut a nonempty prefix of $x$ from tape 1, and paste on tape 2, simulate $M$ on tape 2, and if $M$ rejects its input, then
+                reject $x$. After the while loop is over, accept $x$.
+            \item complementation -- swap $q_{acc}, q_{rej}$ in the DTM (not the NTM).
+        \end{enumerate}
+\paragraph{Turing-recognizable languages} The class of Turing recognizable languages is closed under $\cap, \cup, \cdot, *$ -- same constructions in case of decidable languages, just take care
+of the possibility of non-terminating runs in the proof (just stay positive and think the iff version instead of arguing about the strings not in the language).
+
+\begin{ques}
+    Is the class of Turing recognizable languages closed under complementation?
+\end{ques}
+
+\begin{ques}
+    Is there a language which is recognizable but not decidable?
+\end{ques}
+
+\begin{ques}
+    Give an explicit unrecognizable language.
+\end{ques}
+
+\begin{note}
+    co-Turing recognizable is not the same as unrecognizable.\nl
+    For instance, if $L$ is regular, then $L^c$ is also regular, so both $L, L^c$ are recognizable as well as co-recognizable.
+\end{note}
+ \begin{note}
+     $L$ is co-recognizable is equivalent to saying that there exists a Turing machine $M$ such that $x \not\in L$ iff $M$ on $x$ halts and rejects -- for a construction, swap accepting and
+     rejecting states in the TM of $L^c$.
+ \end{note}
+
+ \begin{obs}
+     If $L$ is decidable then $L$ is recognizable.\nl
+     If $L$ is decidable then $L$ is co-recognizable (since $L$ decidable $\implies$ $L^c$ decidable $\implies$ $L^c$ recognizable).\nl
+\end{obs}
+
+\begin{theorem}
+    A language $L$ is decidable iff $L$ is recognizable as well as co-recognizable.
+\end{theorem}
+\begin{proof}
+    The forward direction is as in the previous observation.\nl
+    For the backward diretion, suppose $L$ is recognizable as well as co-recognizable. Let $M$ be a DTM which recognizes $L$ and $M'$ be a DTM which recognizes $L^c$. Consider the
+    2-tape DTM $D$ which on input $x$ does the following:
+    \begin{enumerate}
+        \item Copy $x$ from tape 1 to tape 2.
+        \item Simulate $M$ on tape 1 and $M'$ on tape 2 in parallel.
+        \item If $M$ halts earlier, abort $M'$ and follow $M$'s decision. Else if $M'$ halts earlier, abort $M$ and invert $M'$'s decision. The other case never arises, since either $x$ is in $L$
+            or in $L^c$, so either $M$ accepts $x$ or $M'$ accepts $x$.
+    \end{enumerate}
+    Note that if $D$ accepts $x$, then $x \in L$ and if $D$ rejects $x$, then $x \in L$.\nl
+    By construction, $D$ is a decider for $L$, so $L$ is decidable.
+\end{proof}
+
+Goal: Construct an unrecognizable language.\nl
+
+Recall the proof of the fact that $2^{\mb{N}}$ is uncountable from COL202.\nl
+Flipping the incidence matrix diagonal is equivalent to considering $\{i \mid i \not\in S_i\}$ and this set is different from each $S_j$.\nl
+
+Recall that the set of TMs over any fixed finite alphabet $\Sigma$ is countable (using binary encoding).\nl
+Let $M_w$ be the DTM whose description is $w$ where $w \in \Sigma$, and if $w$ is not the description of any DTM, then we define $M_w$ to be the DTM where $q_0 = q_{rej}$, $\Gamma = \Sigma \cup
+\{\blank\}$, $Q = \{q_{acc}, q_{rej}\}$.\nl
+
+Now consider the set of strings $w_i$ in $\Sigma^*$, and for each of those, consider $M_{w_i}$ in $\Sigma^*$. Let $A$ be a matrix where $a_{ij} = 1$ iff $M_{w_i}$ accepts $w_j$, and $0$
+otherwise.\nl
+
+Define $\mf{DIAG} = \{w \in \Sigma^* \mid M_w \text{ does not accept } w\}$.
+
+\begin{theorem}
+    $\mf{DIAG}$ is unrecognizable.
+\end{theorem}
+
+\begin{proof}
+    Suppose not. Let $R$ be a DTM that recognizes $\mf{DIAG}$. Then $R = M_w$ for some $w \in \Sigma^*$. Does $R$ accept $w$?\nl
+    If $M_w$ accepts $w$, then by the definition of $\mf{DIAG}$, $w \not\in \mf{DIAG}$. But $M_w$ recognizes $\mf{DIAG}$, so by assumption since $M_w$ accepts $w$, we have $w \in
+    \mf{DIAG}$, which is a contradiction.\nl
+    If $M_w$ doesn't accept $w$, it follows that $w \not\in \mf{DIAG}$ from the fact that $M_w$ recognizes $\mf{DIAG}$. But from the definition of $\mf{DIAG}$, since $M_w$ doesn't accept $w$, $w \in
+    \mf{DIAG}$, which is a contradiction.
+\end{proof}
+
+\end{document}

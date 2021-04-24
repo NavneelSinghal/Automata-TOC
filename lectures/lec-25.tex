@@ -1,0 +1,338 @@
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+% \usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{import}
+\usepackage{pdfpages}
+\usepackage{transparent}
+\usepackage{xcolor}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+
+\usepackage{thmtools}
+\usepackage{enumitem}
+\usepackage[framemethod=TikZ]{mdframed}
+
+\usepackage{xpatch}
+
+\usepackage{boites}
+\makeatletter
+\xpatchcmd{\endmdframed}
+{\aftergroup\endmdf@trivlist\color@endgroup}
+{\endmdf@trivlist\color@endgroup\@doendpe}
+{}{}
+\makeatother
+
+%\usepackage[poster]{tcolorbox}
+%\allowdisplaybreaks
+%\sloppy
+
+\usepackage[many]{tcolorbox}
+
+\xpatchcmd{\proof}{\itshape}{\bfseries\itshape}{}{}
+
+% to set box separation
+\setlength{\fboxsep}{0.8em}
+\def\breakboxskip{7pt}
+\def\breakboxparindent{0em}
+
+\newenvironment{proof}{\begin{breakbox}\textit{Proof.}}{\hfill$\square$\end{breakbox}}
+\newenvironment{ans}{\begin{breakbox}\textit{Answer.}}{\end{breakbox}}
+\newenvironment{soln}{\begin{breakbox}\textit{Solution.}}{\end{breakbox}}
+
+% \tcolorboxenvironment{proof}{
+%     blanker,
+%     before skip=\topsep,
+%     after skip=\topsep,
+%     borderline={0.4pt}{0.4pt}{black},
+%     breakable,
+%     left=12pt,
+%     right=12pt,
+%     top=12pt,
+%     bottom=12pt,
+% }
+%
+% \tcolorboxenvironment{ans}{
+%     blanker,
+%     before skip=\topsep,
+%     after skip=\topsep,
+%     borderline={0.4pt}{0.4pt}{black},
+%     breakable,
+%     left=12pt,
+%     right=12pt,
+% }
+
+\mdfdefinestyle{enclosed}{
+    linecolor=black
+    ,backgroundcolor=none
+    ,apptotikzsetting={\tikzset{mdfbackground/.append style={fill=gray!100,fill opacity=.3}}}
+    ,frametitlefont=\sffamily\bfseries\color{black}
+    ,splittopskip=.5cm
+    ,frametitlebelowskip=.0cm
+    ,topline=true
+    ,bottomline=true
+    ,rightline=true
+    ,leftline=true
+    ,leftmargin=0.01cm
+    ,linewidth=0.02cm
+    ,skipabove=0.01cm
+    ,innerbottommargin=0.1cm
+    ,skipbelow=0.1cm
+}
+
+\mdfsetup{%
+    middlelinecolor=black,
+    middlelinewidth=1pt,
+roundcorner=4pt}
+
+\setlength{\parindent}{0pt}
+
+\mdtheorem[style=enclosed]{theorem}{Theorem}
+\mdtheorem[style=enclosed]{lemma}{Lemma}[theorem]
+\mdtheorem[style=enclosed]{claim}{Claim}[theorem]
+\mdtheorem[style=enclosed]{ques}{Question}
+\mdtheorem[style=enclosed]{defn}{Definition}
+\mdtheorem[style=enclosed]{notn}{Notation}
+\mdtheorem[style=enclosed]{obs}{Observation}
+\mdtheorem[style=enclosed]{eg}{Example}
+\mdtheorem[style=enclosed]{cor}{Corollary}
+\mdtheorem[style=enclosed]{note}{Note}
+
+% \let\thetheorem=\relax
+% \let\thelemma=\relax
+% \let\theclaim=\relax
+% \let\theques=\relax
+% \let\thedefn=\relax
+% \let\thenotn=\relax
+% \let\theobs=\relax
+% \let\thecor=\relax
+% \let\thenote=\relax
+
+% \renewcommand\qedsymbol{$\blacksquare$}
+\newcommand{\nl}{\vspace{0.2cm}\\}
+\newcommand{\mc}{\mathcal}
+\newcommand{\mi}{\mathit}
+\newcommand{\mf}{\mathbf}
+\newcommand{\mb}{\mathbb}
+\renewcommand{\L}{\mc{L}}
+\newcommand{\hd}{\hat{\delta}}
+\newcommand{\produces}{\implies}
+\newcommand{\derives}{\stackrel{*}{\implies}}
+\newcommand{\changesto}{\vdash}
+\newcommand\Vtextvisiblespace[1][.3em]{%
+    \mbox{\kern.06em\vrule height.3ex}%
+    \vbox{\hrule width#1}%
+    \hbox{\vrule height.3ex}
+}
+\newcommand{\blank}{{\Vtextvisiblespace[0.7em]}}
+\newcommand{\leftend}{\triangleright}
+
+\newcommand{\incfig}[1]{%
+    \def\svgwidth{\columnwidth}
+    \import{./figures/}{#1.pdf_tex}
+}
+\pdfsuppresswarningpagegroup=1
+
+\title{\textbf{COL352 Lecture 25}}
+\date{}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Recap}
+
+Completed PDAs and grammars last time.
+
+\section{Definitions}
+
+\begin{defn}
+    A \underline{Deterministic Turing Machine} (DTM) is a 8-tuple of the form $(Q, \Sigma, \Gamma, \delta, q_0, \blank, q_{acc}, q_{rej})$ where
+    \begin{enumerate}
+        \item $Q$ is a finite set of states
+        \item $\Sigma$ is a finite alphabet
+        \item $\Gamma \supsetneq \Sigma$ is the tape alphabet
+        \item $q_0 \in Q$ is the initial state
+        \item $\blank \in \Gamma \setminus \Sigma$ is a blank symbol (tape initially contains input $x \in \Sigma^*$ followed by infinitely many $\blank$).
+        \item $q_{acc} \in Q$ is the accepting state, $q_{rej} \in Q$ is the rejecting state, and $q_{acc} \ne q_{rej}$
+        \item $\delta : (Q \setminus \{q_{acc}, q_{rej}\}) \times \Gamma \to Q \times \Gamma \times \{L, R\}$.
+            Here the first input is the current state, second input is current tape content, the first component of the output is the new state, second is new tape content, and third is the
+            direction in which we need to move.
+    \end{enumerate}
+    If the machine is reading the leftmost tape cell and it makes a leftward move, the location of the head doesn't change.
+\end{defn}
+
+\begin{defn}
+    A DTM $M$ accepts $x \in \Gamma^*$ if $\exists x_1, x_2 \in \Gamma^* : (\epsilon, q_0, x) \changesto^*_M (x_1, q_{acc}, x_2)$.
+\end{defn}
+
+\begin{defn}
+    $L \in \Sigma^*$ is said to be recognised by $M$ if $\forall x \in \Sigma^*$ : $x \in L \iff M$ accepts $x$.
+\end{defn}
+
+\begin{defn}
+        $L$ is said to be Turing-recognisable if it is recognised by some DTM.
+\end{defn}
+
+\begin{defn}
+        A Turing machine $M$ is called a \underline{decider} if it halts on every input $x \in \Sigma^*$, i.e.,
+        \[
+            \forall x \in \Sigma^* : \exists x_1, x_2 \in \Gamma^* : (\epsilon, q_0, x) \changesto^* (x_1, q_{acc}, x_2) \text{ or } (\epsilon, q_0, x) \changesto^* (x_1, q_{rej}, x_2)
+        \]
+        A language $L \in \Sigma^*$ is said to be \underline{decided}  by $M$ if $M$ is a decider and $L$ is recognised by $M$.
+\end{defn}
+
+\begin{defn}
+        $L \in \Sigma^*$ is said to be \underline{decidable} if it is decided by some DTM $M$.
+\end{defn}
+
+\begin{defn}
+        A $2-$tape DTM is $(Q, \Sigma, \Gamma, \delta, q_0, \blank, q_{acc}, q_{rej})$, where $Q, \Sigma, \Gamma, q_0, \blank, q_{acc}, q_{rej}$ are as before, and $\delta : (Q \setminus
+        \{q_{acc}, Q_{rej}\}) \times \Gamma^2 \to Q \times \Gamma^2 times \{L, R, S\}^2$.
+\end{defn}
+
+For now, $S$ is used since moving both tape heads preserves parity of sum of locations, except for the borders.
+
+The language recognised or decided by 2-tape DTM is defined analogously.
+
+\begin{defn}
+    \textbf{Non-Deterministic Turing Machines}\nl
+    A nondeterministic Turing Machine is an 8-tuple $(Q, \Sigma, \Gamma, \Delta, q_0, \blank, q_{acc}, q_{rej})$, where $Q, \Sigma, \Gamma, q_0, \blank, q_{acc}, q_{rej}$ are the same as in the
+    definition of DTMs.\nl
+    $\Delta$ is a relation on $(Q \setminus \{q_{acc}, q_{rej}\} \times \Gamma) \times (Q \times \Gamma \times \{L, R\}$.
+\end{defn}
+
+\begin{defn}
+    A nondeterministic Turing Machine $N$ accepts $x \in \Sigma^*$ if there \underline{exists} an accepting run of $N$ on $x$.\nl
+    Language recognized by $N$ is the set of all $x$ accepted by $N$.
+\end{defn}
+
+\begin{defn}
+    An NTM is called a \underline{nondeterministic decider} if $\forall x \in \Sigma^*$ \underline{every} run of $N$ on $x$ halts.\nl
+    A language decided by a nondetermistic decider $N$ : set of all $x$ accepted by $N$.\nl
+\end{defn}
+
+\section{Content}
+
+\begin{ques}
+    What is the set of instantaneous descriptions of a DTM?
+\end{ques}
+
+\begin{ans}
+    Set of instantaneous description = $\Gamma^* \times Q \times \Gamma^*$, and a state $(x_1, q, x_2)$ is the following:    
+    $x_1$ is the part of the tape that is strictly to the left of the current head, and $x_2$ is the remaining part (leaving out the trailing blanks).
+    
+\end{ans}
+
+    Exercise: Formally define the ``changes to" relation $\changesto_M$ on the set of instantaneous descriptions.\nl
+    $\changesto^*_M$ is the reflexive transitive closure of $\changesto_M$.\nl
+
+\begin{claim}
+        $\forall L \in \Sigma^*$, $L$ is decidable $\implies$ $L$ is Turing-recognisable.
+\end{claim}
+\begin{proof}
+        Definition.
+\end{proof}
+
+Note that we will see later on that the opposite direction is not true.\nl
+
+\subsection{2-tape DTM}
+
+We now have two tapes.
+
+Observe that
+
+\begin{theorem}
+        $L$ recognised by a DTM $\iff$ $L$ recognised by a 2-tape DTM.\nl
+        $L$ decided by a DTM $\implies$ $L$ decided by a 2-tape DTM.
+\end{theorem}
+
+\begin{proof}
+    The forward implication is obvious (just don't use the second tape).\nl
+    Consider the instantaneous description of the 2-tape DTM -- $(x_1, y_1)$ and $(x_2, y_2)$ being the corresponding strings before and not before the tape head on both tapes, and let $\square$ be the blank symbol of the 2-tape DTM.\nl
+    Our single tape DTM would have the following:
+    $\leftend x_1 \to y_1 \square \ldots \square \# x_2 \to y_2 \square \ldots \square 
+    \blank \ldots $\nl
+    Call the 2-tape one $M_2$ and the 1-tape one $M_1$.\nl
+    $M_1 = (Q, \Sigma, \Gamma, \delta, q_0, \square, q_{acc}, q_{rej})$\nl
+    $M_2 = (Q', \Sigma, \Gamma \cup \{\leftend, \to, \#, \blank\}, q_0', \blank, q_{acc}', q_{rej}')$\nl
+    \paragraph{Behaviour of $M_1$}
+    \begin{enumerate}
+        \item Preprocess phase\nl
+            To establish the invariant, we need to change $x \blank \ldots $ to $\leftend \to x \# \to \blank \ldots$
+        \item Simulation phase\nl
+            We shall store (state of $M_2$, symbol from $\Gamma$, symbol from $\Gamma$, $L/R/S$, $L/R/S$).\nl
+            For each transition of $M_2$, $M_1$ makes three passes over the tape.
+            \begin{enumerate}
+                \item Insert $\square$ before the $\#$ and overwrite the leftmost $\blank$ by $\square$.
+                \item Read the symbols after the two $\to$s and save them in the state.
+                \item Execute the transitions of $M_2$ in $M_1$ (doesn't need a complete pass of its own).
+                \item Implement the transitions on the tape: overwrite the cells next to the $\to$s and move the $\to$s.
+            \end{enumerate}
+            For instance, if $\delta(q, a, b) = (c, d, R, L)$, then the state changes from $(q, a, b, \_, \_, \ldots)$ to $(q', c, d, R, L, \ldots)$, where the dots are for more information
+            maintained in other passes, and also stores pass number.
+    \end{enumerate}
+\end{proof}
+
+\begin{ques}
+    Suppose $M_2$ runs in time $T(n)$ on inputs of length $n$. What is the running time of $M_1$?
+\end{ques}
+
+\begin{ans}
+    $O(T(n)^2)$, since the length of the content on the tape of $M_1$ after simulating $t$ steps of $M_2$ is $|x| + 2t + c$ where $c$ is a constant, so the simulation of the $(t + 1)$-th step
+    of $M_2$ of $M_2$ takes time $\approx 3(|x| + 2t + c)$, and if we sum it from $t = 1$ to $T(n)^2$.
+\end{ans}
+
+\begin{note}
+    It might be much easier to exhibit a 2-tape Turing machine instead of a 1-tape Turing machine, and more efficient too.
+\end{note}
+\begin{eg}
+    Set of palindromes over $\Sigma$: on a 1-tape DTM, the obvious algorithm takes time $\Omega(n^2)$ in the worst case -- pass from char 1 to char $n$ to char $2$ and so on.\nl
+    On a 2-tape DTM, copy the reverse of $x$ on tape $2$, and then compare -- this is $O(n)$.
+\end{eg}
+
+Exercise: Prove that the classes of Turing-recognisable and decidable languages are closed under union and intersection.
+\begin{ans}
+    Just run in parallel on both tapes after copying to second tape -- acceptance criteria -- and/or.
+\end{ans}
+
+Exercise: Prove that DTMs with 2-way $\infty$ tape can be simulated by 2-tape DTMs.\nl
+
+\begin{ques}
+    Can we simulate an NTM by a 2-tape DTM?
+\end{ques}
+\begin{ans}
+    Yes, we can.
+\end{ans}
+
+\begin{theorem}
+    If $L$ is recognised (respectively decided) by an NTM, then $L$ is recognised (resp. decided) by a 2-tape DTM, and therefore also by a DTM.
+\end{theorem}
+
+\begin{proof}
+    Recognisability:\nl
+    Label transitions in $\Delta$ as $T_0, T_1, \ldots, T_{m-1}$, where $m = \Delta$.\nl
+    Idea: iterate over all possible strings $\rho$ in $\{0, \ldots, m - 1\}^*$, and hold $\rho$ on tape $2$.\nl
+    Simulate the run given by $\rho$ on tape $1$.
+    \begin{enumerate}
+        \item If it terminates and accepts $x$, then accept.
+        \item If for some $i$, the $i^\mathrm{th}$ transition in $\rho$ is not applicable, then break the simulation.
+        \item If you run out of transitions, i.e., $\rho$ is too small, then break the simulation.
+    \end{enumerate}
+    $N$ accepts $x$ iff there exists an accepting run of $N$ on $x$. Let $\rho^*$ be the sequence of transitions taken in the accepting run. When tape $2$ contains $\rho^*$, then the simulation
+    accepts $x$.\nl
+    Conversely, if the simulation accepts, look at the content of tape 2. That must be an accepting run of $N$ on $x$.\nl
+    Implementation details:
+    \begin{enumerate}
+        \item Store $x\#\rho$ on tape $2$ instead of just $\rho$ (for each $\rho$, erase tape 1, copy $x$ on tape $2$, then start the simulation).
+        \item Observe that given any $\rho$, the next $\rho$ can be computed by a single tape DTM.
+    \end{enumerate}
+\end{proof}
+
+\end{document}
