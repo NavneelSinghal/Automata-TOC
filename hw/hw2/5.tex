@@ -1,0 +1,40 @@
+\begin{soln}
+Let $L_R$ be the language corresponding to the regular expression $R = (abc \cup bac)^*$. $L_R$ is, of course, regular because regular expressions only generate regular languages. Now, denote by $L$ the following language (which we need to show is not regular) -
+\[
+L = \{x\in\{a,b,c\}^*\text{ }|\text{ }x\text{ contains an equal number of occurrences of }ab\text{ and }ba\}
+\]
+
+Suppose $L$ is regular. Then this implies that the language $L' = L \cap L_R$ must also be regular as regular languages are closed under intersection operation. Therefore, to show that that $L$ is not regular it is sufficient to show that $L'$ is not regular.
+
+\begin{claim}
+$L'$ is not a regular language.
+\end{claim}
+\begin{proof}
+By definition $L' = L \cap L_R$ therefore $L'$ can be written as
+\[
+    L' = \{ x \in L_R | \quad x \text{ has equal number of occurrences of }ab\text{ and }ba\}
+\]
+\[
+    \implies L' = \{ x \in L_R | \quad x \text{ has equal number of occurrences of }abc\text{ and }bac\}
+\]
+If $L'$ is regular then it must satisfy the pumping lemma. But, consider the string $s = (abc)^p (bac)^p \in L'$ for any $p \in \mathbb{N}$.
+\begin{claim}
+    It is not possible to partition $s$ into 3 strings $x, y, z$ such that
+    \begin{enumerate}
+        \item $|y| > 0$, and
+        \item $|xy| \leq p$, and
+        \item $x y^i z \in L'$ for all $i \in \mathbb{N} \cup \{0\}$
+    \end{enumerate}
+\end{claim}
+\begin{proof}
+Consider any partition of $s = xyz$ such that conditions $(1)$ and $(2)$ hold. Then $xy$ will be a prefix of $s$ strictly smaller than the prefix $(abc)^p$. Now we make cases on the string $y$.
+\begin{enumerate}
+    \item $y$ is of form $(abc)^k$ for some $k > 0$. This implies $x$ must also be of form $(abc)^{k_1}$ for some choice of $k_1 \geq 0$, and $z$ will be of form $(abc)^{k_2} (bac)^p$ for some $k_2 > 0$. Hence the \emph{pumped down} string $x y^0 z$ will be of form $(abc)^{k_1} (abc)^{k_2} (bac)^p$ where $k_1 + k_2 < p$ as $k_1 + k_2 + k = p$ and $k > 0$. Note that this \emph{pumped down} string is in $L_R$ but not in the language $L'$.
+    \item $y$ is not of form $(abc)^k$. Even in this case, the \emph{pumped down} string $x y^0 z$ will either be not in $L_R$ or it will not be in $L'$ because of removal of atleast 1 character from the string as we have that $xy$ is a prefix smaller than $(abc)^p$.
+\end{enumerate}
+Hence, in either case we have shown that the $(3)$ condition can never hold for all $i \in \mathbb{N}$.
+\end{proof}
+Since $L'$ does not satisfy the pumping lemma which is the necessary condition for a language to be regular, we have that $L'$ can not be regular. Hence, the proof is complete.
+\end{proof}
+Since $L'$ is not regular, $L$ can not be regular as well, by contradiction. Hence the solution is complete.
+\end{soln}

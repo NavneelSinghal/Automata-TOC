@@ -1,0 +1,13 @@
+Let Σ\SigmaΣ be a finite alphabet and let '≤\leq≤' be a total order on Σ\SigmaΣ. This order can be extended to a total order on Σ∗\Sigma^*Σ∗ as follows. For x,y∈Σ∗x,y\in\Sigma^*x,y∈Σ∗, we say x≤yx\leq yx≤y if one of the following is true.
+\begin{itemize}
+\item ∣x∣<∣y∣|x|<|y|∣x∣<∣y∣.
+\item ∣x∣=∣y∣|x|=|y|∣x∣=∣y∣ and yyy does not precede $x$ in the dictionary order induced by '≤\leq≤'. (Formally, there doesn't exist an index iii such that x[1..i−1]=y[1..i−1]x[1..i-1]=y[1..i-1]x[1..i−1]=y[1..i−1] and y[i]<x[i]y[i]<x[i]y[i]<x[i].)
+\end{itemize}
+Recall the definition of an enumerator and an enumerable language from Homework 4. We say that a language LLL is sorted-enumerable\textit{sorted-enumerable}sorted-enumerable if there exists an enumerator which prints all strings in LLL exactly once and in sorted order according to '≤\leq≤', and doesn't print any string not in LLL.
+
+
+Prove that every decidable language is sorted-enumerable.
+
+Prove that every sorted-enumerable language is decidable.
+
+Fix a finite alphabet Σ\SigmaΣ and, as usual, for every w∈Σ∗w\in\Sigma^*w∈Σ∗, let MwM_wMw​ denote the Turing machine over Σ\SigmaΣ whose description is www (if www doesn't legally describe a Turing Machine, then MwM_wMw​ is some fixed Turing machine, say the one whose initial and reject states are the same, has no state other than the accept and the reject state, and has no extra tape symbol apart from the alphabet and the blank symbol). Let InfVisit\texttt{InfVisit}InfVisit be the set of all strings www for which there exists an x∈Σ∗x\in\Sigma^*x∈Σ∗ such that MwM_wMw​ when run on xxx visits every cell of its tape infinitely many times. Is InfVisit\texttt{InfVisit}InfVisit decidable? Prove your answer.

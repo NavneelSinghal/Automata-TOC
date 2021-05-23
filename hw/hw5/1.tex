@@ -1,0 +1,35 @@
+\begin{soln}
+    We break the proof into two parts.
+    \begin{claim}
+        \texttt{HittingSet} is in \texttt{NP}. 
+    \end{claim}
+    \begin{proof}
+        First note that if there is a hitting set of size $k$, and $k \le |U|$, then there is a hitting set of size $k'$ where $k \le k' \le |U|$ (by adding in superfluous elements).
+        A non-deterministic Turing machine can be constructed for the following algorithm that solves the problem in polynomial time:
+        \begin{enumerate}
+            \item Choose a set of size $k$ non-deterministically.
+            \item If this set has a non-empty intersection with every set in $\mathcal{S}$, then accept the input, else reject the input.
+        \end{enumerate}
+        Since each step can be done in polynomial time non-deterministically, we are done.
+    \end{proof}
+    \begin{claim}
+        \texttt{VertexCover} is polynomial-time reducible to \texttt{HittingSet}. 
+    \end{claim}
+    \begin{proof}
+        Suppose $(G = (V, E), k)$ is a pair of a graph and an integer. Consider the tuple $(V, \{\{u, v\} \mid (u, v) \in E\}, k)$ as an input for the \texttt{HittingSet} problem. Note that
+        constructing this input from the original input is possible in deterministic polynomial time. Now we claim the following.\nl
+        \begin{claim}
+            $(G = (V, E), k) \in \mathtt{VertexCover} \iff (V, \{\{u, v\} \mid (u, v) \in E\}, k) \in \mathtt{HittingSet}$
+        \end{claim}
+        \begin{proof}
+            First, suppose that $(G = (V, E), k) \in \mathtt{VertexCover}$. Let $F$ be a vertex cover of $G$ of size $\le k$. Then for each edge $(u, v)$, one of $(u, v)$ is in $F$. Hence, $F \cap
+            \{u, v\} \ne \emptyset \forall (u, v) \in E$, which implies that $(V, \{\{u, v\} \mid (u, v) \in E\}, k) \in \mathtt{HittingSet}$, since $F$ is such a \emph{hitting set} of the
+            collection of subsets (the problem is well-formed trivially).\nl
+            Now suppose that $(V, \{\{u, v\} \mid (u, v) \in E\}, k) \in \mathtt{HittingSet}$. This implies that there is a set $H$ of size $\le k$ such that $H \subseteq V$, and $H \cap \{u, v\}
+            \ne \emptyset \forall (u, v) \in E$. This means $H$ is a vertex cover of size $\le k$ for the graph $G$, and thus $(G, k) \in \mathtt{VertexCover}$, as needed.
+        \end{proof}
+        This claim shows that this reduction is indeed valid, and hence Claim 1.2 holds.
+    \end{proof}
+    The second claim implies, from the fact that \texttt{VertexCover} is \texttt{NP}-hard, that \texttt{HittingSet} is also \texttt{NP}-hard. The first claim shows that it is in \texttt{NP}, which
+    when combined with the previous sentence implies that it is indeed \texttt{NP}-complete. 
+\end{soln}

@@ -1,0 +1,113 @@
+Q1.
+
+State whether each of the following statements is true or false. Substantiate each answer with a short (ideally, at most 3 sentences of) justification. (Answers with incorrect and insufficient justifications get 0 marks.)
+
+1. If L_1,L_2,L_3 are languages on the same alphabet such that each of \sim_{L_1}, \sim_{L_2}, \sim_{L_3} has 7 equivalence classes, then \sim_{(L_1\cup L_2\cup L_3)} has at most 343 equivalence classes.
+
+Let C_i, D_i, E_i be the respective equivalence classes. Then A_{ijk} = (C_i \cap D_j \cap E_k) is a refinement of the equivalence classes of the given relation.
+
+Proof: If two strings x and y are in the C_i \cap D_j \cap E_k, this means that for all strings z, either xz and yz are in L_1 or they are not, are in L_2 or they are not, are in L_3 or they are not, from which it follows that they are both either in (L_1 union L_2 union L_3) or they are not. So x and y are in this set.
+Now note that all of them are disjoint, for a proof, suppose A_{ijk} and A_{i'j'k'} are two different sets. Then they differ in at least one of the "coordinates", wlog, let i \neq i'. Then C_i and C_i' are disjoint, so since A_{ijk} \cap A_{i'j'k'} = C_i \cap (something_1) \cap C_i' \cap (something_2) = C_i \cap C_i' \cap (something_3) = empty set.
+And all elements are in one of these sets by construction, proving our claim.
+
+So there are at most 7 * 7 * 7 = 343 equivalence classes.
+
+2. There exists a language that can be recognized by some NPDA with 4 stacks but cannot be recognized by any NPDA with 3 stacks.
+
+Any Turing machine can simulate any NPDA with k stacks for k being any positive integer (using a proof similar to that in the homework). A NPDA with 2 stacks can simulate a Turing machine. A NPDA with 4 stacks can simulate a 3 stack NPDA, and a 3 stack NPDA can simulate a 2 stack NPDA, so both 4 stack and 3 stack NPDAs can simulate a Turing machine.
+Since Turing machines can simulate any NPDA with k stacks, both 4 stack and 3 stack NPDAs are as powerful as a Turing machine (and no more).
+
+3. A language is Turing-recognisable if and only if it is mapping-reducible to A_{\text{TM}}, the membership language of Turing machines.
+
+Language L Turing recognizable => mapping reducible to A_TM is true (for instance, suppose M is a Turing machine recognizing L, then for an input x, map the input to (<L>, x) as an input for A_TM).
+
+L mapping reducible to A_TM => L is Turing recognizable is true because of the following. Suppose not. Then we have a reduction L <= A_TM where L is Turing unrecognizable. Hence A_TM must be Turing unrecognizable, which is a contradiction.
+
+4. If L_1 and L_2 are languages on the same alphabet \Sigma, L_1 is in P, and L_2 is neither empty nor \Sigma^*, then L_1 is Karp-reducible to L_2 necessarily.
+
+Reduce the input as follows:
+
+Let X be a string in L_2 and let Y be a string not in L_2 (both exist because of condition on L_2)
+
+1. On the input x, run the polynomial time deterministic decider for L_1, and let the output be b.
+2. if b is true, then write X on the tape, else write Y on the tape.
+3. go to the first cell of the tape.
+
+Note that this is a polynomial time algorithm.
+Proof that it is correct:
+Suppose x is in L_1. Then the decider returns true, and hence we return X, which is in L_2.
+Suppose x is not in L_2. Then the decider returns false, and hence we return Y, which is not in L_2.
+Hence this is a correct Karp reduction.
+
+Q2.
+
+Let \Sigma be a finite alphabet and let L_0,L_1\subseteq\Sigma^* be languages such that L_0\cap L_1=\emptyset. Think of L_0 and L_1 as the sets of "bad" and "good" strings respectively. We wish to design an automaton which is guaranteed to reject every string in L_0 and accept every string in L_1. Our automaton is allowed to behave arbitrarily on strings that are neither in L_0 nor in L_1. In other words, our automaton is required to recognize some language L\subseteq\Sigma^* such that L\cap L_0=\emptyset and L\supseteq L_1. For concreteness, let us say that we are looking for a DFA over the alphabet \Sigma=\{0,1\}. Also, let L_0=\{x\in\{0,1\}^*\mid\text{the number of 0's and 1's in }x\text{ are unequal}\} and L_1=\{0^n1^n\mid n\in\mathbb{N}\cup\{0\}\}. Observe that L_0\cap L_1=\emptyset. Does there exist such a DFA which accepts every string in L_1 and rejects every string in L_0? Prove your answer.
+
+We will use the pumping lemma to show that this is impossible.
+
+Suppose there does exist such a DFA. Then the language L of the DFA has L_1 as its subset, and L has an empty intersection with L_0.
+
+There exists a length p such that for all strings s, with |s| >= p, we have x, y, z in Sigma* such that s = xyz, |y| > 0, |xy| < p, and for all non-negative integers i, xy^iz is in L.
+
+Now consider the string w = 0^{p}1^{p}. So there exist x, y, z satisfying the above property. So we have xy as a prefix of 0^p because of the third constraint. Suppose x = 0^a and y = 0^b, with b > 0.
+
+Now consider i = 1 in the lemma. This implies that 0^{a}0^{2b}1^{p} = 0^{p+b}1^{p} is in the language L. But these have an unequal number of 0s and 1s since b > 0, so this string is also in L_0. Hence, L_0 and L have a non-empty intersection.
+
+However, by the assumption, L has an empty intersection with L_0, which is a contradiction.
+
+This implies that such a DFA can't exist.
+
+Q3
+
+Consider a graph G=(V,E). Recall that if $G$ is connected, then $G$ contains a spanning tree, i.e., a tree that connects all the vertices to one another, and that every such spanning tree has exactly |V| - 1 edges. Now, instead of connecting all vertices, suppose our task is to build a tree and connect a given subset S\subseteq V of vertices to one another, possibly through vertices not in S. Obviously, we will need at least ∣S∣−1 edges. However, depending on the graph, we might need many more. An extreme case is where if G is a path and S contains only the two endpoints, in which case our tree must include all the edges. Thus, it makes sense to find a tree in G which connects vertices in S to one another and which has as few edges as possible.
+
+The decision version of this problem, which we will call SetSpanningTree, is as follows. The input is a graph G=(V,E), a set S\subseteq V, and an integer k. We want to accept such an input if and only if G contains a tree which connects vertices in S to one another, and which has at most k edges. Our goal here is to prove that SetSpanningTree is NP-complete.
+
+1. Prove that SetSpanningTree is in NP by giving a non-deterministic polynomial-time algorithm.
+
+Consider the following algorithm:
+
+1. Non-deterministically choose an integer k' between 0 and k, and choose a subset E' of size k' of E.
+2. Construct a graph (V, E') and check (using a DFS/BFS) if there exist paths between each pair of vertices in S.
+3. If there exist paths between each pair of vertices, accept the input, else reject the input.
+
+Suppose the answer for an instance of the input is true. Then there must exist a choice of the set of at most k edges E', which connects vertices in S to one another. Then note that we non-deterministically choose that set in one of the runs of the NTM. By the choice of this set E', the third step must accept, and we are done.
+
+Suppose the answer for an instance of the input is false. We claim that we reject the input in such a case. For the sake of contradiction, suppose we don't. Then there is a set E' of edges with |E'| <= k such that there are paths between each pair of vertices in S with edges in E'. This means that the answer for that instance of the input should have been true, which is a contradiction.
+
+Now note that DFS is polynomial time, and it is run at most O(|S|^2) times, which is in O(|V|^2). So the time taken for the second step is in O(|V|^2(|V| + |E|)), and the last step takes O(1) time (here time is number of transitions in the relevant Turing Machine).
+
+So this algorithm is indeed polynomial time.
+
+2. Prove that SetSpanningTree is NP-hard by giving an appropriate Karp-reduction, and proving that it is correct and it runs in polynomial time.
+
+We give a Karp-reduction from VertexCover to SetSpanningTree.
+On input (G=(V,E),k):
+Construct graph H as follows.
+For each v in V, take a vertex x_v.
+For each e in E, take a vertex y_e.
+For each v in V and e in E, connect x_v and y_e in H iff v is an endpoint of e in G.
+Take one more vertex z, and connect it to each x_v.
+Let S = {y_e | e in E} union {z}.
+Return (H,S,k+|E|).
+
+Running time: linear in the size of input (on a usual computer).
+
+Claim 1: If G has a vertex cover of size (at most) k, then H contains a tree with (at most) k+|E| edges that connects S.
+
+Proof: Let C be a vertex cover of G of size (at most) k. Construct a tree T in H as follows. For each v in C, pick edge (z,x_v). For each e in E, find one endpoint v of e in C, and pick edge (x_v,y_e). Thus, each y_e is connected to z in T, so all vertices in S are connected to one another. Finally, |T| = |C| + |E|, which is (at most) k+|E|.
+
+Claim 2: If H contains a tree with (at most) k+|E| edges that connects S, then G has a vertex cover of size (at most) k.
+
+Proof: Let T be a tree in H with (at most) k+|E| edges that connects S. Let S' be the set of vertices spanned by T. Then |S'| is (at most) k+|E|+1. S' includes all the |E|+1 vertices in S, so S' contains at most k vertices of the form x_v for v in V. Let C = {v in V | x_v in S'}, so that |C| is (at most) k. We claim that C is a vertex cover of G. Consider any edge e in E. Since T connects z to y_e, some edge of H incident on y_e must be in T. That edge must be of the form (x_v,y_e) for some endpoint v of e. This implies x_v in S', and therefore, v in C. Thus, C covers e.
+
+Note that a Karp-reduction from HittingSet to SetSpanningTree is also possible as follows:
+
+For a family F of sets S_i all of which are subsets of U, do the following:
+
+Construct a graph with vertices as:
+1. a vertex v
+2. vertices u_i for each set S_i
+3. vertices w_x for each w in U
+
+Connect all w_x to v, and for each x in S_i, connect w_x to u_i. Now consider the instance of the SetSpanningTree problem where the set is the set of all w_x. It can be shown that this is a valid Karp reduction.

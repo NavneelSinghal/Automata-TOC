@@ -1,0 +1,105 @@
+\begin{soln}
+
+We begin with some notation for the sake of convenience.
+
+\begin{notn}
+For a string $z[1 \ldots n]$ and a sequence $I = I_1 < I_2 \cdots < I_k$ satisfying $\{I_1, I_2, \ldots, I_k\} \subseteq \{1, 2, \ldots n\}$, we define $z[I] = z[I_1] \cdot z[I_2] \cdots z[I_k]$.
+\end{notn}
+
+Since both $L_1, L_2$ are regular, they must be recognizable by a DFA. Let the DFAs be $D_1 = (Q_1, \Sigma, \delta_1, q_{10}, A_1)$ and $D_2 = (Q_2, \Sigma, \delta_2, q_{20}, A_2)$.\\
+
+Construct the NFA $N = (Q, \Sigma, \Delta, Q_0, A)$ where
+\begin{align*}
+    Q &= Q_1 \times Q_2 \\
+    \Delta \subseteq Q \times \Sigma \times Q &=
+        \{ ((q_1, q_2), a, (\delta_1(q_1, a), q_2)) \; \forall q_1, q_2 \in Q_1 \times Q_2 \; \forall a \in \Sigma \} \\
+    &\cup \{ ((q_1, q_2), a, (q_1, \delta_2(q_2, a))) \; \forall q_1, q_2 \in Q_1 \times Q_2 \; \forall a \in \Sigma \} \\
+    Q_0 &= \{ (q_{10}, q_{20} ) \} \\
+    A &= A_1 \times A_2
+\end{align*}
+
+We shall show that language recognized by the NFA $N$ is precisely the \textrm{shuffle} of $L_1$ and $L_2$.\\
+
+\begin{claim}
+$$\mathcal{L}(N) = \mathrm{shuffle}(L_1, L_2)$$
+\end{claim}
+
+To prove this claim we will prove that $\mathcal{L}(N) \subseteq \mathrm{shuffle}(L_1, L_2)$ as well as $\mathrm{shuffle}(L_1, L_2) \subseteq \mathcal{L}(N)$.\\
+
+\begin{claim}
+$\mathcal{L}(N) \subseteq \mathrm{shuffle}(L_1, L_2)$
+\end{claim}
+
+\begin{proof}
+Let $e = q_0 z_1 q_1 \ldots z_n q_n$ where $q_i \in Q$ and $z_i \in \Sigma$ be an accepting run of $N$. For any $1 \leq i \leq n$ we shall unpack $q_i \in Q_1 \times Q_2$ into $(q_i^1, q_i^2)$ (``components" of a state). Note that since $q_{i-1} z_i q_i \in \Delta$ we have $q_i = (\delta_1(q_{i-1}^1, z_i), q_{i-1}^2)$ or $(q_{i-1}^1, \delta_2(q_{i-1}^2, z_i))$. Also let
+
+\begin{align*}
+I_x(k) &= \{i \mid 1 \leq i \leq k \land q_i = (\delta_1(q_{i-1}^1, z_i), q_{i-1}^2) \}\\ 
+I_y(k) &= \{i \mid 1 \leq i \leq k \land q_i = (q_{i-1}^1, \delta_2(q_{i-1}^2, z_i)) \} \setminus I_x(k)
+\end{align*} 
+
+Note that since $A \cup (B \setminus A) = A \cup B$, we have $I_x(k) \cup I_y(k) = \{i \mid 1 \leq i \leq k \land q_i = (\delta_1(q_{i-1}^1, z_i), q_{i-1}^2) \} \cup \{i \mid 1 \leq i \leq k \land q_i = (q_{i-1}^1, \delta_2(q_{i-1}^2, z_i)) \} = \{i \mid 1 \le k \land \left(q_i = (\delta_1(q_{i-1}^1, z_i), q_{i-1}^2) \lor q_i = (q_{i-1}^1, \delta_2(q_{i-1}^2, z_i))\right)\} = \{1, \ldots, k\}$, where the last equality follows from the fact that any transition is of one of those forms. Also, $A$ and $B \setminus A$ are disjoint by definition. Hence $I_x(k)$ and $I_y(k)$ are disjoint and their union is $\{1, \ldots, k\}$, so $I_x(k)$ and $I_y(k)$ are disjoint partitions of $\{1, \ldots, k\}$. We shall prove the following induction hypothesis.
+
+
+\paragraph{Induction Hypothesis} $P(k)$ : For all $0 \leq k \leq n \;$ $q_k = (\hd_1(q_{10}, x(k)), \hd_2(q_{20}, y(k)))$, where $x(k) := z[I_x(k)]$ and $y(k) := z[I_y(k)]$
+
+\paragraph{Base Case} When $i=0$, $q_0 = (q_{10}, q_{20})$ as it is the only possible starting state in the NFA $N$.
+
+\paragraph{Inductive Case}
+
+Suppose we have shown that the inductive hypothesis holds for all $0 \leq k \leq i-1$. We shall now show that this implies that the hypothesis also holds for $k=i$.\\
+
+Since the inductive hypothesis holds for $k=i-1$ by assumption, then $q_{i-1} = (\hd_1(q_{10}, x(i-1)), \hd_2(q_{20}, y(i-1)))$. 
+Now 2 cases arise:
+
+\begin{enumerate}
+    
+    \item $i \in I_x(i)$: This implies that $q_i = (\delta_1(q_{i-1}^1, z_i), q_{i-1}^2)$, $I_x(i) = \{i\} \cup I_x(i-1)$ and $I_y(i) = I_y(i-1)$
+    
+    \item $i \in I_y(i)$: This implies that $q_i = (q_{i-1}^1, \delta_2(q_{i-1}^2, z_i))$, $I_x(i) = I_x(i-1)$ and $I_y(i) = \{i\} \cup I_y(i-1)$
+\end{enumerate}
+
+In either case we can now see that $q_i = (\hd_1(q_{10}, x(i)), \hd_2(q_{20}, y(i)))$. Hence the inductive step is complete and induction is established.\\
+
+As a direct consequence of our inductive hypothesis we have that $q_n = (\hd_1(q_{10}, x(n)), \hd_2(q_{20}, y(n)))$. Since $e$ is an accepting run $q_n$ must be an accepting state. That is, $q_n \in A_1 \times A_2$ which implies $q_n^1 \in A_1$ and $q_n^2 \in A_2$. So finally we have that $\hd_1(q_{10}, x(n)) \in A_1$ and $\hd_2(q_{20}, y(n)) \in A_2$. Thus establishing that $x(n) \in L_1$ and $y(n) \in L_2$ (because they are recognized by the respective DFAs). So we have been able to partition $z_{1 \ldots n} \equiv z$ into 2 sequences $x(n)$ and $y(n)$ such that $x(n) \in L_1$ and
+$y(n) \in L_2$ and $z$ is a \textrm{shuffle} of $x(n)$ and $y(n)$. Since our choice of $z$ was arbitrary, we have shown that for each $z \in \L(N)$, $z \in \mathrm{shuffle}(L_1, L_2)$, which finishes the proof of this claim.
+\end{proof}
+
+\begin{claim}
+$\mathrm{shuffle}(L_1, L_2) \subseteq \mathcal{L}(N)$
+\end{claim}
+
+\begin{proof}
+
+Consider any string $z[1 \ldots n] \in \mathrm{shuffle}(L_1, L_2)$. By definition of a \textrm{shuffle} we have that there exists 2 increasing disjoint partitions of $\{1, \ldots, n\}$, namely $I_x$ and $I_y$, such that $z[I_x] \in L_1$ and $z[I_y] \in L_2$. We shall construct an accepting run corresponding to this string on the NFA $N$.
+
+Consider the run $q_0 z_1 q_1 \ldots z_n q_n$, where 
+\begin{align*}
+q_0 &= (q_{10}, q_{20})\\
+q_i &= \begin{cases}
+    (\delta_1(q_{i-1}^1, z_i), q_{i-1}^2) & i \in I_x \\
+    (q_{i-1}^1, \delta_2(q_{i-1}^2, z_i)) & i \in I_y
+\end{cases} \quad 1 \leq i \leq n
+\end{align*}
+
+Note that this is a valid run by construction as every transition belongs to $\Delta$ already, $q_0$ is a valid starting state, $z_i \in \Sigma$, and $q_i \in Q_1 \times Q_2$. To also prove that this run is an accepting run we shall prove the following induction hypothesis.
+
+\paragraph{Induction Hypothesis}$P(k)$: For all $0 \leq k \leq n$, $q_k = (\hd_1 (q_{10}, x(k)), \hd_2(q_{20}, y(k)))$. Where $x(k) = z[\{i \in I_x : i \leq k\}]$ and $y(k) = z[\{i \in I_y : i \leq k\}]$.
+
+\paragraph{Base Case} When $k=0$, we have $q_0 = (q_{10}, q_{20})$ as that is the only starting state of NFA $N$.
+
+\paragraph{Inductive Case} Suppose we have already shown that the hypothesis holds for all $0 \leq k \leq i-1$. We shall now show that this implies that hypothesis also holds for $k=i$.\\
+
+Since hypothesis holds for $i-1$ we have $q_{i-1} = (\hd_1 (q_{10}, x(i-1)), \hd_2(q_{20}, y(i-1)))$. Now, here we have 2 cases:
+
+\begin{enumerate}
+    \item $i \in I_x$: Then we have $q_i = (\delta_1(q_{i-1}^1, z_i), q_{i-1}^2)$ and $x(i) = x(i-1) \cdot z_i$ and $y(i) = y(i-1)$.
+    
+    \item $i \in I_y$: Then we have $q_i = (q_{i-1}^1, \delta_2(q_{i-1}^2, z_i))$ and $x(i) = x(i-1)$ and $y(i) = y(i-1) \cdot z_i$.
+\end{enumerate}
+
+In either case we can conclude that $q_i = (\hd_1 (q_{10}, x(i)), \hd_2(q_{20}, y(i)))$ thereby establishing the inductive step. Hence the inductive hypothesis is proved.\\
+
+Again as the direct consequence of the inductive hypothesis, we have $q_n = (\hd_1 (q_{10}, x(n)), \hd_2(q_{20}, y(n)))$. But note that $x(n) = z[I_x]$ and $y(n) = z[I_y]$. And therefore $x(n) \in L_1$ and $y(n) \in L_2$ which implies that $\hd_1 (q_{10}, x(n)) \in A_1$ and $\hd_2(q_{20}, y(n)) \in A_2$. Hence $q_n \in A_1 \times A_2$. Therefore, $q_n$ is an accepting state and the constructed run is a valid accepting run on the NFA. This implies that for each string in $L$, there exists an accepting run of $N$ on it, from where the conclusion of the claim follows.
+\end{proof}
+\end{soln}

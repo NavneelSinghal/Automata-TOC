@@ -1,0 +1,34 @@
+\begin{soln}
+To prove that the language $\comp{E_{TM}}$ is \emph{recognizable} we will show how to construct a non-deterministic turning machine that essentially does the following.
+\begin{enumerate}
+    \item Non-deterministically choose a string from $\Sigma^*$ (possibly empty).
+    \item Simulate the turning machine $M_w$ on the chosen string, and return its output.
+\end{enumerate}
+First, suppose that such a NTM exists, then we will show that this proves that $\comp{E_{TM}}$ is recognizable.
+To see this, consider any turning machine $M_w$. If this machine accepts some string $x \in \Sigma^*$,
+then the \emph{run} of our NTM in which it chooses the string $x$ will be an accepting run, therefore this NTM accepts such $M_w$.
+Now, suppose $M_w$ does not accept any string. Then, since the NTM ultimately simulates $M_w$ on a string, there can not exist any accepting run of of this NTM on $M_w$.
+Hence, we can conclude that existence of such a NTM would imply recognisability of $\comp{E_{TM}}$.\\
+
+Now, we shall give an \emph{implementation description} of a 2-Tape NTM that realizes the above given \emph{vague description}. Unless specified otherwise, it is assumed that in a transition tape heads do not move (i.e. a \emph{stay}).
+\begin{enumerate}
+    \item Initially, the first tape would contain the input string $w$, and the second tape would be empty.
+    \item \textbf{Generate Phase: } Transition into a state $q_{decide}$. Whenever the turning machine is in the state $q_{decide}$ it will non-deterministically select one of the following 2 \emph{epsilon} transitions.
+    \begin{enumerate}
+        \item It can transition into state $q_{write}$. In this state the following happens.
+        \begin{enumerate}
+            \item Non-deterministically select a \emph{symbol} from $\Sigma$.
+            \item Write the symbol at the position of the current head of the second tape and move it to its right.
+            \item Transition back to the state $q_{decide}$.
+        \end{enumerate}
+        \item It can transition into state $q_{stop}$ (Generate phase ends).
+    \end{enumerate}
+    \item \textbf{Simulate Phase: } This phase starts once the turning machine hits the $q_{stop}$ state.
+    \begin{enumerate}
+        \item Copy the contents (string) of tape 2 and paste it after the input stored in tape 1 (separated by a special symbol) so that tape 1 now holds some encoding of form $(\langle M_w \rangle, x)$.
+        \item Call the universal turning machine ($A_{TM}$) with contents of tape 1 as its input and return its result (accept \emph{iff} it accepts).
+    \end{enumerate}
+\end{enumerate}
+
+To see how this NTM is equivalent to the originally envisioned machine note that in the generate phase the NTM can non-deterministically generate any string from $\Sigma^*$ in tape 2. Then in simulate phase we copy it and append it to the end of tape 1 and use the universal turning machine to check if $M_w$ accepts the generated string or not.
+\end{soln}

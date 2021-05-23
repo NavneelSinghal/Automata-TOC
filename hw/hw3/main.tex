@@ -1,0 +1,226 @@
+\documentclass[10pt,addpoints]{exam}
+\usepackage[english]{babel}
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+\usepackage{boites}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+% \usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{import}
+\usepackage{pdfpages}
+\usepackage{transparent}
+\usepackage{xcolor}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+
+\usepackage{thmtools}
+\usepackage{enumitem}
+\usepackage[framemethod=TikZ]{mdframed}
+
+\usepackage{xpatch}
+
+\makeatletter
+\xpatchcmd{\endmdframed}
+{\aftergroup\endmdf@trivlist\color@endgroup}
+{\endmdf@trivlist\color@endgroup\@doendpe}
+{}{}
+\makeatother
+
+%\usepackage[poster]{tcolorbox}
+%\allowdisplaybreaks
+%\sloppy
+
+\usepackage[many]{tcolorbox}
+
+%\xpatchcmd{\proof}{\itshape}{\bfseries\itshape}{}{}
+
+\setlength{\parindent}{0pt}
+
+\setlength{\fboxsep}{1em}
+\def\breakboxskip{7pt}
+\def\breakboxparindent{0em}
+
+\newenvironment{proof}{\begin{breakbox}\textit{Proof.}}{\hfill$\square$\end{breakbox}}
+\newenvironment{ans}{\begin{breakbox}\textit{Answer.}}{\end{breakbox}}
+\newenvironment{soln}{\begin{breakbox}\textit{Solution.}}{\end{breakbox}}
+
+% \tcolorboxenvironment{proof}{
+%     blanker,
+%     before skip=\topsep,
+%     after skip=\topsep,
+%     borderline={0.4pt}{0.4pt}{black},
+%     enforce breakable,
+%     left=12pt,
+%     right=12pt,
+%     top=12pt,
+%     bottom=12pt,
+% }
+% 
+% \tcolorboxenvironment{ans}{
+%     blanker,
+%     before skip=\topsep,
+%     after skip=\topsep,
+%     borderline={0.4pt}{0.4pt}{black},
+%     enforce breakable,
+%     left=12pt,
+%     right=12pt,
+%     top=12pt,
+%     bottom=12pt,
+% }
+
+\mdfdefinestyle{enclosed}{
+    linecolor=black
+    ,backgroundcolor=none
+    ,apptotikzsetting={\tikzset{mdfbackground/.append style={fill=gray!100,fill opacity=.3}}}
+    ,frametitlefont=\sffamily\bfseries\color{black}
+    ,splittopskip=.5cm
+    ,frametitlebelowskip=.0cm
+    ,topline=true
+    ,bottomline=true
+    ,rightline=true
+    ,leftline=true
+    ,leftmargin=0.01cm
+    ,linewidth=0.02cm
+    ,skipabove=0.01cm
+    ,innerbottommargin=0.1cm
+    ,skipbelow=0.1cm
+}
+
+\mdfdefinestyle{proofstyle}{
+    linecolor=black
+    ,backgroundcolor=none
+    ,apptotikzsetting={\tikzset{mdfbackground/.append style={fill=gray!100,fill opacity=.3}}}
+    ,frametitlefont=\sffamily\bfseries\color{black}
+    ,splittopskip=.5cm
+    ,frametitlebelowskip=.0cm
+    ,topline=true
+    ,bottomline=true
+    ,rightline=true
+    ,leftline=true
+    ,leftmargin=0.01cm
+    ,linewidth=0.02cm
+    ,skipabove=0.01cm
+    ,innerbottommargin=0.1cm
+    ,skipbelow=0.1cm
+    ,ntheorem=false
+}
+
+\mdfsetup{%
+    middlelinecolor=black,
+    middlelinewidth=1pt,
+roundcorner=4pt}
+
+
+\mdtheorem[style=enclosed]{theorem}{Theorem}
+\mdtheorem[style=enclosed]{ques}{Question}
+\mdtheorem[style=enclosed]{prob}{Problem}
+\mdtheorem[style=enclosed]{lemma}{Lemma}[prob]
+\mdtheorem[style=enclosed]{claim}{Claim}[prob]
+\mdtheorem[style=enclosed]{defn}{Definition}
+\mdtheorem[style=enclosed]{notn}{Notation}
+\mdtheorem[style=enclosed]{obs}{Observation}
+\mdtheorem[style=enclosed]{eg}{Example}
+\mdtheorem[style=enclosed]{cor}{Corollary}
+\mdtheorem[style=enclosed]{note}{Note}
+%\mdtheorem[style=proofstyle]{proof}{Proof.}
+% \mdtheorem[style=proofstyle]{ans}{Answer.}
+
+% \let\theproof=\false
+% \let\theans=\false
+% \let\thetheorem=\relax
+% \let\thelemma=\relax
+% \let\theclaim=\relax
+% \let\theques=\relax
+% \let\thedefn=\relax
+% \let\thenotn=\relax
+% \let\theobs=\relax
+% \let\thecor=\relax
+\let\thenote=\relax
+
+%\renewcommand\qedsymbol{$\blacksquare$}
+\newcommand{\nl}{\vspace{0.2cm}\\}
+\newcommand{\mc}{\mathcal}
+\newcommand{\mi}{\mathit}
+\newcommand{\mf}{\mathbf}
+\newcommand{\mb}{\mathbb}
+\renewcommand{\L}{\mc{L}}
+\newcommand{\hd}{\hat{\delta}}
+\DeclareMathOperator{\takelast}{last}
+\DeclareMathOperator{\xor}{xor}
+\newcommand{\produces}{\implies}
+\newcommand{\derives}{\stackrel{*}{\implies}}
+\newcommand{\changesto}{\vdash}
+
+\newcommand{\incfig}[1]{%
+    \def\svgwidth{\columnwidth}
+    \import{./figures/}{#1.pdf_tex}
+}
+\pdfsuppresswarningpagegroup=1
+
+\usepackage{tfrupee}
+
+\pagestyle{head}
+
+\firstpageheader{COL352}{}{Homework 2}
+\firstpageheadrule
+
+\title{COL352 HW-3}
+\author{
+Sarthak Agrawal \\ 2018CS10383
+\and
+Piyush Gupta \\ 2018CS10365
+\and
+Navneel Singhal \\ 2018CS10360
+}
+
+\begin{document}
+\maketitle
+
+%\noindent\href{https://moodle.iitd.ac.in/mod/forum/discuss.php?d=19210#p26977}{\textbf{Read the instructions carefully.}}
+%
+%\vspace{0.5cm}
+%
+
+\begin{prob}
+Consider the grammar $G=(\{S\},\{a,b\},R,S)$, where the set of production rules is
+\[R=\{S\longrightarrow SS\text{, }S\longrightarrow aaSb\text{, }S\longrightarrow bSaa\text{, }S\longrightarrow aSbSa\text{, }S\longrightarrow\varepsilon\}\text{.}\]
+Obviously, the language $L$ generated by this grammar contains only those strings in which the number of $a$'s is twice the number of $b$'s. (If you are unable to prove the last statement rigorously, you must contact the instructor asap.) Prove that, in fact, $L$ contains all strings in which  the number of $a$'s is twice the number of $b$'s.
+\end{prob}
+\input{1.tex}
+
+\newpage
+\begin{prob}
+An \textit{empty stack pushdown automaton} is a tuple $P'=(Q,\Sigma,\Gamma,\Delta,q_0,Z)$ where $Q$, $\Sigma$, $\Gamma$, $\Delta$, and $q_0$ have the same meaning as in definition of a PDA. The last component $Z\in\Gamma$ is the initial stack symbol: it is present on the stack in the beginning of every run. In other words, the initial instantaneous description in a run of $P'$ on $x\in\Sigma^*$ is $(q_0,x,Z)$. We say that such an automaton $P'$ accepts string $x$ if there is a run of $P'$ on $x$ that ends with an empty stack (and in any state). Formally, \text{$P'$ accepts $x$} if there exists a state $q\in Q$ such that $(q_0,x,Z)\vdash^*_{P'}(q,\varepsilon,\varepsilon)$. The language recognized by an empty stack pushdown automaton $P'$ is the set of strings accepted by $P'$.
+\begin{enumerate}
+\item \textbf{[1 mark]} Prove that if a language $L$ is recognized by some PDA $P$, then it is recognized by some empty stack PDA $P'$. (Describe a construction of $P'$ from $P$.)
+\item \textbf{[1 mark]} Prove that if a language $L$ is recognized by some empty stack PDA $P'$, then it is recognized by some PDA $P$. (Describe a construction of $P$ from $P'$.)
+\end{enumerate}
+\end{prob}
+\input{2.tex}
+
+\newpage
+\begin{prob}
+Prove that the class of context-free languages is closed under intersection with regular languages. That is, prove that if $L_1$ is a context-free language and $L_2$ is a regular language, then $L_1\cap L_2$ is a context-free language.
+\end{prob}
+\input{3.tex}
+
+\newpage
+\begin{prob}
+Consider the following two languages over the alphabet $\{a,b,c,d\}$.
+\[L_1=\{a^mb^nc^md^n\text{ }|\text{ }m,n\in\mathbb{N}\cup\{0\}\}\text{,}\]
+\[L_2=\{a^mb^nc^nd^m\text{ }|\text{ }m,n\in\mathbb{N}\cup\{0\}\}\text{.}\]
+Determine whether each of these languages is context-free, and prove your answer. 
+\end{prob}
+\input{4.tex}
+
+\newpage
+\begin{prob}
+Prove that the language $\{a^mb^n\text{ }|\text{ }n\text{ is a multiple of }m\}\subseteq\{a,b\}^*$ is not context-free.
+\end{prob}
+\input{5.tex}
+
+
+\end{document}

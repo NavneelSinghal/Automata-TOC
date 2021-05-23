@@ -1,0 +1,116 @@
+%\begin{soln}
+%\begin{claim}
+%$L_1$ is not context-free
+%\end{claim}
+%\begin{proof}
+%Suppose $L_1$ is context-free. Then it must satisfy the pumping lemma for context-free languages.
+%But as we will show in the claim below $L_1$ does not satisfy the pumping lemma. Hence $L_1$ can
+%not be context-free.
+%\begin{claim}
+%For all $p \in \mathbb{N}$ there exists a string $w \in L_1$ such that $|w| \geq p$ and
+%for all strings $u, v, x, y, z \in \Sigma^*$ such that $w = uvxyz$  and one of the following does 
+%not hold
+%\begin{enumerate}
+%    \item  $|vy| > 0$
+%    \item $|vxy| \leq p$
+%    \item  $uv^ixy^iz \in L_1$ for all $i \in \mathbb{N} \cup \{0\}$.
+%\end{enumerate}
+%\end{claim}
+%\begin{proof}
+%For any $p \in \mathbb{N}$ consider the string $w = a^p b^p c^p d^p$ and its partition $w = uvxyz$.
+%Then we have 3 cases
+%\begin{enumerate}
+%    \item $vxy$ is a substring of $a^p b^p$. In this case if we assume property 1 and 2 then by pumping once (i.e. $i=2$)
+%    we have that $uv^2xy^2z \notin L_1$ because number of a's increase while number of c's remain the same.
+%    Hence property 3 is violated here.
+%    
+%    \item $vxy$ is a substring of $b^p c^p$. In this case if we assume property 1 and 2 then by pumping once (i.e. $i=2$)
+%    we have that $uv^2xy^2z \notin L_1$ because number of b's increase while number of d's remain the same.
+%    Hence property 3 is again violated here.
+%     
+%    \item $vxy$ is a substring of $c^p d^p$. In this case if we assume property 1 and 2 then by pumping once (i.e. $i=2$)
+%    we have that $uv^2xy^2z \notin L_1$ because number of c's increase while number of a's remain the same.
+%    Hence property 3 is again violated here.
+%\end{enumerate}
+%Thus for each case we have proved the claim.
+%\end{proof}
+%Hence $L_1$ can not be context-free.
+%\end{proof}
+%
+%\begin{claim}
+%$L_2$ is context-free
+%\end{claim}
+%\begin{proof}
+%Consider the language of grammar of $G = (N, \Sigma, R, S)$ where $N = \{S, S'\}$,
+%and $\Sigma = \{a, b, c, d\}$ and following rules under $R$:
+%\begin{align*}
+%    S &\rightarrow \varepsilon\\
+%    S &\rightarrow a S d\\
+%    S &\rightarrow S'\\
+%    S' &\rightarrow \varepsilon\\
+%    S' &\rightarrow b S' c\\
+%\end{align*}
+%
+%\begin{claim}
+%$L_2 \subseteq \mathcal{L}(G)$
+%\end{claim}
+%\begin{proof}
+%Consider any string $s \in L_2$ as $a^m b^n c^n d^m$.
+%Then to generate this string via grammar $G$ we may apply the production rule 2 $m$ times,
+%followed by production rule 3 and then production rule 5 applied $n$ times finally followed by production rule 4.
+%In the corner case when $m, n = 0$ we may simply apply production rule 1 and be done with it.
+%\end{proof}
+%
+%\begin{claim}
+%$\mathcal{L}(G) \subseteq L_2$
+%\end{claim}
+%\begin{proof}
+%\begin{claim}
+%If $S' \derives s$ then $s = b^n c^n$ for some $n \in \mathbb{N} \cup \{0\}$
+%\end{claim}
+%\begin{proof}
+%Proof by induction on number of production rules used in shortest derivation.
+%\paragraph{Base Case} Number of production rules used = 1, then we have must have used the rule 4 giving us $s = \varepsilon$.
+%\paragraph{Inductive Case} If we have used more than one production rule then our first production rule must have been
+%$S' \produces b S' c \derives b b^n c^n c$ where the derivation follows from inductive hypothesis.
+%\end{proof}
+%
+%\begin{claim}
+%If $S \derives s$ then $s = a^m b^n c^n d^m$ for some $m, n \in \mathbb{N} \cup \{0\}$
+%\end{claim}
+%\begin{proof}
+%Proof by induction on number of production rules used in shortest derivation.
+%\paragraph{Base Case} Number of production rules used = 1, then we have must have used the rule 1 giving us $s = \varepsilon$.
+%\paragraph{Inductive Case} If we have used more than one production rule then our first production rule must have been either
+%\begin{enumerate}
+%    \item  $S \produces a S d \derives a a^m b^n c^n d^m d$ where the derivation follows from inductive hypothesis.
+%    \item $S \produces S' \derives b^n c^n$ where the derivation follows from the previous claim. Here $m = 0$.
+%\end{enumerate}
+%\end{proof}
+%\end{proof}
+%
+%\end{proof}
+%\end{soln}
+
+\begin{soln}
+We solve part 1 first.
+Consider the language $E_{TM}$ which consists of encodings of Turing machines which only accept the empty language. We shall show that $E_{TM}$ is mapping-reducible to $L$, and since $E_{TM}$ is
+unrecognizable, part 1 shall follow.\nl
+Consider the function $f$ where $f(w)$ is the encoding of a Turing machine which does the following to an input $x$:\nl
+Run $M_w$ on all strings of length $\le |x|$ for at most $|x|$ transitions. If any string is accepted, then get into an infinite loop, else accept the input.\nl
+Now consider $M_w$ for a given string $w$. If $w \in E_{TM}$, then $M_w$ doesn't accept any string, and hence only runs for a finite amount of time. So, $M_{f(w)}$ always terminates, and hence
+$M_{f(w)}$ is a decider, so $f(w) \in L$.\nl
+If $w \not\in E_{TM}$, then there exists at least one string $t$ such that $M_w$ accepts $t$. Let $k$ be the length of the accepting run of $M_w$ on $t$. Then, consider any string of length $1 +
+\max(|t|, k)$. Since the length of $t$ is less than the length of the input, it must be one of the strings on which $M_w$ is run on. Since the accepting run of $M_w$ has length less than that of
+the input, $t$ is accepted by $M_w$. Hence, $M_{f(w)}$ goes into an infinite loop, and thus is not a decider.\nl
+From the above, we have that $w \in E_{TM} \iff f(w) \in L$, so $E_{TM} \le_m L$, which completes the proof.\nl
+
+Now we solve part 2. We shall exhibit a mapping reduction from $\comp{HALT}$ to $\comp{L}$, and since $\comp{HALT}$ is unrecognizable, part 2 shall follow.\nl
+Consider the function $f$ where $f(w, x)$ is the encoding of a Turing machine which does the following to an input $t$:\nl
+Erase $t$ from the tape, and copy $x$ onto the tape, and simulate $M_w$ on $x$. If $M_w$ halts on $x$, accept, else it is stuck infinitely and doesn't halt.\nl
+Now if $(w, x) \in \comp{HALT}$, then $M_w$ doesn't halt on $x$, so for any input $t$ to $M_{f(w, x)}$, this machine never halts on $t$, and hence can't be a decider. So $f(w, x)$ is not a decider,
+and thus $f(w, x) \in \comp{L}$.\nl
+Now if $(w, x) \not\in \comp{HALT}$, then $M_w$ halts on $x$, so $M_{f(w, x)}$ always halts and accepts on any input $t$, so it is a decider, from where we get that $f(w, x) \not\in
+\comp{L}$.\nl
+From here, we get to know that $(w, x) \in \comp{HALT} \iff f(w, x) \in \comp{L}$, so $\comp{HALT} \le_m \comp{L}$, whence the proof is complete.
+\end{soln}

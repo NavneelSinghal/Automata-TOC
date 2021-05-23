@@ -1,0 +1,244 @@
+\documentclass[10pt,addpoints]{exam}
+\usepackage[english]{babel}
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+\usepackage{boites}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+% \usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{import}
+\usepackage{pdfpages}
+\usepackage{transparent}
+\usepackage{xcolor}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+
+\usepackage{thmtools}
+\usepackage{enumitem}
+\usepackage[framemethod=TikZ]{mdframed}
+
+\usepackage{xpatch}
+
+\makeatletter
+\xpatchcmd{\endmdframed}
+{\aftergroup\endmdf@trivlist\color@endgroup}
+{\endmdf@trivlist\color@endgroup\@doendpe}
+{}{}
+\makeatother
+
+%\usepackage[poster]{tcolorbox}
+%\allowdisplaybreaks
+%\sloppy
+
+\usepackage[many]{tcolorbox}
+
+%\xpatchcmd{\proof}{\itshape}{\bfseries\itshape}{}{}
+
+\setlength{\parindent}{0pt}
+
+\setlength{\fboxsep}{1em}
+\def\breakboxskip{7pt}
+\def\breakboxparindent{0em}
+
+\newenvironment{proof}{\begin{breakbox}\textit{Proof.}}{\hfill$\square$\end{breakbox}}
+\newenvironment{ans}{\begin{breakbox}\textit{Answer.}}{\end{breakbox}}
+\newenvironment{soln}{\begin{breakbox}\textit{Solution.}}{\end{breakbox}}
+
+% \tcolorboxenvironment{proof}{
+%     blanker,
+%     before skip=\topsep,
+%     after skip=\topsep,
+%     borderline={0.4pt}{0.4pt}{black},
+%     enforce breakable,
+%     left=12pt,
+%     right=12pt,
+%     top=12pt,
+%     bottom=12pt,
+% }
+% 
+% \tcolorboxenvironment{ans}{
+%     blanker,
+%     before skip=\topsep,
+%     after skip=\topsep,
+%     borderline={0.4pt}{0.4pt}{black},
+%     enforce breakable,
+%     left=12pt,
+%     right=12pt,
+%     top=12pt,
+%     bottom=12pt,
+% }
+
+\mdfdefinestyle{enclosed}{
+    linecolor=black
+    ,backgroundcolor=none
+    ,apptotikzsetting={\tikzset{mdfbackground/.append style={fill=gray!100,fill opacity=.3}}}
+    ,frametitlefont=\sffamily\bfseries\color{black}
+    ,splittopskip=.5cm
+    ,frametitlebelowskip=.0cm
+    ,topline=true
+    ,bottomline=true
+    ,rightline=true
+    ,leftline=true
+    ,leftmargin=0.01cm
+    ,linewidth=0.02cm
+    ,skipabove=0.01cm
+    ,innerbottommargin=0.1cm
+    ,skipbelow=0.1cm
+}
+
+\mdfdefinestyle{proofstyle}{
+    linecolor=black
+    ,backgroundcolor=none
+    ,apptotikzsetting={\tikzset{mdfbackground/.append style={fill=gray!100,fill opacity=.3}}}
+    ,frametitlefont=\sffamily\bfseries\color{black}
+    ,splittopskip=.5cm
+    ,frametitlebelowskip=.0cm
+    ,topline=true
+    ,bottomline=true
+    ,rightline=true
+    ,leftline=true
+    ,leftmargin=0.01cm
+    ,linewidth=0.02cm
+    ,skipabove=0.01cm
+    ,innerbottommargin=0.1cm
+    ,skipbelow=0.1cm
+    ,ntheorem=false
+}
+
+\mdfsetup{%
+    middlelinecolor=black,
+    middlelinewidth=1pt,
+roundcorner=4pt}
+
+
+\mdtheorem[style=enclosed]{theorem}{Theorem}
+\mdtheorem[style=enclosed]{ques}{Question}
+\mdtheorem[style=enclosed]{prob}{Problem}
+\mdtheorem[style=enclosed]{lemma}{Lemma}[prob]
+\mdtheorem[style=enclosed]{claim}{Claim}[prob]
+\mdtheorem[style=enclosed]{defn}{Definition}
+\mdtheorem[style=enclosed]{notn}{Notation}
+\mdtheorem[style=enclosed]{obs}{Observation}
+\mdtheorem[style=enclosed]{eg}{Example}
+\mdtheorem[style=enclosed]{cor}{Corollary}
+\mdtheorem[style=enclosed]{note}{Note}
+%\mdtheorem[style=proofstyle]{proof}{Proof.}
+% \mdtheorem[style=proofstyle]{ans}{Answer.}
+
+% \let\theproof=\false
+% \let\theans=\false
+% \let\thetheorem=\relax
+% \let\thelemma=\relax
+% \let\theclaim=\relax
+% \let\theques=\relax
+% \let\thedefn=\relax
+% \let\thenotn=\relax
+% \let\theobs=\relax
+% \let\thecor=\relax
+\let\thenote=\relax
+
+%\renewcommand\qedsymbol{$\blacksquare$}
+\newcommand{\nl}{\vspace{0.2cm}\\}
+\newcommand{\mc}{\mathcal}
+\newcommand{\mi}{\mathit}
+\newcommand{\mf}{\mathbf}
+\newcommand{\mb}{\mathbb}
+\renewcommand{\L}{\mc{L}}
+\newcommand{\hd}{\hat{\delta}}
+\DeclareMathOperator{\takelast}{last}
+\DeclareMathOperator{\xor}{xor}
+\newcommand{\produces}{\implies}
+\newcommand{\derives}{\stackrel{*}{\implies}}
+\newcommand{\changesto}{\vdash}
+\newcommand{\comp}{\overline}
+
+\newcommand{\incfig}[1]{%
+    \def\svgwidth{\columnwidth}
+    \import{./figures/}{#1.pdf_tex}
+}
+\pdfsuppresswarningpagegroup=1
+
+\usepackage{tfrupee}
+
+\pagestyle{head}
+
+\firstpageheader{COL352}{}{Homework 4}
+\firstpageheadrule
+
+\title{COL352 HW-4}
+\author{
+Sarthak Agrawal \\ 2018CS10383
+\and
+Piyush Gupta \\ 2018CS10365
+\and
+Navneel Singhal \\ 2018CS10360
+}
+
+\begin{document}
+
+\maketitle
+
+\noindent\href{https://moodle.iitd.ac.in/mod/forum/discuss.php?d=19210#p26977}{\textbf{Read the instructions carefully.}}
+
+\vspace{0.5cm}
+
+
+\noindent The deadline for this homework will be announced later, and at least one week in advance. The deadline will be no earlier than May 15, 23:00. However, \textbf{if your group is not seriously affected by the pandemic and is in a position to submit early, you are requested to do so.} Please bear in mind that since we have our exam on the last day of the major exam week, the TAs will already be under pressure to grade your exams in the following week (May 17-23). The incentive for submitting the homework by May 15, 23:00 is that we will grade it and provide feedback in the next 24 hours (unless we get too many submissions on the same day). \textbf{Once your submission is ready to be graded, please ping the instructor and all the TAs on Teams so that we know we can start grading, and don't submit thereafter.}
+
+\newpage
+
+\begin{prob} Let $U$ be a finite set and let $\mathcal{S}\subseteq2^U$ be a collection of subsets of $U$. We say that a set $H\subseteq U$ is a \textit{hitting set} of $\mathcal{S}$ if for all $A\in\mathcal{S}$, we have $H\cap A\neq\emptyset$, or in other words, $H$ intersects every set in $\mathcal{S}$. In the \texttt{HittingSet} problem, we are given $U$, $\mathcal{S}\subseteq2^U$, and an integer $k$ as input. We are required to determine whether there is a hitting set of $\mathcal{S}$ having size at most $k$. Prove that \texttt{HittingSet} is \texttt{NP}-complete.
+
+\end{prob}\input{1.tex}
+
+\newpage
+
+
+\begin{prob} Recall that two graphs $G=(V,E)$ and $G'=(V',E')$ are called \textit{isomorphic} if there exists a bijection $h:V\longrightarrow V'$ such that for all vertices $u,v\in V$, $(u,v)\in E$ if and only if $(f(u),f(v))\in E$, and such a bijection is called an \textit{isomorphism} between $G$ and $G'$. In other words, an isomorphism is an adjacency-preserving bijection. Also recall that a subgraph of a graph $G$ is any graph that is obtained by deleting some vertices and edges of $G$. In the \texttt{SubgraphIsomorphism} problem, the input consists of two graphs, say $G$ and $G'$, and we are required to determine whether $G'$ is isomorphic to some subgraph of $G$. Prove that \texttt{SubgraphIsomorphism} is \texttt{NP}-complete.
+
+\end{prob}\input{2.tex}
+
+\newpage
+
+
+\begin{prob} A \textit{dominating set} of a graph is a subset $D$ of vertices such that every vertex that is not in $D$ is adjacent to some vertex in $D$. The input to the \texttt{DominatingSet} problem is a graph $G$ and an integer $k$, and the output is whether $G$ has a dominating set of size at most $k$. Prove that the following algorithm is a Karp reduction from \texttt{VertexCover} to \texttt{DominatingSet}.
+
+\texttt{VCtoDS}($G,k$):
+\begin{enumerate}
+\item Construct a vertex set $V'$ by taking the vertex set $V$ of $G$, and then adding a vertex $v_e$ for each edge $e$ of $G$.
+\item Construct an edge set $E'$ as follows. For each edge $e=(a,b)$ of $G$, add three edges -- $(a,v_e)$, $(b,v_e)$, and $(a,b)$ to $E'$.
+\item Return the instance $(G',k)$ of \texttt{DominatingSet}, where $G'=(V',E')$.
+\end{enumerate}
+
+\end{prob}\input{3.tex}
+
+\newpage
+
+
+\begin{prob} Recall that a boolean formula is said to be a 3CNF formula if it is an AND of clauses, where each clause is an OR of at most $3$ literals. Let us call a boolean formula a \textit{strict 3CNF} formula if it is an AND of clauses, where each clause is an OR of exactly $3$ literals. In the \texttt{Strict3SAT} problem, we are given a strict 3CNF formula, and we need to accept it if it is satisfiable, and reject it otherwise. Prove that \texttt{3SAT} is Karp-reducible to \texttt{Strict3SAT}.
+
+\end{prob}\input{4.tex}
+
+\newpage
+
+\begin{prob} The crazy instructor of COL352 has an equally crazy criterion for passing the course. The instructor gives $n$ homework problems over the semester, and every student gets zero or one mark in every problem. For a student to pass the course, her/his marks must satisfy all of $m$ constraints specified by the instructor in the beginning of the semester. Specifically, a student who gets marks $x[1],\ldots x[n]$ passes the course if and only if for each $i\in\{1,\ldots,m\}$, $\sum_{j=1}^n A[i][j]\times x[j]\geq b[i]$. Here $A[i][j]$ and $b[i]$ are integers specified in the beginning of the semester.
+
+For example, if $m=n=3$ and the constraints are $x[1]+x[2]+x[3]\geq2$, $-2x[2]\geq-1$, and $-x[1]+3x[3]\geq1$, then a student getting marks $x[1]=0,x[2]=0,x[3]=1$ fails the course due to violation of the first constraint, while a student getting marks $x[1]=1,x[2]=0,x[3]=1$ passes the course.
+
+Given the matrix of integers $(A[i][j])$ where $i=1,\ldots,m$ and $j=1,\ldots,n$, and the array $b[1],\ldots,b[m]$, the students would like to know whether it is at all possible to pass the course. That is, they want to accept the input if and only if there exist $x[1],\ldots,x[n]\in\{0,1\}$ such that for each $i\in\{1,\ldots,m\}$, $\sum_{j=1}^n A[i][j]\times x[j]\geq b[i]$. Prove that this task is \texttt{NP}-complete.
+
+
+\end{prob}\input{5.tex}
+
+\newpage
+
+\begin{prob} Recall the \texttt{CircuitSAT} problem discussed in class. The input to the problem is a boolean circuit over variables $x_1,\ldots,x_n$, where each input of each gate is a variable, a constant (\texttt{true} or \texttt{false}), or the output of an ``earlier'' gate. One gate is designated as the output gate, and we are required to determine whether there exists a boolean assignment to the variables that makes the output of the circuit \texttt{true} (a.k.a.\ satisfying assignment). The \texttt{CircuitSATSearch} problem has the same input as \texttt{CircuitSAT}, but we are required to output a satisfying assignment if such an assignment exists, and otherwise output ``NO''.
+
+Suppose that you are given a ``black box'' algorithm $B$ that solves \texttt{CircuitSAT}, that is, given a boolean circuit as input, the $B$ accepts if the circuit is satisfiable, and rejects otherwise. Design an algorithm to solve \texttt{CircuitSATSearch} which makes at most a polynomial number of calls to $B$ and spends at most a polynomial amount of time outside those calls. (This implies that to be able to search for a satisfying assignment in polynomial time, it is sufficient to be able to detect the presence or absence of such an assignment in polynomial time.)
+
+\end{prob}\input{6.tex}
+
+\end{document}

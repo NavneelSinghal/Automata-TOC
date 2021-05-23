@@ -1,0 +1,243 @@
+\documentclass[10pt,addpoints]{exam}
+\usepackage[english]{babel}
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+\usepackage{boites}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+% \usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{import}
+\usepackage{pdfpages}
+\usepackage{transparent}
+\usepackage{xcolor}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+
+\usepackage{thmtools}
+\usepackage{enumitem}
+\usepackage[framemethod=TikZ]{mdframed}
+
+\usepackage{xpatch}
+
+\makeatletter
+\xpatchcmd{\endmdframed}
+{\aftergroup\endmdf@trivlist\color@endgroup}
+{\endmdf@trivlist\color@endgroup\@doendpe}
+{}{}
+\makeatother
+
+%\usepackage[poster]{tcolorbox}
+%\allowdisplaybreaks
+%\sloppy
+
+\usepackage[many]{tcolorbox}
+
+%\xpatchcmd{\proof}{\itshape}{\bfseries\itshape}{}{}
+
+\setlength{\parindent}{0pt}
+
+\setlength{\fboxsep}{1em}
+\def\breakboxskip{7pt}
+\def\breakboxparindent{0em}
+
+\newenvironment{proof}{\begin{breakbox}\textit{Proof.}}{\hfill$\square$\end{breakbox}}
+\newenvironment{ans}{\begin{breakbox}\textit{Answer.}}{\end{breakbox}}
+\newenvironment{soln}{\begin{breakbox}\textit{Solution.}}{\end{breakbox}}
+
+% \tcolorboxenvironment{proof}{
+%     blanker,
+%     before skip=\topsep,
+%     after skip=\topsep,
+%     borderline={0.4pt}{0.4pt}{black},
+%     enforce breakable,
+%     left=12pt,
+%     right=12pt,
+%     top=12pt,
+%     bottom=12pt,
+% }
+% 
+% \tcolorboxenvironment{ans}{
+%     blanker,
+%     before skip=\topsep,
+%     after skip=\topsep,
+%     borderline={0.4pt}{0.4pt}{black},
+%     enforce breakable,
+%     left=12pt,
+%     right=12pt,
+%     top=12pt,
+%     bottom=12pt,
+% }
+
+\mdfdefinestyle{enclosed}{
+    linecolor=black
+    ,backgroundcolor=none
+    ,apptotikzsetting={\tikzset{mdfbackground/.append style={fill=gray!100,fill opacity=.3}}}
+    ,frametitlefont=\sffamily\bfseries\color{black}
+    ,splittopskip=.5cm
+    ,frametitlebelowskip=.0cm
+    ,topline=true
+    ,bottomline=true
+    ,rightline=true
+    ,leftline=true
+    ,leftmargin=0.01cm
+    ,linewidth=0.02cm
+    ,skipabove=0.01cm
+    ,innerbottommargin=0.1cm
+    ,skipbelow=0.1cm
+}
+
+\mdfdefinestyle{proofstyle}{
+    linecolor=black
+    ,backgroundcolor=none
+    ,apptotikzsetting={\tikzset{mdfbackground/.append style={fill=gray!100,fill opacity=.3}}}
+    ,frametitlefont=\sffamily\bfseries\color{black}
+    ,splittopskip=.5cm
+    ,frametitlebelowskip=.0cm
+    ,topline=true
+    ,bottomline=true
+    ,rightline=true
+    ,leftline=true
+    ,leftmargin=0.01cm
+    ,linewidth=0.02cm
+    ,skipabove=0.01cm
+    ,innerbottommargin=0.1cm
+    ,skipbelow=0.1cm
+    ,ntheorem=false
+}
+
+\mdfsetup{%
+    middlelinecolor=black,
+    middlelinewidth=1pt,
+roundcorner=4pt}
+
+
+\mdtheorem[style=enclosed]{theorem}{Theorem}
+\mdtheorem[style=enclosed]{ques}{Question}
+\mdtheorem[style=enclosed]{prob}{Problem}
+\mdtheorem[style=enclosed]{lemma}{Lemma}[prob]
+\mdtheorem[style=enclosed]{claim}{Claim}[prob]
+\mdtheorem[style=enclosed]{defn}{Definition}
+\mdtheorem[style=enclosed]{notn}{Notation}
+\mdtheorem[style=enclosed]{obs}{Observation}
+\mdtheorem[style=enclosed]{eg}{Example}
+\mdtheorem[style=enclosed]{cor}{Corollary}
+\mdtheorem[style=enclosed]{note}{Note}
+%\mdtheorem[style=proofstyle]{proof}{Proof.}
+% \mdtheorem[style=proofstyle]{ans}{Answer.}
+
+% \let\theproof=\false
+% \let\theans=\false
+% \let\thetheorem=\relax
+% \let\thelemma=\relax
+% \let\theclaim=\relax
+% \let\theques=\relax
+% \let\thedefn=\relax
+% \let\thenotn=\relax
+% \let\theobs=\relax
+% \let\thecor=\relax
+\let\thenote=\relax
+
+%\renewcommand\qedsymbol{$\blacksquare$}
+\newcommand{\nl}{\vspace{0.2cm}\\}
+\newcommand{\mc}{\mathcal}
+\newcommand{\mi}{\mathit}
+\newcommand{\mf}{\mathbf}
+\newcommand{\mb}{\mathbb}
+\renewcommand{\L}{\mc{L}}
+\newcommand{\hd}{\hat{\delta}}
+\DeclareMathOperator{\takelast}{last}
+\DeclareMathOperator{\xor}{xor}
+\newcommand{\produces}{\implies}
+\newcommand{\derives}{\stackrel{*}{\implies}}
+\newcommand{\changesto}{\vdash}
+\newcommand{\comp}{\overline}
+
+\newcommand{\incfig}[1]{%
+    \def\svgwidth{\columnwidth}
+    \import{./figures/}{#1.pdf_tex}
+}
+\pdfsuppresswarningpagegroup=1
+
+\usepackage{tfrupee}
+
+\pagestyle{head}
+
+\firstpageheader{COL352}{}{Homework 4}
+\firstpageheadrule
+
+\title{COL352 HW-4}
+\author{
+Sarthak Agrawal \\ 2018CS10383
+\and
+Piyush Gupta \\ 2018CS10365
+\and
+Navneel Singhal \\ 2018CS10360
+}
+
+\begin{document}
+
+\maketitle
+
+\noindent\href{https://moodle.iitd.ac.in/mod/forum/discuss.php?d=19210#p26977}{\textbf{Read the instructions carefully.}}
+
+\vspace{0.5cm}
+
+\noindent\textbf{How to describe Turing Machines}: Describing a Turing Machine can often be tricky: it's hard to strike the right balance between rigor and understandability. Here are a few ways Turing Machines can be described (inspired from Section 3.3 of Sipser's book).
+
+\begin{enumerate}
+\item \textbf{Formal definition}: Define all the components ($Q,\Sigma,\Gamma,\delta,q_0,\Box,q_{\text{acc}},q_{\text{rej}}$) mathematically. Except for some simple Turing Machines, this gets extremely messy and hard to comprehend for a human.
+\item \textbf{Implementation description}: Write a sequence of steps, possibly enclosed in loops, so that a Turing machine can do the task of each step in a single, mostly-forward or mostly-backward pass. A mostly-forward (resp.\ mostly backward) pass is a sequence of transitions where the head moves right (resp.\ left), except for a constant number of transitions (that is independent of the length of the tape's content). Feel free to ``call'' other Turing Machines and to ``abort'' a call (if it takes too long to complete). If using more than one tape (but a constant number of tapes) and nondeterminism helps simplify the description, do so and specify your choice upfront. While designing Turing machines with more than one tape, explain the purpose of each tape (eg.\ ``We store the value of variable $v$ on tape 2'').
+\item \textbf{High-level description}: This is just an algorithm -- like the ones you wrote in COL106 or COL351. We rely on the Church-Turing thesis which states that any such algorithm can be turned into a Turing Machine.
+\end{enumerate}
+
+\noindent Unless specifically asked to define some Turing Machine formally, you should prefer writing an implementation description or a high-level description. \textbf{For the purpose of this homework, stick to implementation descriptions.}
+
+\vspace{0.5cm}
+
+\begin{questions}
+
+\newpage
+\question\textbf{[1 mark]} We proved in class that the language $E_{\text{TM}}=\{w\text{ }|\text{ }\mathcal{L}(M_w)=\emptyset\}$ is unrecognisable. (Here $M_w$ denotes the Turing machine whose description is $w$.) Prove that $\overline{E_{\text{TM}}}$ is recognisable.
+
+\input{1.tex}
+
+\newpage
+
+\question\textbf{[1 mark]} An \textit{enumerator} is a $2$-tape DTM connected to a printer. One of its tapes is called the ``work tape'' and the other is called the ``print tape''. The enumerator has a special state $q_{\text{print}}$. The computation of an enumerator proceeds just like a usual $2$-tape DTM, except that it starts with both tapes being empty, and whenever the enumerator enters state $q_{\text{print}}$, the (non-blank) content of the print tape is sent to the printer. A language $L$ is said to be \textit{enumerable} if there exists an enumerator $E$ such that
+\begin{itemize}
+\item For every $x\in L$, $E$ prints $x$ at least once.
+\item For every $x\notin L$, $E$ never prints $x$.
+\end{itemize}
+Prove that a language is enumerable if and only if it is recognisable. For the `if' part, the following observation might be useful. An enumerator with $k$ work tapes can be simulated by an enumerator with one work tape, just like a $k$ tape Turing machine can be simulated by a single tape Turing machine. You should be able to prove this, although you don't have to give the proof in the homework. Proving one direction of the `if and only if' is harder than the other. A correct proof of the harder direction gets the one mark.
+
+\input{2.tex}
+
+\newpage
+\question\textbf{[1 mark]} A \textit{two-stack Nondeterministic Pushdown Automaton} (2-NPDA) is like an NPDA, except that it has two stacks. In every transition a 2-NPDA reads 0 or 1 input symbols, pops 0 or 1 symbols from each stack, changes state, and pushes 0 or 1 symbol on each stack. (The transition relation $\Delta$ is a subset of $Q\times\Sigma_{\varepsilon}\times\Gamma_{\varepsilon}^2\times Q\times\Gamma_{\varepsilon}^2$, where $Q$ is the state space, $\Sigma$ the input alphabet, and $\Gamma$ the stack alphabet.) Prove that if a language is Turing-recognisable if and only if it is recognised by a 2-NPDA. Proving one direction of the `if and only if' is harder than the other. A correct proof of the harder direction gets the one mark.
+
+\input{3.tex}
+
+\newpage
+\question Consider the language $L=\{w\text{ }|\text{ the Turing machine }M_w\text{ is a decider}\}$. Using mapping reductions, prove the following statements.
+\begin{enumerate}
+\item \textbf{[1 mark]} $L$ is unrecognisable.
+\item \textbf{[1 mark]} $\overline{L}$ is unrecognisable.
+\end{enumerate}
+(Note that $L$ is different from the language $\{w\text{ }|\text{ the Turing machine }M_w\text{ recognises a decidable language}\}$. Rice's Theorem applies to the latter, but not to the former. Moreover, the version of Rice's Theorem discussed in class lets you claim undecidability only.)
+
+\input{4.tex}
+
+\newpage
+
+\question\textbf{[1 mark]} After an exhausting day of finishing and submitting homeworks (including COL352, of course), Alice falls into deep sleep, and in her dream, finds herself in Wonderland. She finds that Turing Machines in Wonderland have $2$ tapes -- one which has the input initially, and the other one which is called the ``query tape''. Each Wonderland Turing Machine (WTM) also has $3$ more special states -- $q_{\text{query}}$, $q_{\text{yes}}$, and $q_{\text{no}}$ (in addition to the usual $q_0,q_{\text{accept}},q_{\text{reject}}$). The computation of a WTM proceeds just like a usual $2$-tape DTM, except that as soon as a WTM enters state $q_{\text{query}}$, its state changes instantaneously to $q_{\text{yes}}$ or $q_{\text{no}}$ depending on the content $w$ of the query tape: if $w\in\text{DIAG}$, the machine enters $q_{\text{yes}}$, and if  $w\notin\text{DIAG}$, the machine enters $q_{\text{no}}$. The definition of the language $\text{DIAG}$ in Wonderland is same as that in real-life: it is the set of all strings $x$ such that the \textbf{real-life} Turing machine whose description is $x$ doesn't accept $x$. (Note that the domain of the transition function of a WTM is $(Q\setminus\{q_{\text{accept}},q_{\text{reject}},q_{\text{query}}\})\times\Gamma$, where $Q$ is its state space and $\Gamma$ is its tape alphabet.)
+
+Obviously, every language that is recognisable in real-life is Wonderland-recognisable too (don't have any transition into $q_{\text{query}}$). Give an example of a language which is unrecognisable in real-life but, in fact, decidable in Wonderland (0 marks for this). More importantly, Alice is wondering whether there exists a Wonderland-unrecognisable language too. Help her by giving an explicit example of such a language, and prove that your example language is indeed Wonderland-unrecognisable.
+
+\input{5.tex}
+
+\end{questions}
+
+\end{document}

@@ -1,0 +1,32 @@
+\begin{soln}
+
+To prove $L$=$\{0^m1^n\text{ }|\text{ }m\neq n\}$
+
+If $L$ is regular then it must satisfy the pumping lemma. But, consider the string $s = 0^p 1^{p+p!} \in L$ for any $p \in \mathbb{N}$.
+\begin{claim}
+    It is not possible to partition $s$ into 3 strings $x, y, z$ such that $s = xyz$ and
+    \begin{enumerate}
+        \item $|y| > 0$, and
+        \item $|xy| \leq p$, and
+        \item $x y^i z \in L$ for all $i \in \mathbb{N} \cup \{0\}$
+    \end{enumerate}
+\end{claim}
+
+\begin{proof}
+Let's suppose that there exist $x,y,z$ which satisfy the above property, then according to property 1 and 2, $y$ must be of form $y=0^a$ where $0<a\leq p$.\\
+
+Let $k=\frac{p!}{a}+1$. As $a$ lies between $1$ and $p$ therefore it will divide $p!$, hence $k \in \mathbb{N}$.\\
+
+Now consider the \emph{pumped} string $w=x y^k z$
+
+\begin{align*}
+w &= 0^{p-a} \cdot 0^{a*(\frac{p!}{a}+1)} \cdot 1^{p+p!}\\
+w &= 0^{p-a} \cdot 0^{p!+a} \cdot  1^{p+p!}\\
+w &= 0^{p+p!} \cdot 1^{p+p!}
+\end{align*}
+
+But this means $w \notin L$, but this is contradiction to the property 3, where $i=k$, So this means our assumption was wrong and $L$ can not be regular.
+
+\end{proof}
+
+\end{soln}

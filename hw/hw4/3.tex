@@ -1,0 +1,98 @@
+\begin{soln}
+    We shall break the proof into two parts.
+    \paragraph{Recognisable by 2-NPDA $\implies$ Turing-recognisable} This is the easier part. In this case, we can directly simulate a 2-NPDA on a 3-tape NTM, as follows:\nl
+    The state space consists of all states of the 2-NPDA along with one distinct new state each for each transition.
+    Treat the first tape as read-only with the input on it, both of the remaining tapes as stacks, the head of the first tape as the location of the first character of the string, and the remaining
+    two heads as pointers to the top of the stacks. Now note the following:
+    \begin{enumerate}
+        \item If we read an input character, then the first head moves to the right, else it stays there.
+        \item Consider what happens to one of the tapes on a transition. We have the following four types of transitions, which can be handled with the help of an intermediate state as
+            follows. Note that a distinct intermediate state $q_t$ is added for each transition $(q_1, a, (c_1, c_2), q_2, (d_1, d_2))$, and in each case we add two transitions (call them type 1 and
+            type 2 respectively). A transition of the NTM is an element of $Q \times \Gamma_\epsilon^3 \times Q \times \Gamma_\epsilon^3 \times \{L, R, S\}$. Wlog assume that we talk
+            about the second tape, the third tape can be handled similarly.
+            \begin{enumerate}
+                \item None of push and pop happen on this stack (which corresponds to a tape in the NTM): in this case, we add two transitions: one from the current state to the intermediate state
+                    without changing anything on the NTM, and one that carries out the read from the string (iff needed) as well as the transition to the state that the 2-NPDA transition intended to go to (and
+                    in both cases, stay at the same place on the relevant tape). So for a transition $(q_1, -, (\epsilon, -), q_2, (\epsilon, -))$, we add two transitions $(q_1, (-, c, -), q_t,
+                    (-, c, -), S)$ and $(q_t, (-, c, -), q_2, (-, c, -), S)$ to the Turing machine (the $-$ denotes don't-cares, i.e., they will be filled in the merge step towards the end,
+                    which is done in view of conciseness).
+                \item We push a character onto the stack but don't pop a character: in this case, we add two transitions: one that goes to the right and changes nothing and transitions to the
+                    intermediate state, and the other that reads from the string (iff needed) and stays, while changing the current tape content to the character intended to be pushed on the stack and
+                    transitioning to the intended state. So for a transition $(q_1, -, (\epsilon, -), q_2, (c, -))$, we add two transitions $(q_1, (-, r, -), q_t, (-, r, -), R)$ and $(q_t,
+                    (-, r, -), q_2, (-, c, -), S)$.
+                \item We pop a character from the stack but don't push a character: in this case, we add two transitions: one that goes to the left and changes nothing and transitions to the
+                    intermediate state, and the other that reads from the string (iff needed) and stays and transitions to the intended state. So for a transition $(q_1, -, (c, -), q_2,
+                    (\epsilon, -))$, we add two transitions $(q_1, (-, c, -), q_t, (-, c, -), L)$ and $(q_t, (-, r, -), q_2, (-, r, -), S)$.
+                \item We both pop and push a character from the stack: in this case, we add two transitions: one that stays and changes the current character and transitions to the
+                    intermediate state, and the other that reads from the string (iff needed) and stays and transitions to the intended state. So for a transition $(q_1, -, (c, -), q_2, (d,
+                    -))$, we add two transitions $(q_1, (-, c, -), q_t, (-, d, -), S)$ and $(q_t, (-, r, -), q_2, (-, r, -), S)$.
+            \end{enumerate}
+            Now note that all of this was for one tape (and its corresponding stack). We can combine this analysis with the analogous analysis for the other tape (by noting that we always move to
+            the intermediate state, and read the string (iff needed) always in the second state, preserving the `global' parts of the transition, as opposed to the tape-local changes), to
+            construct a complete table of transitions. Note that having a separate intermediate state for each transition of the 2-NPDA ensures that we never have stray unintended transitions
+            in the NTM, and since none of
+            these states is an accepting state, we never accept when the run is stuck in the case of a non-deterministic run. We have omitted the complete analysis here since it has a total of $4 \times 4 = 16$ cases and it is very cumbersome to explicitly list it
+            out.
+        \item We can add a simple transition from all the accepting states to a single new accepting state, and add a transition from all non-accepting states to a single rejecting state,
+            and this will be triggered when we reach a blank on tape 1.
+    \end{enumerate}
+    This construction works because of the following inductive claim: at a given position in some particular run of the 3-tape NTM on the string, either we are in an intermediate stage, or the following happens: the next character of the
+    string to be read is pointed to by the head of the first tape, and there exists a run of the 2-NPDA that has the contents of the first stack and the second stack identical to the contents
+    of the first tape and the second tape before and including the position of the respective tapes (apart from the bottom symbol, of course).
+    \paragraph{Turing-recognisable $\implies$ Recognisable by 2-NPDA} This is the harder part. We construct a 2-NPDA which does things in the following stages as preprocessing:
+    \begin{enumerate}
+        \item Go from the initial state to a preprocessing state, and at the end of this transition, both stacks have a bottom symbol on them.
+            So, we have a transition $(q_{init}, \epsilon, (\epsilon, \epsilon), q_{preprocess, 1}, (\bot, \bot))$.
+        \item In a single pass, read the whole string into the first tape, and add an epsilon transition to the second preprocessing state (and after the first preprocessing state is exited,
+            we will never read the input again and work only with epsilon transitions) -- this helps in ensuring that if we
+            accept, we accept only on an input that is read completely.
+            So we have transitions $(q_{preprocess, 1}, c, (\epsilon, \epsilon), q_{preprocess, 1}, (c, \epsilon))$ and $(q_{preprocess, 1}, \epsilon, (\epsilon, \epsilon), q_{preprocess, 2},
+            (\epsilon, \epsilon))$.
+        \item In the second preprocessing state, we transfer everything from the first stack to the second stack (it is easy to add such transitions), till we reach the bottom of the stack, where we
+            transition to the initial state of the Turing machine from where we never reach either the preprocessing states or the initial state of the 2-NPDA ever again. So we have
+            transitions $(q_{preprocess, 2}, \epsilon, (c, \epsilon), q_{preprocess, 2}, (\epsilon, c))$ and $(q_{preprocess, 2}, \epsilon, (\bot, \epsilon), q_{0}, (\bot, \epsilon))$.
+    \end{enumerate}
+    Now we shall aim to preserve the following invariant:\nl
+    Let $x_1$ be the string that is formed by the contents of the first stack (top to bottom), and let $x_2$ be the string that is formed by the contents of the second stack (assuming that stack grows
+    leftwards), apart from the bottom symbols. Then, $rev(x_1) \cdot x_2$ is a prefix of the corresponding Turing machine's tape (on that instant of the run) such that the remaining part consists of
+    only blank symbols, and the corresponding location of the element at the top of the second stack in this string is the position of the head of the DTM at that instant in that run. We are in
+    either an intermediate state or in the same state as the Turing machine would have been in at this instance of the run.\nl
+    For a run of length 0, we are trivially done, since after the preprocessing states, we have $x_2$ is the input and $x_1$ is empty (note that when constructing these strings, we have to start
+    from the second-last element of the stack in order to ignore the bottom symbol).\nl
+    Note that the only transitions allowed in a state are going either to the left or to the right.\nl
+    Now we aim to add the following transitions for the following cases (for any given transition of the Turing machine, we need to handle all of the following cases):
+    \begin{enumerate}
+        \item If $x_1$ is empty: this implies that we are at the first position in the Turing machine (from the invariant), and at this point, we are at the bottom of the first stack. A
+            replace-and-move-left transition corresponds to just pushing and popping the bottom symbol on the first stack, and performing the replacement on the second stack (insertion if we are at
+            the bottom of the second stack), so we need to add in
+            a single relevant transition here that does this (along with changing the state of course). A replace-and-move-right transition corresponds to the following two transitions on the
+            2-NPDA: pop and push to replace (or just push if we are on the bottom of the second stack) on the second stack and move to an intermediate state on this transition, and then move from that state to the required state, and pop the element from the
+            second stack and push onto the first stack. All of these can be handled by adding epsilon transitions (i.e., not reading anything from the input), and at most 2 of them.
+        \item If $x_1$ is not empty but $x_2$ is empty: this implies that we are at a blank in the Turing machine (from the invariant), but there is something to the left of the pointer on the
+            Turing machine's tape. A replace-and-move-right transition corresponds to the following transition of the 2-NPDA: push the replaced character on the first stack and do the intended
+            state transitions. A replace-and-move-left transition corresponds to the following transitions of the 2-NPDA: push the replaced character on the second stack and go to an intermediate
+            state, and pop from the first stack and push the popped character onto the second stack (and go to the intended state).
+        \item If neither $x_1$ is empty, nor $x_2$ is empty: a replace-and-move-right transition corresponds to the following transition of the 2-NPDA: push the replaced character on the
+            first stack and pop from the second stack and do the intended state transitions. A replace-and-move-left transition corresponds to the following transitions of the 2-NPDA: replace on the
+            second stack and move to an intermediate state, and then pop the character on the first stack and push the character on the second stack and go to the intended state.
+    \end{enumerate}
+    Note that in order to carry out the above transitions, while handling the cases where the relevant stacks are empty, we would need to take another transition into a state (by popping and pushing
+    the bottom symbol, and thus this would require at most one more transition than originally specified in the above description).
+    % From the above discussions, we get the following transitions ($q_{ti}$s are separate for each transition).
+    % \begin{center}
+    %     \begin{tabular}{|c|c|}
+    %         \hline
+    %         Transition of DTM & Transitions of 2-NPDA \\
+    %         \hline
+    %         $(q_1, c, q_2, d, L)$ & $(q_1, \epsilon, (\bot, \bot), q_{t, d}, (\bot, \bot))$, $(q_{t, d}, \epsilon, (\bot, \bot), q_2, (\bot, d))$, $(q_1, \epsilon, (\bot, c), q_2, (\bot, d))$,
+    %         $(q_1, \epsilon, (r, \bot), q_{t', d}, ())$ \\
+    %         \hline
+    %         $(q_1, c, q_2, d, R)$ &  \\
+    %         \hline
+    %     \end{tabular}
+    % \end{center}
+
+    Using these transitions, we note that we can maintain the mentioned invariant, so we have simulated a Turing machine on a 2-NPDA (the final stopping conditions are fairly
+    straightforward).
+
+\end{soln}

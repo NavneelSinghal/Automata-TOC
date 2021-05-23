@@ -1,0 +1,138 @@
+Q1.
+
+State whether each of the following statements is true or false. Substantiate each answer with a short (ideally, at most 3 sentences of) justification. (Answers with incorrect and insufficient justifications get 0 marks.)
+
+1. The language {r∣r is a regular expression over {0,1} and L(r)={0,1}∗} is decidable.
+
+We can first check that the regular expression is well formed, then we can construct a DFA from this regular expression, and then construct the DFA that recognizes the complement of the language recognized by this DFA. Then on that DFA, we can perform a dfs to check if any accepting states are reachable or not. If any accepting states are reachable, then this means there is a string that the complement of L(r) accepts, so r is not in the given language. Otherwise, no string is accepted by the complement of L(r), so r is in the language given. Since all of these steps can be carried out in terms of computable functions, the specified algorithm works, and the corresponding Turing Machine for this algorithm is a decider.
+
+2. If L_1 is a context-free language and L_2 is a regular language then L_1 \setminus L_2 and L_2 \setminus L_1 are both necessarily context-free.
+
+As done in homework 2 problem 3, the class of context free languages is closed under intersection with regular languages. Since L2 is regular, its complement is also regular, so intersection of L1 and (L2)^bar is context free.
+
+However, for the second part, taking L2 = Sigma^* is a regular language, but L2 \ L1 is the complement of L1, and context free languages aren't closed under complementation, so it is false.
+
+3. The languages \{w\mid\mathcal{L}(M_w)\text{ is empty}\}, \{w\mid\mathcal{L}(M_w)\text{ is finite}\}, \{w\mid\mathcal{L}(M_w)\text{ is decidable}\}, {w\mid\mathcal{L}(M_w)\text{ is enumerable}\} are all undecidable. (Refer to Homework 4 for the definition of an enumerable language).
+
+The first three are undecidable by Rice's theorem, however it doesn't apply to the last language.
+
+Note that the last language is in fact Sigma^*, where Sigma is the alphabet. This is because each string in Sigma^* is assigned some Turing Machine by our definition of M_w, and each language that is recognizable is also enumerable, and vice versa. And hence, since Sigma^* is trivially recognizable, the last language has a Turing machine where the first state can be made the accepting state.
+
+// In fact, in the case where M_w is undefined when w is ill-formed, since the encoding of any Turing machine is finite, and the usual encoding of a Turing machine allows for a finite-time checking of well-formedness, we can decide the last language using such a parser.
+
+4. 4SAT (defined analogously to 3SAT) is Karp-reducible to 3SAT.
+
+We can construct an equivalent 3SAT instance from a 4SAT instance as follows:
+
+Let Q be a 4SAT formula
+
+Let P = empty formula
+For each clause c in the formula Q:
+    if c has <= 3 literals, P <- P AND c
+    else:
+        let X be a new literal that is not in P currently as well as not in c, and let c = A OR B OR C OR D
+        P <- P AND (A OR B OR X) AND (C OR D OR Xbar)
+
+Proof of correctness: Note that it suffices to show that a satisfying assignment of Q leads to a satisfying assignment of P and vice versa.
+
+For the forward direction, since A OR B OR C OR D has at least one of them to be true, if one of A and B is true, the set X = false, else set X = true. This gives a valid satisfying assignment for P.
+
+For the backward direction, note that X can be either true or false. If it is true, then Xbar is false, so either of C and D are true, so A OR B OR C OR D is true. The other case is analogous. So this assignment leads to a satisfying assignment of Q as well.
+
+Or we could use the NP-completeness of 3SAT as well.
+
+Q2.
+
+Consider the following algorithm which takes a grammar G=(N,\Sigma,R,S) as input and either accepts or rejects it. As usual, N is the set of non-terminals, \Sigma is the alphabet, R is the set of production rules, and S \in N is the initial non-terminal.
+
+\text{Alg}(N,\Sigma,R,S):
+T \gets \emptyset.
+While R contains a production rule of the form  A \rightarrow \alpha, where A \notin T and \alpha\in T^*, do:
+        T \gets T\cup\{A\}.
+EndWhile
+If S \in T then Accept, else Reject.
+
+1. What interesting property of G is this algorithm testing? Prove your answer.
+
+Claim: the algorithm tests whether the empty string is a part of the language or not.
+
+Proof: We show it as follows:
+
+Firstly note that at each iteration, size of T increases by 1, and there are at most |R| rules, so the algorithm terminates.
+
+Subclaim 1: At the end of the i^th iteration, T consists of only i non-terminals, and all of them can derive the empty string.
+Proof:
+Initially, T is empty, so this is trivially true.
+Now suppose at the i^th step, a non-terminal A is added. Then A -> alpha is a rule with alpha in T*. Since everything in T* can derive the empty string, alpha in T* can derive the empty string by an application of this rule. Hence A can derive the empty string, and our claim is proved by induction.
+
+Subclaim 2: T contains all possible non-terminals that can derive the empty string.
+
+Consider the derivation tree of X =>* epsilon, and find the lowest non-terminal W (in terms of depth) that isn't in T. Then note that since all of it's children are either non-terminals in T, or epsilon, the rule corresponding to this node's expansion has the RHS being in T*. Hence, W should be in T, which is a contradiction.
+
+Combining both subclaims, we are done, since the grammar accepts the empty string iff S => epsilon, which is equivalent to checking if S is in T, and we are done.
+
+2. Make minimal changes to the above algorithm so that your modified algorithm accepts a grammar G if and only if \mathcal{L}(G)\neq\emptyset. Argue why your algorithm is correct.
+
+Change the following condition:
+
+While $$R$$ contains a production rule of the form $$A\rightarrow\alpha$$, where $$A\notin T$$ and $$\alpha\in T^*$$
+
+To:
+While $$R$$ contains a production rule of the form $$A\rightarrow\alpha$$, where $$A\notin T$$ and $$\alpha\in (T \cup \Sigma)^*$$
+
+The proof is essentially the same.
+
+Firstly note that at each iteration, size of T increases by 1, and there are at most |R| rules, so the algorithm terminates.
+
+Subclaim 1: At the end of the i^th iteration, T consists of only i non-terminals, and all of them can derive at least one string.
+Proof:
+Initially, T is empty, so this is trivially true.
+Now suppose at the i^th step, a non-terminal A is added. Then A -> alpha is a rule with alpha in T*. Since everything in (T union Sigma)* can derive at least one string (if T is empty, RHS is epsilon, and it derives the empty string), alpha in T* can derive at least one string by an application of this rule. Hence A can derive at least one string, and our claim is proved by induction.
+
+Subclaim 2: T contains all possible non-terminals that can derive at least one string.
+Suppose for the sake of contradiction that there is a non-terminal X not in T that can derive at least one string.
+Consider the derivation tree of X =>* epsilon, and find the lowest non-terminal W (in terms of depth) that isn't in T. Then note that since all of it's children are either non-terminals in T or terminals in Sigma or epsilon, the rule corresponding to this node's expansion has the RHS being in (T union Sigma)*. Hence, W should be added to T at some point, which is a contradiction.
+
+Now note that combining the two subclaims gives us that a non-terminal is in T iff it can derive at least one string. Hence for the grammar's language to have at least one string, S should be able to derive at least one string (this is necessary and sufficient), which is equivalent to S being in T, and we are done.
+
+Q3.
+
+Consider the following language (which might remind you of InfVisit from Quiz 4).
+
+\texttt{Visit}=\{(w,x,k)\mid M_w\text{ when run on }x\text{ visits the }k^{\text{\tiny{th}}}\text{ cell of its tape at least once}\}\text{.}
+
+Is Visit recognizable? Is it co-recognizable? Prove your answers.
+
+Claim 1: Visit is recognizable.
+
+Proof:
+
+Augment the implementation of a Universal Turing Machine as follows:
+
+Add another tape, and on that tape, store the current tape cell number (in binary or unary), and on another tape, cut and paste the value of k.
+
+Also, replace all transitions in the Universal Turing Machine that lead to the Universal Turing Machine's accepting state into transitions that lead to the Universal Turing Machine's rejecting state.
+
+If k = 1, we can immediately go to an accepting state. Now suppose k > 1.
+
+Now when we read off a transition, go into a "evaluate" state, where we do the following check:
+1. If the current tape number is less than k, and the transition is a R transition, increment the current tape cell number and check if the result is k, and if it is, go to the accept state, else go to the next state of the original Universal Turing Machine and resume the execution.
+2. If the current tape number is > 1 and the transition is a L transition, decrement the current tape cell number and go to the next state of the original Universal Turing Machine and resume the execution.
+3. If the current tape cell number is 1 and the transition is a L transition, don't do anything to the current tape cell number and go to the next state of the original Universal Turing Machine and resume the execution.
+4. Current tape number = k will be impossible due to our invariant that we maintain by the steps above (which is that whenever we are in the evaluate state, we are on a cell with number [1, k) in the original Turing Machine, and we have already accepted if the cell we are on is cell number k).
+
+Note that the description of the Turing machine as given here shows that we can simulate the Turing Machine and accept if we ever reach the kth state, and either never halt or reject if we never reach the kth state. This is valid since the only way to go from state 1 to state k has to also visit all states in between, and the first time we reach cell k, we must have cells from k+1 to infinity all unvisited.
+
+Claim 2: Visit is decidable:
+
+Firstly note that for k > 1, there are only |Q|^2 * (k - 1) * |Gamma|^k * 2 "configurations" of the part of the tape from 1 to k - 1 including the current state as well as the location of the read
+head, as well as the next transition that we shall take and what we will replace the current cell by. Note that the transition information is just to keep track of what we have already visited, and
+do not represent the tape + state configuration. All of this information uniquely determines the next step.
+
+ Hence we can construct a decider as follows:
+
+1. Store all such configurations on a single tape, and keep a cell vacant just to the right to each configuration for a boolean telling us whether it has been seen before in this execution or not,
+and set it to a character F (representing false, T will represent true, and I'm assuming T and F are wlog not in my alphabet).
+
+2. In the evaluate state in the proof of being recognizable, we will also check whether this configuration has already been reached or not.
+

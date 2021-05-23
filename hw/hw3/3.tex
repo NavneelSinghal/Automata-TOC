@@ -1,0 +1,170 @@
+% % Hint: use product construction
+% \begin{soln}
+
+% Let the PDA associated with $L_1$ be P=$(Q_1,\Sigma,\Gamma,q_{01},\Delta_1,A_1$) and the DFA associated with $L_2$ be N=$(Q_2,\Sigma,\delta_2,q_{02},A_2)$
+% \newline Now consider a PDA $P'$ = $(Q,\Sigma,\Gamma,q_0,\Delta,A)$
+% where
+% \newline $Q=Q_1 \times Q_2$
+% \newline $q_0=(q_{01},q_{02})$
+% \newline $\Delta_{01}$=  $\{( (q_1,q_2),a,B,(q_3,q_4),B') \mid \delta(q_1,a)=q_3 \in \Delta_1 , (q_2,a,B,q_4,B') \in \Delta_2$  \}
+% \newline $\Delta_{02}$=  $\{( (q_1,q_2),\epsilon,\epsilon,(q3,q2),\epsilon) \mid (q_1,\epsilon,q_3) \in \Delta_2  \}$
+% \newline $\Delta_{03}$=  $\{( (q_1,q_2),\epsilon,B,(q_1,q4),B') \mid  (q_2,\epsilon,B,q_4,B') \in \Delta_1$  \}
+% \newline $\Delta = \Delta_{01} \cup \Delta_{02} \cup \Delta_{03}$
+% \newline $A=\{(q_1,q_2) \mid q_1 \in A_1, q_2 \in A_2$ \}
+
+% \begin{claim}
+% $L(P')=L_1 \cap L_2$
+% \end{claim}
+
+% \begin{claim}
+% $  L_1 \cap L_2 \subseteq L(P')$
+% \end{claim}
+% \begin{proof}
+% Let $x \in L_1 \cap L_2$, now as x exist in $L_1$ and $L_2$ therefore there exist a accepted run in both P and N,
+% Now I Claim the induction on length of string
+% \paragraph{Induction Hypothesis}
+% P(n): Induction on length of string
+% If there is a run in N, which reads $x$ and reaches state $q_2'$, also 
+% $( q_{01},x,\epsilon) ->_{P} (q_1',\epsilon,\alpha)$ then $( (q_{01},q_{02}),x,\epsilon) ->_{P'} ((q_1',q_2'),\epsilon,\alpha)$
+% \paragraph{Base Case}
+% n=0, Therefore x=
+
+
+
+% \end{proof}
+
+% \begin{claim}
+% $L(P') \subseteq L_1 \cap L_2$
+% \end{claim}
+% \begin{proof}
+
+% Let $x \in L(P')$,
+%  Consider those runs, Now I Claim the induction on number of transitions
+% \paragraph{Induction Hypothesis}
+% P(n): Induction on number of transitions
+% if $( (q_{01},q_{02}),x_1x_2,\epsilon) ->_{P'} ((q_1',q_2'),x_2,\alpha)$  then
+% there is a run in N, which reads $x_1$ and reaches state $q_2'$, also 
+% $( q_{01},x,\epsilon) ->_{P} (q_1',x_2,\alpha)$
+% \paragraph{Base Case}
+% n=0, therefore $x_1=\epsilon, q_1'=q_{01}, q_2'=q_{02}, \alpha = \epsilon$. This is trivial as for $\epsilon$ there is run from $q_{02}$ to $q_{02}$ in N, also in P $( q_{01},x,\epsilon) ->_{P} (q_{01},x,\epsilon)$
+% \paragraph{Inductive Case}
+% For $n>0$, There exist x',q3,q4 and alpha' such that  $( (q_{01},q_{02}),x_1x_2,\epsilon) ->_{P'} ((q_3,q_4),x'x_2,\alpha')$  and T transition  $( (q_3,q_4),x'x_2,\aplha') -> ((q_1',q_2'),x_2,\alpha)$ 
+% as P(n-1) holds, now the last transition can be of three type according to in which subdelta it is present
+% \begin{enumerate}
+%     \item T Transition belong to $\Delta_{01}$, so x'=a, $(q_4,a,q_2') \in \Delta_1$, $(q_3,a,B,q_1',B') \in \Delta_2$ , where $B\alpha'=B'\alpha$
+%     \newline now as P(n-1) holds so there is a run of $x_1[1...len(x_1)-1]$ in N which ends in $q_4$, now take transition $(q_4,a,q_2')$, therefore there is a run of $x_1$ in n which ends in $q_2'$.
+%     Now as P(n-1) holds therefore $(q_{01},x_1x_2,\epsilon) ->_{P} (q_3,x'x_2,\alpha')$, now take the transition $( q_3,x'x_2,\alpha') -> (q_1',x_2,\alpha)$  this is possible as $(q_3,a,B,q_1',B') \in \Delta_2$ and hence induction holds in this case
+    
+%     \item T Transition belong to $\Delta_{02}$, so $x'=\epsilon$, $\alpha'=\alpha$,$q_{03}=q_1'$,$(q_4,a,q_2') \in \Delta_1$, 
+%     \newline now as P(n-1) holds so there is a run of $x_1$ in N which ends in $q_4$, now take transition $(q_4,\epsilon,q_2')$, therefore there is a run of $x_1$ in n which ends in $q_2'$.
+%      as P(n-1) holds therefore $(q_{01},q_{02}),x_1x_2,\epsilon) ->_{P} ((q_3,q_4),x'x_2,\alpha')$ therefore  $(q_{01},x_1x_2,\epsilon) ->_{P} (q_3,x'x_2,\alpha')$  and as x' = $\epsilon$,$\alpha'=\alpha$,$q_{03}=q_1'$ therefore this translates to  $(q_{01},x_1x_2,\epsilon) ->_{P} (q_1',x_2,\alpha)$ and hence induction holds in this case
+     
+%      \item T Transition belong to $\Delta_{03}$, so $x'=\epsilon$,$B\alpha'=B'\alpha$,$q_{04}=q_2'$ and $(q_3,a,B,q_1',B') \in \Delta_2$. 
+%      \newline Now as P(n-1) holds so there is a run of $x_1$ in N which ends in $q_4$, now as $q_{04}=q_2'$, therefore there is a run of $x_1$ in N which ends in $q_2'$. 
+%      As P(n-1) holds therefore $(q_{01},x_1x_2,\epsilon) ->_{P} (q_3,x'x_2,\alpha')$, now take the transition $( q_3,x'x_2,\alpha') -> (q_1',x_2,\alpha)$  this is possible as $(q_3,a,B,q_1',B') \in \Delta_2$ and hence induction holds in this case.
+% \end{enumerate}
+% As all the above cases are exhaustive therefore the induction holds.
+% \newline Now as $x \in L(P')$ therefore $( (q_{01},q_{02}),x_1x_2,\epsilon) ->_{P'} ((q_1',q_2'),\epsilon,\alpha)$ where $q_1' \in A_1, q_2' \in A_2$
+% Now from the above claim there exist a run on x in N that ends in $q_1'$ hence accepting x, i.e. $x \in L_2$, also from the above claim $( q_{01},x,\epsilon) ->_{P} (q_1',\epsilon,\alpha)$ and hence $x \in L_2$, combining both we get $x\in L_1 \cup L_2$ which further implies $L(P') \subseteq L_1 \cap L_2$
+% % Now by observing the $\Delta$ we can see that the second element in the tuples of state space, it changed only when transition correspond to $\Delta_{01}$ or $\Delta_{02}$,and if we see the (inital state (second element), alphabet,final state(second element)) tuple of that transition then the same transition is also exist in $\Delta_2$, the starting state' second element also is the starting state of N, also the ending state's second element lies in A2(As the final state is accepted by P')
+% % \newline Therefore following the same route as followed by the x in P', except the transition corresponding to $\Delta_{03}$, we can find the path in N, also and therefore x $\in L_2$.
+% % \newline
+% % \newline Similarly by observing the $\Delta$ we can see that the first element in the tuples of state space, it changed only when transition correspond to $\Delta_{01}$ or $\Delta_{03}$,and if we see the (inital state (first element), alphabet,push stack element,final state(second element),pop stack element) tuple of that transition then the same transition is also exist in $\Delta_1$, the starting state' first element also is the starting state of P, also the ending state's first element lies in A1(As the final state is accepted by P')
+% % \newline Therefore following the same route as followed by the x in P', except the transition corresponding to $\Delta_{02}$, we can find the path in P, also and therefore x $\in L_1$.
+% % \newline
+% % \newline Combining both we get $x \in L1 \cap L2$. and hence $L(P') \subseteq L_1 \cap L_2$
+
+
+% \end{proof}
+% \end{soln}
+\begin{soln}
+
+Let the PDA associated with $L_1$ be $P=(Q_1,\Sigma,\Gamma,q_{01},\Delta_1,A_1$) and the DFA associated with $L_2$ be $D=(Q_2,\Sigma,\delta_2,q_{02},A_2)$.\nl
+Now consider a PDA $P'$ = $(Q,\Sigma,\Gamma,q_0,\Delta,A)$, where
+\begin{enumerate}
+\item $Q=Q_1 \times Q_2$
+\item $q_0=(q_{01},q_{02})$
+\item $\Delta_{01}$=  $\{( (q_1,q_2),a,B,(q_3,q_4),B') \mid \delta(q_2,a)=q_4  , (q_1,a,B,q_3,B') \in \Delta_2$  \}
+\item $\Delta_{02}$=  $\{( (q_1,q_2),\epsilon,B,(q_3,q_2),B') \mid  (q_1,\epsilon,B,q_3,B') \in \Delta_1$  \}
+\item $\Delta = \Delta_{01} \cup \Delta_{02} $
+\item $A=\{(q_1,q_2) \mid q_1 \in A_1, q_2 \in A_2$ \}
+\end{enumerate}
+
+\begin{claim}
+$L(P')=L_1 \cap L_2$
+\end{claim}
+\begin{proof}
+
+
+\begin{claim}
+$  L_1 \cap L_2 \subseteq L(P')$
+\end{claim}
+\begin{proof}
+Let $x \in L_1 \cap L_2$, now as $x$ is in $L_1$ and $L_2$, therefore there exist accepting runs of both $P$ and $D$ on $x$.\nl
+Now we perform induction on the length of string (say $n$).
+\paragraph{Induction Hypothesis}
+$P(n):$ for any $x \in \Sigma^*$ with $|x|=n$, if $\hd(q_{02},x)=q_2'$ and $( q_{01},x,\epsilon) \to_{P} (q_1',\epsilon,\alpha)$ then $((q_{01},q_{02}),x,\epsilon) \to_{P'} ((q_1',q_2'),\epsilon,\alpha)$
+\paragraph{Base Case} $n=0$, therefore $x=\epsilon$, hence $q_2'=q_{02}$, now as $( q_{01},\epsilon,\epsilon) \to_{P} (q_1',\epsilon,\alpha)$ therefore all transitions take $\epsilon$ as input. Now
+considering transitions in $\Delta_{02}$ and following the same transitions as followed in $P$, (the second element in the state tuple remains the same throughout the run) and thus we can reach the
+the ID $((q_1',q_2'),\epsilon,\alpha)$ and hence $(q_{01},q_{02}),x,\epsilon) \to_{P'} ((q_1',q_2'),\epsilon,\alpha)$, as needed.
+
+\paragraph{Inductive Case} For $n>0$, let $x_1=x[1,2,..n-1]$. There exist $q_3,q_4$ such that $\hd(q_{02},x_1)=q_4$ and $\delta(q_4,x[n])=q_2'$ and $(q_{01},x_1,\epsilon) \to_{P}^*
+(q_3,\epsilon,\alpha')$ and $(q_3,x[n],\alpha') \to_{P}^* (q_1',\epsilon,\alpha)$. Now as $x_1$ is of length $n-1$, and $P(n-1)$ is true, so $((q_{01},q_{02}),x_1,\epsilon) \to_{P'}
+((q_3,q_4),\epsilon,\alpha')$.\nl
+Now during $(q_3,x[n],\alpha') \to_{P}^* (q_1',\epsilon,\alpha)$ one transition takes $x[n]$ as input and all the other transition take $\epsilon$ as the input. Now take all the transition till the
+transition corresponding to $x[n]$. Corresponding to these transitions we get transitions in $\Delta_{02}$ where the only first state of state tuple changes. Now take the transition where $x[n]$ is
+the input. Corresponding to this there is a transition in $\Delta_{01}$. Then again take the $\epsilon$ transitions as done previously.\nl
+So $((q_3,q_4),\epsilon,\alpha') \to_{P}^* ((q_1',q_2'),\epsilon,\alpha')$, Combining this with $(q_{01},q_{02}),x_1,\epsilon) \to_{P'}^* ((q_3,q_4),\epsilon,\alpha')$ we get 
+ $(q_{01},q_{02}),x_1,\epsilon) \to_{P'}^* ((q_1',q_2'),\epsilon,\alpha')$.\nl
+Now as $x \in L_1 \cap L_2$, therefore  $\hd(q_{02},x)=q_2'$ where $q_2' \in A_2$ and there exists a run $(q_{01},x,\epsilon) \to_{P}^* (q_1',\epsilon,\alpha)$ where $q_1' \in A_1$. 
+Now using the above inductive claim $(q_{01},q_{02}),x,\epsilon) \to_{P'}^* ((q_1',q_2'),\epsilon,\alpha)$, but $(q_1',q_2') \in A$ as $q_1 \in A_1, q_2 \in A_2$. Therefore $x$ is accepted by
+$P'$, and hence $x \in L(P')$ and therefore $L_1 \cap L_2 \subseteq L(P')$
+
+\end{proof}
+
+\begin{claim}
+$L(P') \subseteq L_1 \cap L_2$
+\end{claim}
+\begin{proof}
+Consider a string $x \in L(P')$. Consider an accepting run of $P'$ on $x$. We perform induction on number of transitions.
+\paragraph{Induction Hypothesis}
+$P(n)$: if $((q_1,q_2),x,\alpha) \to_{P'}^* ((q_1',q_2'),\epsilon,\alpha')$ in at most $n$ transitions, then $\hd(q_2,x)=q_2'$ and $( q_{1},x,\alpha) \to_{P}^* (q_1',\epsilon,\alpha')$
+\paragraph{Base Case}
+$n=0$ -- here $x=\epsilon, q_1'=q_1, q_2'=q_2, \alpha = \alpha'$. This is trivial as $\hd(q_2,x)=q_2$ because of $q_2'=q_2$, and in $P$, $(q_{1},x,\alpha) \to_{P}^* (q_{1},\epsilon,\alpha')$
+\paragraph{Inductive Case}
+For $n>0$, there exist $x',q_3,q_4$ and $\alpha'$ such that $x=ax'$ for some $a \in \Sigma \cup \{\varepsilon\}, x' \in \Sigma^*$
+\[
+((q_1, q_2), x, \alpha) \changesto_P ((q_3, q_4), x', \alpha'') \to_{P}^* ((q_1',q_2'),\epsilon,\alpha')
+\]
+The first transition can be of two type according to in which subdelta it is present
+
+\begin{enumerate}
+    \item First transition belong to $\Delta_{01}$, so $\delta(q_2,a)=q_4$, $(q_1,a,B,q_3,B') \in \Delta_1$ , where B and B' are such that after poping B and pushing B' to $\alpha$ we get $\alpha''$
+    \newline now as P(n-1) holds so $\hd(q_{4},x')=q_2'$ and now using $\delta(q_2,a)=q_4$ we get $\hd(q_{2},x)=q_2'$. 
+    Now as P(n-1) holds therefore $(q_{3},x',\alpha'') \to_{P}^* (q_1',x',\alpha')$, now the transition $( q_1,a,\alpha) \changesto (q_3,\epsilon,\alpha'')$  this is possible as $(q_1,a,B,q_3,B') \in \Delta_2$ combining both we get $( q_{1},x,\alpha) \to_{P}^* (q_1',\epsilon,\alpha')$ hence induction holds in this case
+    
+    % \item T Transition belong to $\Delta_{02}$, so $x'=\epsilon$, $\alpha'=\alpha$,$q_{03}=q_1'$,$(q_4,a,q_2') \in \Delta_1$, 
+    % \newline now as P(n-1) holds so there is a run of $x_1$ in N which ends in $q_4$, now take transition $(q_4,\epsilon,q_2')$, therefore there is a run of $x_1$ in n which ends in $q_2'$.
+    %  as P(n-1) holds therefore $(q_{01},q_{02}),x_1x_2,\epsilon) ->_{P} ((q_3,q_4),x'x_2,\alpha')$ therefore  $(q_{01},x_1x_2,\epsilon) ->_{P} (q_3,x'x_2,\alpha')$  and as x' = $\epsilon$,$\alpha'=\alpha$,$q_{03}=q_1'$ therefore this translates to  $(q_{01},x_1x_2,\epsilon) ->_{P} (q_1',x_2,\alpha)$ and hence induction holds in this case
+     
+     \item Transition belongs to $\Delta_{02}$, so $a=\epsilon$, $q_2=q_4$, $(q_1,a,B,q_3,B') \in \Delta_1$ , where B and B' are such that after popping B and pushing B' to $\alpha$ we get $\alpha''$
+     \newline Now as P(n-1) holds $\hd(q_{4},x')=q_2'$, now as $q_{4}=q_2$ and $x=x'$, therefore  $\hd(q_{2},x_1)=q_2'$. 
+     \newline Now as P(n-1) holds therefore $(q_{3},x',\alpha'') \to_{P}^* (q_1',x',\alpha')$, now the transition $( q_1,a,\alpha) \changesto (q_3,\epsilon,\alpha'')$  this is possible as $(q_1,a,B,q_3,B') \in \Delta_2$ combining both we get $( q_{1},x,\alpha) \to_{P}^* (q_1',\epsilon,\alpha')$ hence induction holds in this case
+\end{enumerate}
+As all the above cases are exhaustive therefore the induction holds.
+\newline Now as $x \in L(P')$, therefore $( (q_{01},q_{02}),x,\epsilon) ->_{P'}^* ((q_1',q_2'),\epsilon,\alpha)$ where $q_1' \in A_1, q_2' \in A_2$
+Now from the above claim $\hd(q_{02},x)=q_1'$ hence accepting x, i.e. $x \in L_2$, also from the above claim $( q_{01},x,\epsilon) ->_{P}^* (q_1',\epsilon,\alpha)$ and hence $x \in L_2$, combining both we get $x\in L_1 \cup L_2$ which further implies $L(P') \subseteq L_1 \cap L_2$
+% Now by observing the $\Delta$ we can see that the second element in the tuples of state space, it changed only when transition correspond to $\Delta_{01}$ or $\Delta_{02}$,and if we see the (inital state (second element), alphabet,final state(second element)) tuple of that transition then the same transition is also exist in $\Delta_2$, the starting state' second element also is the starting state of N, also the ending state's second element lies in A2(As the final state is accepted by P')
+% \newline Therefore following the same route as followed by the x in P', except the transition corresponding to $\Delta_{03}$, we can find the path in N, also and therefore x $\in L_2$.
+% \newline
+% \newline Similarly by observing the $\Delta$ we can see that the first element in the tuples of state space, it changed only when transition correspond to $\Delta_{01}$ or $\Delta_{03}$,and if we see the (inital state (first element), alphabet,push stack element,final state(second element),pop stack element) tuple of that transition then the same transition is also exist in $\Delta_1$, the starting state' first element also is the starting state of P, also the ending state's first element lies in A1(As the final state is accepted by P')
+% \newline Therefore following the same route as followed by the x in P', except the transition corresponding to $\Delta_{02}$, we can find the path in P, also and therefore x $\in L_1$.
+% \newline
+% \newline Combining both we get $x \in L1 \cap L2$. and hence $L(P') \subseteq L_1 \cap L_2$
+
+\end{proof}
+Combining both of the above claims be get $L(P')=L_1 \cap L_2$
+
+
+\end{proof}
+\end{soln}

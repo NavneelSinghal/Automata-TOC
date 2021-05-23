@@ -1,0 +1,85 @@
+\begin{soln}
+    We proceed in two parts.
+
+    \begin{claim}
+        If $L$ is language with a DFA $D$, and $q$ is a state of $D$, then the language $$L_q = \{x \mid x \in \L(D) \text{ and the run of $D$ on $x$ visits $q$ an odd number of times}\}$$
+        is regular.
+    \end{claim}
+    \begin{proof}
+    Consider the DFA $D' = (Q', \Sigma, \delta', q_0', A')$ as follows.
+    \begin{enumerate}
+        \item $Q' = Q \times \{0, 1\}$
+        \item $\delta'((p, t), a) = 
+            \begin{cases}
+                (\delta(p, a), t) & \text{if } \delta(p, a) \ne q\\
+                (\delta(p, a), 1 - t) & \text{otherwise}
+            \end{cases}
+            $
+        \item $q_0' = 
+            \begin{cases}
+                (q_0, 0) & \text{if } q_0 \ne q\\
+                (q_0, 1) & \text{otherwise}
+            \end{cases}
+            $
+        \item $A' = \{(q_a, 1) \mid q_a \in A\}$
+    \end{enumerate}
+    \begin{claim}
+        If $\hd'(q_0', x) = (p, b)$, then the following are true (and vice-versa):
+        \begin{enumerate}
+            \item $\hd(q_0, x) = p$
+            \item $b$ is the parity of the number of visits of $q$ in the run of $D$ on $x$.
+        \end{enumerate}
+    \end{claim}
+    \begin{proof}
+        We prove this by induction on the length of $x$. The base case is trivial: for $|x| = 0$, we must have $x = \epsilon$, so $\hd'(q_0', x) = \hd'(q_0', \epsilon) = q_0'$, and the property
+        holds by definition.\nl
+        For the inductive case, suppose $x = ya$ for some $y \in \Sigma^*$ and $a \in \Sigma$. Suppose $\hd'(q_0', y) = (p', b')$ for some $p' \in Q, b' \in \{0, 1\}$.
+        Then we have two cases:
+        \begin{enumerate}
+            \item $\delta(p', a) = q$.\nl
+                In this case, the parity of number of visits to $q$ on the run of $D$ on $x$ is different from that for the run of $D$ on $y$. Also, from the transition function, we note that $b = 1 -
+                b'$, from which the second part of the claim follows. Again, from the transition function, we have $p = \delta(p', a) = \delta(\hd(q_0, y), a) = \hd(q_0, ya) = \hd(q_0,
+                x)$, so the first part of the claim holds true here too.
+            \item $\delta(p', a) \ne q$.\nl
+                In this case, the second part of the claim can be proved as in the previous case. For the first part of the claim, since $\delta(p', a) \ne q$, the parity of the number of visits to $q$ on
+                the run of $D$ on $x$ is the same as that for the run of $D$ on $y$, and the parity doesn't change. Since the transition function gives $b = b'$, the claim is proved.
+        \end{enumerate}
+        The reverse direction can be proved by simply reversing the argument.
+    \end{proof}
+    \begin{claim}
+        $\L(D') = L_q$.
+    \end{claim}
+    \begin{proof}
+        Consider the following equivalences induced by the previous lemma:
+        \begin{align*}
+            x \in \L(D') &\iff \hd'(q_0', x) \in A'\\
+                        &\iff \hd'(q_0', x) = (q_a, 1) \in A'\\
+                        &\iff \exists q_a \in A \text{: the run of }D\text{ on }x\text{ has an odd number of visits to }q \land \hd'(q_0, x) = q_a\\
+                        &\iff x \in L(D) \text{ and the run of }D\text{ on }x\text{ visits }q\text{ an odd number of times}\\
+                        &\iff x \in L_q
+        \end{align*}
+        This completes the proof of this claim.
+    \end{proof}
+    Since we have exhibited a DFA recognizing this language, this language must be regular.
+    \end{proof}
+    \begin{claim}
+        There exists a state $q$ in $Q$ such that there are infinitely many strings in $L_q$ and $L \setminus L_q$.
+    \end{claim}
+    \begin{proof}
+        Consider a string $s$ with length at least $|Q|$ (Such a string $s$ exists because $L$ is infinite). Then in the run of $D$ on $x$, there are $|Q| + 1$ states, and hence two of them must be the same, say $q$. Suppose the substring of $x$
+        corresponding to the simple cycle between the first two occurences is $y$, with $x = wyz$ for some $w, z \in \Sigma^*$. Note that $|y| > 0$. We consider the following two sets of strings:
+        \begin{enumerate}
+            \item $L_e = \{wy^{2i}z \mid i \in \mathbb{N}\}$
+            \item $L_o = \{wy^{2i+1}z \mid i \in \mathbb{N}\}$
+        \end{enumerate}
+        Clearly, both of these languages have an infinite number of strings, and the following hold true (since pumping the cycle once increases the number of visits to $q$ by exactly 1):
+        \begin{enumerate}
+            \item For any string $s$ in $L_e$, the parity of the number of visits of the run of $D$ on $s$ is the same as that of the run of $D$ on $x$.
+            \item For any string $s$ in $L_o$, the parity of the number of visits of the run of $D$ on $s$ is different from that of the run of $D$ on $x$.
+        \end{enumerate}
+        Hence, one of these is a subset of $L_q$, and the other one of $L \setminus L_q$, which implies that both are infinite. 
+    \end{proof}
+    By the definition of the complement, the languages $L_q$ and $L \setminus L_q$ are disjoint and have union equal to $L$, which completes the proof in view of the previous claim, and the fact that
+    $L \setminus L_q$ is a regular language due to being the set difference of two regular languages (closure under intersection and complementation), or just by noting that we can replace
+    $1$ by $0$ in the set of accepting states in the definition of the DFA $D'$.
+\end{soln}

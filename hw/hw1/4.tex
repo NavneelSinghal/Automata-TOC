@@ -1,0 +1,146 @@
+\begin{note}
+    To make the description easier to read, we shall resort to the following abuse of notation:
+    \begin{enumerate}
+        \item If a string $x$ consists of a single character, we consider it to be equivalent to a single character. In other words, we do not distinguish between $\Sigma^1$ and $\Sigma$.
+        \item If a string $x = \epsilon$, then in the context of transitions of an NFA, we consider $(q, x, q'), (q, \epsilon, q')$ to refer to the same thing.
+    \end{enumerate}
+    These will be helpful for Case 1 in the following solution.
+\end{note}
+
+\begin{soln}
+	Since the language $L$ is regular, there must be a DFA $D = (Q, \Sigma, \delta, q_0, A)$ that recognizes $L$.
+	Consider the following construction for a potential NFA of the language $f(L)$:
+	$$
+		N = (Q \cup Q', \Gamma, \Delta, {q_0}, A)
+	$$
+	We will define $Q'$ and $\Delta$ below
+	\newline $\Delta$ will contain tuples which we can divide in two cases depending upon the alphabets $a\in \Sigma$:
+	\begin{enumerate}
+        \item Case 1: $f(a) \in \Gamma \cup \epsilon$. In this case add the tuples \{$(q,f(a),\delta(q,a)) \mid  q\in Q, a \in \Sigma$\} to $\Delta$
+		\item Case 2: $f(a) \not\in \Gamma \cup \epsilon$. In this case first divide $f(a)$ into alphabets of $\Gamma$ i.e. $f(a)=b[1] \cdot b[2] \cdot \cdots b[n]$ where $b[i] \in \Gamma$.
+		    Now for
+            each transition $(q,a,\delta(q,a)) \in \delta$, create $n-1$ extra (intermediate) states, say $q_{qa1}',q_{qa2}', \ldots, q_{qa(n-1)}'$, and add the $n$ tuples
+            $(q,b[1],q_{qa1}')$, $(q_{qai}',b[i+1],q_{qa(i+1)}')$ for $i \in \{1,2, \ldots, n-2\}$ and $(q_{qa(n-1)}',b[n],\delta(q,a))$ to $\Delta$.
+	\end{enumerate}
+	Note: the creation of $n-1$ states will be done for each transition $(q,a,\delta(q,a))$ where  $f(a) \not\in \Gamma \cup \epsilon$.
+	$Q'$ is the union of all the new states formed in the above Case 2.\\
+
+	\begin{claim}
+		$f(L) = \L(N)$
+	\end{claim}
+	We will show that in the following two claims\\
+
+	\begin{claim}
+		$f(L) \subseteq \L(N)$
+	\end{claim}
+	\begin{proof}
+		Let $x \in f(L)$ this means there exist a $y$ such that $y \in L$, that is, a run of $y$ on DFA $D$ is accepted. We will use this to show that there exists an accepting run of $x$ on NFA $N$.
+
+		Let the run of $y$ on DFA $D$ be $q_0y[1]q_1y[2] \ldots y[n]q_n$ where $y[i] \in \Sigma$ and $y=y[1]\cdot y[2]\cdots y[n]$ as the run is accepted therefore $q[n] \in A$.
+
+		\begin{align*}
+			x & =f(y)                                  \\
+			x & =f(y[1]\cdot y[2]\cdots y[n])         \\
+			x & =f(y[1])\cdot f(y[2]) \cdots f(y[n])
+		\end{align*}
+		We claim that on running $x$ on $N$, it will also end in $q_n$. we will prove this by induction.
+
+		\paragraph{Induction Hypothesis} $P(k)$ : For all $0 \leq k \leq n$, there exists a run of $N$ on $f(y[1]\cdot y[2]\cdot...y[k])$ on $N$ which ends on $q_k$.
+
+		\paragraph{Base Case} When $k=0$, as the starting state of $N$ is also $q_0$ so this is trivially true.
+
+		\paragraph{Inductive Case} Let us assume that $P(k-1)$ is true. Now $f(y[1]\cdot y[2]\cdots y[k]) =f(y[1]\cdot y[2]\cdots y[k-1]) \cdot f(y[n])$ using the homomorphism property. Using $P(k-1)$
+        we know that there exist a run of $N$ on $f(y[1] \cdot y[2] \cdots y[k-1])$ ending on $q_{k-1}$. Now there are two cases possible for $f(y[n])$ (by $a$ we denote $y[n]$).
+
+		\begin{enumerate}
+			\item  Case 1:  $f(a) \in \Gamma \cup \epsilon$.\nl
+			In this case $(q_{k-1},f(y[k]),q_k) \in \Delta$ as defined above. So we can take this transition and reach $q_k$.\nl
+			More formally,
+                appending $f(y[k]), q_k$ to a run of $N$ on $f(y[1] \cdot y[2] \cdots y[k - 1])$ that ends on $q_{k-1}$ gives a run of $N$ on $f(y[1] \cdot y[2] \cdots y[k])$ that ends on $q_k$.
+			\item Case 2: $f(a) \not\in \Gamma \cup \epsilon$.\nl
+			In this case, let $f(a)=b[1] \cdot b[2] \cdots b[m]$ where $b[i] \in \Gamma$.\nl
+			As defined above, we have created new states*,
+            say $q_{1}',q_{2}',\ldots, q_{m-1}'$, such that $\Delta$ has tuples $(q_{k-1},b[1],q_1')$ , $(q_i',b[i+1],q_{i+1}')$ for $i\in \{1,2,\ldots,m-2\}$ and $(q_{m-1}',b[m],\delta(q_{k-1},a))$.\nl
+            Following them, we will reach $q_k = \delta(q_{k-1},a)$ and hence the run we just constructed ends in $q_k$.\nl
+            More formally, appending $b[1], q_1', b[2] \ldots, q_{m-1}', b[m], q_k$ to
+            a run of $N$ on $f(y[1] \cdot y[2] \cdots y[k - 1])$ that ends on $q_{k-1}$ gives a run of $N$ on $f(y[1] \cdot y[2] \cdots y[k])$ that ends on $q_k$.\nl
+            \textbf{Note}*: Here the state names are simplified for ease of reading.    
+		\end{enumerate}
+
+		As both the above cases are mutually exclusive and exhaustive, $P(k)$ holds when $P(k-1)$ is true. This establishes our induction.\nl
+		Using the above claim for $k = n$, there exists a run of $x$ on $N$ ends on $q_n$, which belongs to $A$, therefore being accepted by $N$. Hence $x \in \L(N)$, and as $x$ was an
+        arbitrary string in $f(L)$, we have $f(L) \subseteq \L(N)$.
+	\end{proof}
+
+	\begin{claim}
+		$\L(N) \subseteq f(L)$
+	\end{claim}
+	\begin{proof}
+		Consider any $x \in \L(N)$. We claim that $x \in f(L)$.\\
+
+		As $x \in \L(N)$ there exists a run $q_0x[1]q_1x[2]q_2x[3] \ldots x[n]q_n$ where $q_n \in A$ and $x=x[1] \cdot x[2] \cdots x[n]$ and $x[i] \in \Gamma$.\\
+
+		As the state space of N is $Q \cup Q'$ and both $Q$ and $Q'$ are disjoint therefore each of the state $q_0,q_1, \ldots, q_n$ can either lie in $Q$ or $Q'$. Let the indices of states which belong
+        to $Q$ be $r_0,r_1, \ldots, r_l$ and which belong to $Q'$ be $p_1,p_2, \ldots, p_m$, where $l+m=n$, and $r_0<r_1<\ldots<r_l$ , $p_1<p_2<\ldots<p_m$ and as the states $q_0$ and $q_n$ belongs to
+        $Q$, so
+        $r_0=0$ and $r_l=n$.\\
+
+		We will now claim that $\exists y \in \Sigma^*$, such that $f(y)=x[1] \cdot x[2] \cdots x[n]$ and $\hat\delta(q_0,y)=q_n$.  We will prove this by induction.
+
+		\paragraph{Induction Hypothesis} $P(k)$: $\exists y \in \Sigma^*$ such that $f(y)=x[1] \cdot x[2] \cdots x[r_k]$, and $\hat\delta(q_0,y)=q_{r_k}$, where $0\leq k\leq l$
+
+        \paragraph{Base Case} When $k=0$: This is trivially true as $r_0=0$, therefore the RHS would be $\epsilon$, so for $y=\epsilon \in \Sigma^*$, since $f(y)=\epsilon$, we have $\hd(q_0, f(y)) = \hd(q_0,
+        \epsilon) = q_0$.
+
+		\paragraph{Inductive Case} Let us assume that the induction holds for $k-1$, that is $P(k-1)$ is true. Now there are two cases possible for the number of states between $q_{r_{k-1}}$ and
+        $q_{r_{k}}$.
+
+		\begin{enumerate}
+			\item
+			      Case 1: $r_{k} - r_{k-1} = 1$. In this case as both the states are in $Q$, and from the way we have defined $\Delta$, we have $x[r_k] \in \Gamma \cup \epsilon$ and $\exists a \in
+                  \Sigma$ such that $f(a)=x[r_k]$. From $P(k-1)$ we have $\exists y_1 \in \Sigma^*$ such that $f(y_1) = x[1] \cdot x[2] \cdots x[r_{k-1}]$. So we have
+			      \begin{align*}
+                      f(y_1) &= x[1] \cdot x[2] \cdots x[r_{k-1}] \land f(a) = x[r_k]\\
+				      \implies f(y_1\cdot a) &= f(y_1) \cdot f(a) \\
+				                        & =x[1] \cdot x[2] \cdots x[r_{k}]
+			      \end{align*}
+			      Now as $y_1 \in \Sigma^*$ and $a \in \Sigma$ therefore $y_1\cdot a \in \Sigma^*$. Also, as $f(a)=x[r_k] \in \Gamma \cup \epsilon$, there exists a transition $(q_{r_{k-1}},a,q_{r_k})
+                  \in \Delta$, and from the definition of $\Delta$, we have $\delta(q_{r_{k-1}}, a) = q_{r_k}$. So we have
+			      \begin{align*}
+				      \hat\delta(q_0,y_1\cdot a) & =\hat\delta(\hat\delta(q_0,y_1),a) \\
+				                                & =\hat\delta(q_{r_{k-1}},a)         \\
+				                                & =q_{r_k}
+			      \end{align*}
+			      Hence in this case the induction hypothesis holds.
+
+			\item
+                Case 2: $r_k-r_{k-1} >1$. In this case all the states between $q_{r_{k-1}}$ and $q_{r_k}$ in the run are in $Q'$, i.e., they are the extra states we created in the definition of
+                $\Delta$.\\
+                Now as we have created new states for every transition $(q,a,\delta(q,a))$ where  $f(a) \not\in \Gamma \cup \epsilon$ and the indegree and outdegree of every new state is 1, there is
+                only one way to go to these states and come out to $\delta(q,a)$, which is when the value of string entered at $q$ is $f(a)$.\\
+                Hence, for $x$ to traverse these extra states, it must be
+                the case that $\exists a \in \Sigma$ such that $f(a)=x[r_{k-1}+1] \cdots x[r_{k}]$. Also, since $P(k-1)$ is true, there must exist $y \in \Sigma^*$ such that $f(y_1) = x[1]
+                \cdot x[2] \cdots x[r_{k-1}]$. Consider the string $y \cdot a$.
+
+			      \begin{align*}
+				      f(y_1)        & =x[1] \cdot x[2] \cdots x[r_{k-1}] \land f(a) = x[r_{k-1}+1] \cdots x[r_{k}] \\
+				      \implies f(y_1\cdot a) & =f(y_1)\cdot f(a)                                         \\
+                                             &=x[1] \cdot x[2] \cdots x[r_{k}]
+			      \end{align*}
+			      Now as $y_1 \in \Sigma^*$ and $a \in \Sigma$ therefore $y_1\cdot a \in \Sigma^*$. Now since $f(a)=x[r_{k-1}+1] \cdots x[r_{k}]$, the paragraph above the above set of
+                  equations implies that there is a transition $\delta(q_{r_{k-1}}, a) = q_{r_k}$.
+			      \begin{align*}
+				      \hat\delta(q_0,y_1\cdot a) & =\hat\delta(\hat\delta(q_0,y_1),a) \\
+				       & =\hat\delta(q_{r_{k-1}},a)         \\
+				       & =q_{r_k}
+			      \end{align*}
+			      Hence in this case, the induction hypothesis holds true as well.
+		\end{enumerate}
+
+		As both the cases are exhaustive, the inductive step is complete.
+
+        Using the induction hypothesis for $k = n$, we get that $\exists y \in \Sigma^*$, such that $f(y) = x[1] \cdot x[2] \cdots x[n] = x$ and $\hat\delta(q_0,y)=q_n \in A \implies y \in L$. This implies that $x\in
+        f(L)$. Since $x$ was arbitrary, we have $\L(N) \subseteq f(L)$, as needed.
+	\end{proof}
+	By claims 4.2, 4.3, we have that $\L(N) = f(L)$, so $N$ is an NFA that recognizes $f(L)$, implying $f(L)$ is a regular language.
+\end{soln}

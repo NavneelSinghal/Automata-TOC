@@ -1,0 +1,48 @@
+\begin{soln}
+DFA $D=(Q,\{0,1\},\delta,q_0,A)$ is minimal and recognises the above given language, where\\
+
+$Q=\{q_0,q_1,q_2,q_4,q_5\}$
+\newline $A=\{q_1,q_5\}$
+\newline $\delta$ described in the below table
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+ & 0 & 1 \\
+\hline
+$q_0$ & $q_0$ & $q_1$  \\
+\hline
+$q_1$ & $q_2$ & $q_0$  \\
+\hline
+$q_2$ & $q_4$ & $q_5$  \\
+\hline
+$q_4$ & $q_2$ & $q_0$  \\
+\hline
+$q_5$ & $q_4$ & $q_5$  \\
+\hline
+\end{tabular}
+\end{center}
+
+Strings for each distinct pair q,q' is described in the below table
+\begin{center}
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+ & $q_0$ & $q_1$ &$q_2$& $q_4$ & $q_5$\\
+\hline
+$q_0$ & - & $\epsilon$ & 01 & 1& $\epsilon$  \\
+\hline
+$q_1$  & $\epsilon$  & - & $\epsilon$ & $\epsilon$ & 1  \\
+\hline
+$q_2$  & 01 & $\epsilon$ & - & 1& $\epsilon$  \\
+\hline
+$q_4$  & 1 & $\epsilon$ & 1 & -& $\epsilon$  \\
+\hline
+$q_5$  & $\epsilon$ & 1 & $\epsilon$ & $\epsilon$ & -  \\
+\hline
+\end{tabular}
+\end{center}
+
+
+
+
+\end{soln}

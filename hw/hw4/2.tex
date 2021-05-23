@@ -1,0 +1,53 @@
+\begin{soln}
+We will prove from both sides.
+\begin{claim}
+Language $L$ is \emph{enumerable} $\implies$ $L$ is \emph{recognizable}
+\end{claim}
+\begin{proof}
+This is the easier direction. Suppose $E$ is the enumerator of $L$. Then consider the 4-tape turning machine whose implementation description is as follows.
+\begin{enumerate}
+    \item Initially, input will be one the first tape and the remaining 3 tapes will be empty.
+    \item Simulate 2-tape DTM enumerator $E$ on the 2 of the remaining 3 tapes until it reaches the state $q_{print}$.
+    \item Once it reaches state $q_{print}$, copy the input from tape 1 and paste it into tape 4, then copy the contents of \emph{print} tape and paste it to tape 4 (after the input).
+    \item Check if content of tape 4 is of form $w w$, if so, \emph{accept} the string.
+    \item Else, clear tape 4 and continue the simulation of enumerator.
+\end{enumerate}
+To prove that this TM recognized the language $L$, consider any string $w \in L$. By definition of enumerator, it will eventually \emph{print} the string $w$, therefore when it prints the string $w$ the TM would accept the input string $w$ as content of tape 4 would be of form $w w$. Similarly, suppose the TM accepts some string $w$, then it means that the enumerator must have printed the string $w$. But, by definition of enumerator it only prints strings that are in $L$ so this implies $w \in L$.
+\end{proof}
+
+\begin{claim}
+Language $L$ is \emph{recognizable} $\implies$ $L$ is \emph{enumerable}
+\end{claim}
+\begin{proof}
+Suppose $M$ is the Turing machine which recognizes $L$. Also, suppose $f$ is some computable function which takes as input some natural number, and outputs a string in $\Sigma^*$ such that all strings in $\Sigma*$ are enumerated by $f$. One example of such a computable function is
+\begin{enumerate}
+    \item $f(1) = \varepsilon$
+    \item $f(n) = $ representation of $n-2$ in base $|\Sigma|$ by using symbols from $\Sigma$.
+\end{enumerate}
+
+Then consider the enumerator with three work tapes and one print tape whose implementation description is as follows.
+\begin{enumerate}
+    \item Initially all the 4 tapes will be empty.
+    \item \textbf{Preprocess Phase: } Write the natural number $1$ into work tape 2.
+    \item \textbf{Generation Phase: } Repeat the steps below forever
+    \begin{enumerate}
+        \item Erase the contents of work tape 3 and write the natural number $1$ into it.
+        \item Repeat the below steps until the number in work tape 3 is $\leq$ number in work tape 2.
+        \begin{enumerate}
+            \item Erase contents of work tape 1, and copy contents of work tape 3 into work tape 1.
+            \item Use the computable function $f$ to replace the number in work tape 1 with the corresponding string in $\Sigma*$
+            \item Simulate the TM $M$ on work tape 1 upto at most $n$ number of transitions where $n$ is the number written in work tape 2.
+            \item if $M$ reaches accept state, once again copy content of work tape 3 into print tape, use the function $f$ to generate the corresponding string and goto the state $q_{print}$ to print this string. Afterwards, increment the number in work tape 3 and goto next iteration.
+            \item If $M$ rejects, or we run out of transitions, increment the number in tape 3 and goto next iteration.
+        \end{enumerate}
+        \item Increment the number in work tape 2.
+    \end{enumerate}
+\end{enumerate}
+
+Now to prove that this enumerator is correct, we need to show that :
+\begin{enumerate}
+    \item If $w \in L$ be some string, then $E$ prints $w$ at least once. Suppose $|w| = n$ and $M$ accepts $w$ in $k$ transitions. Then, when content of work tape 2 will be the number $\max(n, k)$ and content of work tape 3 will be the number $k$, the enumerator will generate the string $w$ into work tape 1. $M$ will accept it without running out of transitions, so $w$ will be copied to print tape and printed. Hence, the constructed enumerator prints all strings $w \in L$ at least once.
+    \item $E$ never prints any string not in $L$. Note that $E$ only prints a string whenever $M$ accepts it. Therefore $E$, as constructed, can never print a string not in $L$.
+\end{enumerate}
+\end{proof}
+\end{soln}

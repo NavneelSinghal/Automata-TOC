@@ -1,0 +1,36 @@
+\begin{soln}
+    The error in the reduction stated in the question is that it does not account for the fact that there may be \emph{isolated} vertices in $G$, i.e., vertices with degree = 0 which have no incident edges.
+    The reason these vertices can cause a mishap is because such vertices are not necessary to be included in vertex cover but they must necessarily be included in the dominating set. We shall further emphasize this fact in the proof below.
+    Hence, we will make the correction that while constructing the vertex set $V'$ we will not include such \emph{isolated} vertices.\\
+    Clearly, the reduction can be performed in polynomial-time in the input size. So, we now show the following two claims which shall finish the problem.\nl
+    \begin{claim}
+        $(G = (V, E), k) \in \texttt{VertexCover} \implies (G' = (V', E'), k) \in \texttt{DominatingSet}$.
+    \end{claim}
+    \begin{proof}
+        Let $F$ be a vertex cover of size at most $k$ of the graph $G$. We claim that $F$ is a dominating set of size at most $k$ in graph $G'$, which will prove this claim.\nl
+        To this end, consider any vertex in $V'$ not in $F$. It can be of two types.
+        \begin{enumerate}
+            \item It is $v_e$ for some edge $e \in E$. Since $e = (u, v)$ and $F$ is a vertex cover of $G$, at least one of $u, v$ is in $F$, wlog, say $u$. Then since $u \in F$, and $(v_e, u) \in
+                E'$, $v_e$ is adjacent to some vertex in $F$, finishing off this case.
+            \item It is $v \in V$. Consider any edge of the form $e = (u, v)$. Since $F$ is a vertex cover, and $v \not\in F$, we must have $u \in F$, and since $(u, v) \in E'$, we have $v$ adjacent
+                to some vertex in $F$, finishing off this case as well.
+                Note that here it could have been possible that there is no such $e$ in the first place, and this is the error with the original reduction as mentioned in the problem statement. But as we have stated before, we have modified reduction to delete such vertices hence this anomaly does not arise.
+        \end{enumerate}
+        Hence, for each vertex not in $F$, there is a vertex in $F$ which is adjacent to it, implying that $F$ is a dominating set.
+    \end{proof}
+    \begin{claim}
+        $(G = (V, E), k) \in \texttt{VertexCover} \impliedby (G' = (V', E'), k) \in \texttt{DominatingSet}$.
+    \end{claim}
+    \begin{proof}
+        Consider a dominating set $D$ of $G'$ of size $\le k$. We exhibit a vertex cover as follows:
+        Let $S$ be initially empty. For each vertex $v_e$ in $D \cap (E' \setminus E)$, where $e = (u, v)$, add $u$ to $S$. Then for each vertex $v \in D \cap E$, add $v$ to $S$. This gives a set of
+        size at most $k$ (since we have at most $k$ additions).\nl
+        Now we show that $S$ is indeed a vertex cover of the graph. To this end, consider any edge $e = (u, v)$ in the graph.
+        \begin{enumerate}
+            \item If $v_e$ is in $D$, then at least one of $u, v$ is in $S$, so $S$ covers the edge $e$ in $G$.
+            \item If $v_e$ is not in $D$, then there must be some vertex $w$ in $D$ that it is adjacent to, and since $u, v$ are the only vertices adjacent to $v_e$, at least one of $u, v$ is in
+                $D$, and due to our construction of $S$, $S$ must have that vertex. So $S$ covers the edge $e$ in $G$.
+        \end{enumerate}
+        We have hence shown that $S$ is a vertex cover of size $\le k$ in $G$, as needed.
+    \end{proof}
+\end{soln}

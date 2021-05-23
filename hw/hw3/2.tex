@@ -1,0 +1,84 @@
+\begin{soln}
+    \paragraph{1.} Consider any PDA $P = (Q, \Sigma, \Gamma, \Delta, q_0, A)$. We shall construct an empty stack PDA $P' = (Q', \Sigma, \Gamma', \Delta', q_{init}, A, Z)$ as follows:
+    \begin{enumerate}
+        \item $Q' = Q \uplus \{q_{init}, q_{accept}\}$.
+        \item $\Gamma' = \Gamma \uplus \{\bot, Z\}$.
+        \item $\Delta' = \Delta \cup \{(q_{init}, \epsilon, Z, q_0, \bot)\} \cup \{(q, \epsilon, \epsilon, q_{accept}, \epsilon) \mid q \in A\} \cup \{(q_{accept}, \epsilon, a,
+            q_{accept}, \epsilon) \mid a \in \Gamma'\}$.
+    \end{enumerate}
+    We prove the claim in the problem in two parts.\nl
+    \begin{claim}
+        If $P$ accepts a string $x$, then $P'$ accepts $x$.
+    \end{claim}
+    \begin{proof}
+        Consider an ``accepting" run of $P$ on $x$. More formally, we have $(q_0, x, \epsilon) \changesto_P^* (q, \epsilon, s')$ for some $q \in A$ and $s' \in \Gamma^*$. Note that this implies that we have $(q_0,
+        x, \bot) \changesto_P^* (q, \epsilon, s'\bot)$, and since $\Delta \subseteq \Delta'$, we have $(q_0, x, \bot) \changesto_{P'}^* (q, \epsilon, s'\bot)$. By the definition of $\Delta'$, we have
+        $(q_{init}, x, Z) \changesto_{P'} (q_0, x, \bot) \changesto_{P'}^* (q, \epsilon, s)$ for $s = s'\bot \in \Gamma'^*$ and $q \in A$. From the third set in $\Delta'$, we get that $(q,
+        \epsilon, s) \changesto_{P'} (q_{accept}, \epsilon, s)$, and since the last set represents transitions that lead to $q_{accept}$ for any stack character, we have $(q_{accept},
+        \epsilon, s) \changesto_{P'}^* (q_{accept}, \epsilon, \epsilon)$. Combining this with the previous relation, we get $(q_{init}, x, Z) \changesto_{P'}^* (q_{accept}, \epsilon, \epsilon)$, as needed.
+    \end{proof}
+    \begin{claim}
+        If $P'$ accepts a string $x$, then $P$ accepts $x$.
+    \end{claim}
+    \begin{proof}
+        Consider an ``accepting run" of $P'$ on $x$. We call an i.d. \textit{good} if it is of the form $(q, \epsilon, \epsilon)$ for some $q \in Q'$. An accepting run can end only at a good i.d..\nl
+        The first i.d. in the run must be $(q_{init}, x, Z)$ (which is not good), and the second one must exist and be equal to $(q_0, x, \bot)$, which is also not good.\nl
+        We first claim that the last i.d. in the run is $(q_{accept}, \epsilon, \epsilon)$.
+        Note that since the run is accepting, the last state has to be good. Since the second i.d. in the run has $\bot$ on the stack, and the last doesn't, there has to be some transition in the run
+        where $\bot$ is popped. This must be done in a transition from $q_{accept}$ to itself, since no other transition involves popping of $\bot$. Moreover, this transition is the only such
+        transition, since we push $\bot$ in only the first transition, and no other transition is able to do so.\nl
+        Hence, in the run, we reach $q_{accept}$ at some point, and since any transition out of $q_{accept}$ leads to $q_{accept}$, the last state in the run is $q_{accept}$.\nl
+        %Now we have that there is a unique i.d. in the run that pops $\bot$ from the stack.
+        Consider the last i.d. in the run that is not at state $q_{accept}$. This is clearly not the last i.d. in the run itself, since the the last i.d. in the run is at state $q_{accept}$. Note that
+        the part of the run from this i.d. to the final i.d. doesn't involve reading and discarding characters from the string at that point, so this i.d. is of the form $(q, \epsilon, s)$ for
+        some $q \in Q, s \in \Gamma'^*$, and $\bot$ is a character in $s$ (this follows from the fact that popping $\bot$ can happen only in a transition from $q_{accept}$ to itself). From the fact that this is the last i.d. not in $q_{accept}$, we have that $q$ must be in $A$ (by the definition of
+        $\Delta'$). From the fact that there is exactly one transition involving popping of $\bot$ and it is after this i.d., we have the fact that the part of the run from the second i.d. to
+        this i.d. doesn't involve pushing or popping $\bot$ onto/from the stack, and $\bot$ is on the stack (moreover it is at the bottom position).\nl
+        From here, we know that the original run is of the form $$(q_{init}, x, Z) \changesto_{P'} (q_0, x, \bot) \changesto_{P'}^* (q, \epsilon, s) \changesto_{P'}^* (q_{accept}, \epsilon,
+        \epsilon)$$
+        where the part $(q_0, x, \bot) \changesto_{P'}^* (q, \epsilon, s)$ always has $\bot$ at the bottom of the stack, and no transition in this part involves $\bot$, and $q \in A$. Moreover, there are no
+        transitions in this part which are in $\Delta'$ but not in $\Delta$, since $q_{init}$ is always a source and never a sink and $q_0 \ne q_{init}$, and $q_{accept}$ is only in a suffix
+        of the run that starts after this part of the run gets over.\nl
+        $Z$ is also absent in this part of the run, since $Z$ is involved in only the first transition in the run and nowhere else.\nl 
+        From this information, it follows that $(q_0, x, \bot) \changesto_P^* (q, \epsilon, s)$ (note that $\bot, Z$ are not in the stack alphabet of $P$, but we resort to a slight abuse of
+        notation here, since we are guaranteed that all transitions in this part of the run are in $\Delta$, and no transition in $\Delta$ involves $\bot, Z$ at all -- we shall do this in later
+        parts too when it is obvious), where all transitions in this part are in $\Delta$, and $s = s'\bot$ for some $s \in \Gamma^*$ (note that $s$ doesn't contain $Z$).\nl
+        Hence, it follows that $(q_0, x, \epsilon) \changesto_P^* (q, \epsilon, s')$ for $q \in A$, whence we are done.
+    \end{proof}
+    \paragraph{2.} Consider any empty stack PDA $P' = (Q', \Sigma, \Gamma', \Delta', q_0', A', Z)$. We shall add an extra symbol $\bot$ to $\Gamma'$, and add some new states and relevant transitions to $\Delta'$, and
+    change $q_0', A'$ too, to get a PDA $P = (Q, \Sigma, \Gamma, \Delta, q_{init}, \{q_{accept}\})$ as follows:
+    \begin{enumerate}
+        \item $Q = Q' \uplus \{q_{init}, q_{start}, q_{accept}\}$.
+        \item $\Gamma = \Gamma' \uplus \{\bot\}$.
+        \item $\Delta = \Delta' \cup \{(q_{init}, \epsilon, \epsilon, q_{start}, \bot), (q_{start}, \epsilon, \epsilon, q_0, Z)\} \cup \{(q, \epsilon, \bot, q_{accept}, \epsilon) \mid \forall q \in Q'\}$.% \cup \{(q_{accept}, a, ) \mid \forall a \in \Sigma\}$.
+    \end{enumerate}
+    We prove the claim in the problem in two parts.\nl
+    \begin{claim}
+        If $P$ accepts a string $x$, then $P'$ accepts $x$.
+    \end{claim}
+    \begin{proof}
+        Consider the ``accepting run" of $P$ on $x$. We have $(q_{init}, x, \epsilon) \changesto_{P} (q_{start}, x, \bot) \changesto_{P} (q_0, x, Z\bot) \changesto_{P}^* (q, \epsilon, \bot) \changesto_{P} (q_{accept}, \epsilon, \epsilon)$.\nl
+        We first show why the first, second and the last transitions are as claimed, as well as why the last two i.d.s are as claimed, below:\nl
+        Note that the first two transitions are always as specified since there is no path from $q_{init}$ to $q_{accept}$ that doesn't go through $q_0$ as well as $q_{start}$.\nl
+        Note that $q_{accept}$ can only be a sink state in a transition, so $q_{accept}$ can never be in the middle part of
+        the above run, and hence $\bot$ is never popped off the stack in the middle part of the run. So the part of the stack below $\bot$ always remains the same throughout the run (i.e., it always
+        remains empty), so when the final state is reached, we should have run out of the string, and since we reach $q_{accept}$, $\bot$ must have been popped out of the stack, and this
+        implies (from our previous sentence) that the stack must be empty at the last state. This shows why the run is as claimed.\nl
+        Now note that from the same argument, $q_{init}$ and $q_{accept}$ are never present in any sequence of i.d.s that gives rise to $(q_0, x, Z\bot) \changesto_{P}^* (q, \epsilon, \bot)$ (since
+        these states can only act as a source and a sink respectively), and $q_{start}$ is never in any sequence of i.d.s that gives rise to the same relation because of never being
+        a sink of any transition other than the one in $\Delta'$ but not in $\Delta$, and hence in such a sequence of i.d.s, there is no transition between consecutive i.d.s that is in $\Delta'$ but not in
+        $\Delta$. These two observations, combined with the fact that $\Delta$ has no transitions which concern $\bot$, imply that $(q_0, x, Z\bot) \changesto_{P'}^* (q, \epsilon, \bot)$
+        without ever popping $\bot$ off the stack, and hence using a simple induction, we have $(q_0, x, Z) \changesto_{P'}^* (q, \epsilon, \epsilon)$ for some $q \in Q'$, which means that
+        $P'$ accepts $x$, as required.
+    \end{proof}
+    \begin{claim}
+        If $P'$ accepts a string $x$, then $P$ accepts $x$.
+    \end{claim}
+    \begin{proof}
+        The proof is very similar to the previous part; here, we instead consider an ``accepting run" of $P'$ on $x$, say $(q_0, x, Z) \changesto_{P'}^* (q, \epsilon,
+        \epsilon)$ for some $q \in Q'$. Note that since $\Delta' \subseteq \Delta$, we have $(q_0, x, Z) \changesto_{P}^* (q, \epsilon, \epsilon)$ as well. By a simple induction as
+        mentioned in the previous part, we have that
+        this implies that $(q_0, x, Z\bot) \changesto_{P}^* (q, \epsilon, \bot)$. Noting that $(q_{init}, x, \epsilon) \changesto_{P} (q_{start}, x, \bot) \changesto_{P} (q_0, x, Z\bot)$ and $(q, \epsilon, \bot) \changesto_{P}
+        (q_{accept}, \epsilon, \epsilon)$, we see that $(q_{init}, x, \epsilon) \changesto_{P}^* (q_{accept}, \epsilon, \epsilon)$, from where it follows that $P$ accepts $x$.
+    \end{proof}
+\end{soln}

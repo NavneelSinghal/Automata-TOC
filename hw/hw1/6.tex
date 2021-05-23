@@ -1,0 +1,99 @@
+\begin{soln}
+To start with, we can assume WLOG that both $D_1$ and $D_2$ are DFAs over the same alphabet $\Sigma$ (for if not, let $\Sigma = \Sigma_1 \bigcup \Sigma_2$ and add appropriate error state transitions in both the DFA).
+
+Now, let the regular language recognized by the DFA $D_1$ and $D_2$ be $L_1$ and $L_2$ respectively. To design an algorithm which can recognize whether $L_1$ and $L_2$ are same we will use following bi-implication from set theory (note that $L_1, L_2 \subseteq \Sigma^*$)
+\begin{claim}
+    $$L_1 = L_2 \quad \Longleftrightarrow \quad L_1 \cap L_2^C = \emptyset \; \text{and} \; L_1^C \cap L_2 = \emptyset$$
+    Where $L^C = \Sigma^* \setminus L$.
+\end{claim}
+\begin{proof}
+The forward direction follows directly from the definition of set complement, so we shall focus our proof on showing the backwards implication. Specifically we shall prove
+\[
+L_1 \cap L_2^C = \emptyset \; \text{and} \; L_1^C \cap L_2 = \emptyset \quad \implies \quad L_1 = L_2
+\]
+To prove this we prove the following 2 statements.
+\begin{enumerate}
+    \item $L_1^C \cap L_2 = \emptyset \; \implies \; L_2 \subseteq L_1$. Proof by contradiction. Suppose there exists some $x \in L_2$ such that $x \notin L_1$. But $x \notin L_1 \implies x \in L_1^C$ which therefore implies that $x \in L_1^C \cap L_2$, which is a contradiction.
+    \item $L_1 \cap L_2^C = \emptyset \; \implies \; L_1 \subseteq L_2$. Proof by contradiction. Suppose there exists some $x \in L_1$ such that $x \notin L_2$. But $x \notin L_2 \implies x \in L_2^C$ which therefore implies that $x \in L_1 \cap L_2^C$, which is a contradiction.
+\end{enumerate}
+Thus, from both the above statements we have $L_1 \subseteq L_2$ and $L_2 \subseteq L_1$ which implies $L_1 = L_2$ and hence the proof is complete.
+\end{proof}
+
+This bi-implication lays down the foundation of our algorithm. By closure properties of regular languages we know that they are closed under both complementation and intersection. Further, we already know how to derive DFA for these cases starting from the DFA(s) of the initial languages. Thus, we can obtain the DFAs for the languages $L' = L_1 \cap L_2^C$ and $L'' = L_1^C \cap L_2$. Let's call the DFAs $D'$ and $D''$.
+
+\begin{align*}
+    L_1 = L_2 &\iff L', L'' = \emptyset\\
+              &\iff \L(D'), \L(D'') = \emptyset\\
+              &\iff \text{none of } D', D'' \text{ accepts any string over } \Sigma
+\end{align*}
+
+
+For such DFAs, no accepting state can be reachable from the initial state through any sequence of transitions. Thus, to determine if $L_1 = L_2$ we construct the DFAs $D'$ and $D''$ and verify the set of reachable states from the initial state is disjoint with set of accepting states.\\
+
+In the algorithm below we define the routine \textsc{CheckIfSame} as the required algorithm. It uses helper routines \textsc{ComplementDFA}, \textsc{IntersectionDFA} and \textsc{DFS}. The briefs of each routine is given alonside the code. The formal proof of correctness of these sub-routines is skipped as they have already been covered in the class.\\
+
+\begin{algorithmic}[1]
+\State \Comment{Helper functions for the main function below}
+\Function{ComplementDFA}{$D$}
+\Comment{Returns the DFA $D'$ such that $\mathcal{L}(D') = \mathcal{L}(D)^C$}
+\State unpack $(Q, \Sigma, \delta, q_0, A) \gets D$
+\State \Return $(Q, \Sigma, \delta, q_0, Q \setminus A)$
+\EndFunction
+\\
+\Function{IntersectionDFA}{$D_1$, $D_2$}
+\Comment{Returns the DFA $D'$ such that $\mathcal{L}(D') = \mathcal{L}(D_1) \cap \mathcal{L}(D_2)$}
+\State unpack $(Q_1, \Sigma, \delta_1, q_{10}, A_1) \gets D_1$
+\State unpack $(Q_2, \Sigma, \delta_2, q_{20}, A_2) \gets D_2$
+\Function{$\delta$}{$(q_1, q_2), a$}
+    \State \Return $(\delta_1(q_1, a), \delta_2(q_2, a))$
+\EndFunction
+%\State let $\delta : (Q_1 \times Q_2) \times \Sigma \rightarrow (Q_1 \times Q_2) \;$ be such that $\delta ((q_1, q_2), a) = (\delta_1(q_1, a), \delta_2(q_2, a))$
+\State \Return $(Q_1 \times Q_2, \Sigma, \delta, (q_{10}, q_{20}), A_1 \times A_2)$
+\EndFunction
+\\
+\Function{CheckIfSame}{$D_1, D_2$}
+\State let $D_1^C \gets$ \Call{ComplementDFA}{$D_1$}
+\State let $D_2^C \gets$ \Call{ComplementDFA}{$D_2$}
+\State let $D' \gets$ \Call{IntersectionDFA}{$D_1, D_2^C$}
+\State let $D'' \gets$ \Call{IntersectionDFA}{$D_1^C, D_2$}
+\State unpack $(Q', \Sigma, \delta', q_0', A') \gets D'$
+\State unpack $(Q'', \Sigma, \delta'', q_0', A'') \gets D''$
+\State \Comment{Reduce DFAs to graphs}
+\State let graph $G' \gets (Q', \{(q, q') \mid \exists a \in \Sigma \ni \delta'(q, a) = q'\})$
+\State let graph $G'' \gets (Q'', \{(q, q') \mid \exists a \in \Sigma \ni \delta''(q, a) = q'\})$
+\State \Comment{Assume DFS returns boolean array denoting reachability for each vertex}
+\State let $\mathit{reachable}' [1 \ldots |Q'|] \gets \Call{DFS}{G', q_0'}$
+\State let $\mathit{reachable}'' [1 \ldots |Q''|] \gets \Call{DFS}{G'', q_0''}$
+\ForAll{$q \in A'$}
+    \If{$\mathit{reachable}'[q]$}
+        \State \Return False \Comment{An accepting state is reachable in $D'$ implies $L_1 \cap L_2^C \ne \emptyset$}
+    \EndIf
+\EndFor
+\ForAll{$q \in A''$}
+    \If{$\mathit{reachable}''[q]$}
+        \State \Return False \Comment{An accepting state is reachable in $D''$ implies $L_1^C \cap L_2 \ne \emptyset$}
+    \EndIf
+\EndFor
+\State \Return True
+\Comment {No accepting state is reachable in either $D'$ or $D''$}
+\EndFunction
+\\
+\Function{DFS}{$G(V, E), v_0$}
+    \Comment{Standard iterative version of DFS algorithm}
+    \State let $reachable \gets$ boolean array of size $|V|$ initialized to all False.
+    \State let $stack \gets$ empty stack
+    \State push $v_0$ into $stack$
+    \State $reachable[v_0] \gets $ True
+    \While{$stack$ is not empty}
+        \State let $v \gets$ pop from $stack$
+        \ForAll{$u : (v, u) \in E$}
+            \If{not $reachable[u]$}
+                \State $reachable[u] \gets$ True
+                \State push $u$ into $stack$
+            \EndIf
+        \EndFor
+    \EndWhile
+    \State \Return reachable
+\EndFunction
+\end{algorithmic}
+\end{soln}

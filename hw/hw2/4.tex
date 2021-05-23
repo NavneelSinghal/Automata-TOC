@@ -1,0 +1,61 @@
+\providecommand{\equival}{\ensuremath =_{L_k}}
+\providecommand{\last}[2]{\ensuremath \takelast_{#1} (#2)}
+
+\begin{soln}
+
+Let $D_k$ be any DFA recognizing the language $L_k$, let $n$ denote the number of states in this DFA. Then we know that
+\[
+    n \geq |\text{classes}(\sim_{D_k})| \geq |\text{classes}(\equival)|
+\]
+Where $\sim_{D_k}$ and $\equival$ are the equivalence relations that assume their usual meaning as defined in class, and $\text{classes}(\cdot)$ denotes the set of equivalence classes of an equivalence relation. Thus, to show that $D_k$ must have at least $2^k$ states it is sufficient to show that $\equival$ has at least $2^k$ states.
+
+\begin{notn}
+Let $x \in \{0, 1\}^*$ be any string such that $|x| \geq \alpha$, then we define $\last{\alpha}{x}$ as the string formed by last $\alpha$ characters of $x$.
+\end{notn}
+
+\begin{claim}
+For any 2 strings $x,y \in \{0, 1\}^*$ where $|x|, |y| \geq k$ we have that $x \equival y$ if and only if $\last{k}{x} = \last{k}{y}$
+\end{claim}
+\begin{proof}
+To prove this claim we shall prove from both sides.\\
+
+\begin{note}
+We shall make use of some well-known identities involving the $\xor$ (xor of all bits in a bitstring) and the $\oplus$ (xor of 2 bits) operator.
+\begin{align}
+    \xor(x \cdot y) &= \xor(x) \oplus \xor(y) \\
+    a \oplus b &= c \oplus b \implies a = c \\
+    a \oplus 0 &= a
+\end{align}
+\end{note}
+
+Suppose $x \equival y$, then we will first show that $\last{k}{x} = \last{k}{y}$. By definition of the equivalence relation $\equival$ we have that $x \equival y$ if and only if both $x \cdot a$ and $y \cdot a$ are in $L_k$ or both are not in $L_k$ for all strings $a \in \Sigma^*$. Specifically for our particular language $L_k$ this translates to saying that $\xor(\last{k}{x \cdot a}) = \xor(\last{k}{y \cdot a})$. Now, in particular we choose strings of form $a = 0^m$ where $m < k$. Then we can write
+\begin{align*}
+    \xor(\last{k}{x \cdot a}) &= \xor(\last{k}{y \cdot a}) \\
+    \implies \xor(\last{k-m}{x} \cdot \last{m}{a}) &= \xor(\last{k-m}{y} \cdot \last{m}{a})\\
+    \implies \xor(\last{k-m}{x}) \oplus \xor(\last{m}{a}) &= \xor(\last{k-m}{y}) \oplus \xor(\last{m}{a}) \; \text{ By property (1)}\\
+    \implies \xor(\last{k-m}{x}) &= \xor(\last{k-m}{y}) \; \text{ By property(2)}\\
+\end{align*}
+
+Now observe that $\xor(\last{m}{x})$ may be written as $(\text{m-th from last character in $x$}) \oplus \xor(\last{m-1}{x})$. This leads to the following conclusions.
+
+\begin{align*}
+    \last{1}{x} &= \last{1}{y} & \text {directly from }  \xor(\last{1}{x}) &= \xor(\last{1}{y})\\
+    \last{2}{x} &= \last{2}{y} & \text {from previous identity and } \xor(\last{2}{x}) &= \xor(\last{2}{y})\\
+    \vdots\\
+    \last{k}{x} &= \last{k}{y} & \text {from previous identity and } \xor(\last{k}{x}) &= \xor(\last{k}{y})\\
+\end{align*}
+
+Hence first part of the claim is complete.\\
+
+Now, suppose $\last{k}{x} = \last{k}{y}$. We shall now show that this implies that $x \equival y$.\\
+To show this we need to show that for all strings $a \in \Sigma^*$, either both $x \cdot a$ and $y \cdot a$ are in $L_k$ or both are not in $L_k$. Specifically for our particular language $L_k$ this translates to saying that $\xor(\last{k}{x \cdot a}) = \xor(\last{k}{y \cdot a})$.\\
+
+To see this note that $\xor(\last{k}{x \cdot a}) = \xor(\last{\max(0, k-|a|)}{x} \cdot \last{\min(|a|, k)}{a})$. And because $\xor$ is both commutative and associative we have that $\xor(\last{k}{x \cdot a}) = \xor(\last{\max(0, k-|a|)}{x}) \oplus \xor(\last{\min(|a|, k)}{a})$.\\
+
+Similarly, of course, we have that $\xor(\last{k}{y \cdot a}) = \xor(\last{\max(0, k-|a|)}{y}) \oplus \xor(\last{\min(|a|, k)}{a})$. But, as $\last{k}{x} = \last{k}{y}$ by assumption we therefore have that $\last{k}{x \cdot a} = \last{k}{y \cdot a}$ and since our choice of $a$ was arbitrary the result holds for all $a \in \Sigma^*$ which completes the proof.
+
+\end{proof}
+
+The above claim implies that $\equival$ has exactly $2^k$ equivalence classes, where each string $x$ is classified into a equivalence class based on precisely the last $k$ bits of the string $x$. Hence the solution is complete.
+
+\end{soln}

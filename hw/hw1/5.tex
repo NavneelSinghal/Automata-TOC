@@ -1,0 +1,89 @@
+
+%\todo{Check if runs are okay on DFA} -- yes they are, courtesy: prof's piazza reply
+
+\begin{note}
+    The motivation for the construction in the following proof comes from the fact that we want to run the DFA both forwards and backwards until both ``runs" end on the same state. This can be
+    done if we reverse the second DFA and combine the states in a suitable manner using a cross product.\\
+
+    Also note that we use ``runs" in the context of DFAs to make the proof simpler (since there is a natural NFA for each DFA, as proved in class, which has precisely a single run, due to $\delta$ being a function).
+\end{note}
+
+\begin{soln}
+
+    Since $L$ is regular, there must be a DFA $D = (Q, \Sigma, \delta, q_0, A)$ that recognizes it. Consider the NFA $N = (Q, \Sigma, \Delta, A, \{q_0\})$, where $\Delta = \{(q', a, q) \mid \delta(q,
+    a) = q', q \in Q, a \in A\}$, which recognizes $rev(L)$ as done in class.
+
+    Now consider the NFA $N' = (Q \times Q, \Sigma, \Delta', \{q_0\} \times A, \{(q, q) \mid q \in Q\})$, where 
+
+    $$\Delta' = \{((q, q'), a, (q'', q''')) \mid \delta(q, a) = q'' \land
+    (q', a, q''') \in \Delta \land q, q', q'', q''' \in Q \land a \in \Sigma\}$$
+
+    We shall show the following two claims, which shall complete the proof:\\
+
+    \begin{claim}
+        $L_0 \subseteq \mc{L}(N')$
+    \end{claim}
+
+    \begin{proof}
+        Consider any string $x$ such that $x \cdot rev(x) \in L$. Then we need to construct an accepting run of $x$ on $N'$.\\
+
+        Suppose $x = x[1] x[2] \ldots x[n]$. Then $x \cdot rev(x) = x[1] \ldots x[n] x[n] \ldots x[1]$. Since $L$ accepts $x \cdot rev(x)$, the run of $D$ on $x \cdot rev(x)$ must be accepting.
+        Suppose the run is $q_0 x[1] q_1 \ldots x[n] q_n x[n] q_{n+1} x[n - 1] \ldots q_{2n-1} x[1] q_{2n}$.\\
+
+        Now we claim that $(q_0, q_{2n}) x[1] (q_1, q_{2n-1}) \ldots x[n] (q_n, q_n)$ is an accepting run of $N'$ on $x$.\\
+
+        \begin{proof}
+            We shall break the proof into two parts.
+            \begin{enumerate}
+                \item If it is a run, it is an accepting run: This holds because the last state is $(q_n, q_n)$, which is an accepting state by definition of the set of accepting states of $N'$.
+                \item It is a run: This holds because of the following:
+
+                    \begin{enumerate}
+                        \item $x = x[1] x[2] \ldots x[n]$: This is true by the definition of $x[i]$'s.
+                        \item $(q_i, q_{2n-i}) \in Q \times Q$: This is true because $q_i \in Q$ for all $i$, by definition of $D$ and the run of $D$ on $x \cdot rev(x)$.
+                        \item $x[i] \in \Sigma$ for all $i$: This is true as $x \in \Sigma^*$.
+                        \item $((q_i, q_{2n-i}), x[i+1], (q_{i+1}, q_{2n-i-1}))$ is in $\Delta'$, which is true because $\delta(q_i, x[i]) = q_{i+1}$ (following from definition of $q_i, q_{i+1}$ in the run of $D$ on $x$), and $\delta(q_{2n-i-1}, x[i+1]) = q_{2n-i} \implies (q_{2n-i}, x[i+1], q_{2n-i-1}) \in \Delta$.
+                        \item $(q_0, q_{2n})$ is a starting state: This is true because $q_{2n}$ is an accepting state in $D$, and hence $q_{2n} \in A$, so $(q_0, q_{2n}) \in \{q_0\} \times A)$.
+                    \end{enumerate}
+            \end{enumerate}
+            Using these two states, we have shown that this is an accepting run of $N'$ on $x$, whence we are done.
+        \end{proof}
+        We have thus constructed an accepting run of $N'$ on $x$ whenever $x \in L_0$, so we are done.
+    \end{proof}
+
+    \begin{claim}
+        $\mc{L}(N') \subseteq L_0$
+    \end{claim}
+
+    \begin{proof}
+        Consider any string $x \in \mc{L}(N')$. Then we need to show that $x \cdot rev(x) \in L$. By the definition of $x$, there exists an accepting run of $x$ on $N'$.\\
+
+        Suppose $x = x[1] x[2] \ldots x[n]$. Note that there is no $\epsilon$ transition in $N'$, and thus there are exactly $n$ transitions in an accepting run of $x$. Also, since an
+        accepting run ends at an accepting state, the accepting state must be of the form $(q_n, q_n)$ for some $q_n$. Suppose the run is $(q_0, q_{2n}) x[1] (q_1, q_{2n-1}) \ldots x[n] (q_n, q_n)$
+        for some $q_i$'s.\\
+
+        Now we claim that $q_0 x[1] q_1 \ldots x[n] q_n x[n] q_{n+1} x[n-1] \ldots x[1] q_{2n}$ is the run of the DFA $D$ on $x \cdot rev(x)$, and that $D$ accepts $x \cdot rev(x)$.
+
+        \begin{proof}
+        We break the proof into two parts.
+            \begin{enumerate}
+                \item $q_0 x[1] q_1 \ldots x[n] q_n x[n] q_{n+1} x[n-1] \ldots x[1] q_{2n}$ is the run of the DFA $D$ on $x \cdot rev(x)$: Note the following:
+                    \begin{enumerate}
+                        \item $x[1]x[2] \ldots x[n] x[n] \ldots x[1] = x \cdot rev(x)$
+                        \item $q_i \in Q$ for each $i$.
+                        \item $x[i] \in \Sigma$ for each $i$.
+                        \item $q_0$ is the starting state of this run, so the starting state of the run works.
+                        \item Since $((q_i, q_{2n-i}), x[i], (q_{i+1}, q_{2n-i-1})$ is a transition of $N'$, we must have $\delta(q_i, x[i]) = q_{i+1}$ and $(q_{2n-i}, x[i], q_{2n-i-1}) \in
+                            \Delta \implies q_{2n-i} = \delta(q_{2n-i-1}, x[i])$.
+                    \end{enumerate}
+                    This implies that it is indeed the run of $D$ on $x \cdot rev(x)$.
+                \item $D$ accepts $x \cdot rev(x)$: Since the final state of the run is $q_{2n}$, and the starting state of the run of $N'$ on $x$ is $(q_0, q_{2n})$, by definition of the
+                    starting states of $N'$, we have $q_{2n} \in A$, which implies that $q_{2n}$ is an accepting state, from which the conclusion follows.
+            \end{enumerate}
+        \end{proof}
+        From here, it follows that what we constructed is indeed the run of $D$ on $x$, and thus for each $x \in \L(N')$, we have $x \in L_0$.
+    \end{proof}
+    From these two claims, it follows that $L(N') = L_0$, so the NFA $N'$ accepts $L_0$, from where it follows that $L_0$ is a regular language.
+\end{soln}
+
+

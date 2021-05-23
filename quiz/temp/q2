@@ -1,0 +1,17 @@
+We reduce HALT to that problem.
+
+Work with an effectively shifted tape, i.e., push a blank in the beginning position and then some sort of a marker, and then the input. Whenever you reach the marker, just bounce back to the correct state and replace  the character on the tape cell to the immediate right by the correct character by adding |Q|*|Sigma| intermediate states to the state space.
+
+Now we just need to show how the reduction works.
+
+If you have an input (<M>, w), convert it into M' that does the following:
+
+1. erase the input
+
+2. convert the tape into a shifted tape
+
+3. run M on w on the effectively shifted tape
+
+4. if it halts, clear the whole tape and treat it like a normal tape and start from the left and do a zig-zag motion on the whole tape to visit everything infinitely many times.
+
+This clearly works.

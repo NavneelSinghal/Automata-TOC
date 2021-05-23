@@ -1,0 +1,80 @@
+
+\begin{soln}
+\begin{notn}
+Let us define $C(s)$ for $s \in \{a, b\}^*$ to be equal to $\# a's - 2 \# b's$.
+Let's call a string $s \in \{a, b\}^*$ \textbf{balanced} if $C(s) = 0$.
+\end{notn}
+\begin{lemma}
+Let $s$ be a non-empty balanced string. If $b$ is the first character of $s$ then either $aa$ is a suffix of $s$, or,
+$s$ can be partitioned into 2 (non-empty) substrings $s_1, s_2$ such that $s = s_1 s_2$ and
+both $s_1, s_2$ are balanced.
+\end{lemma}
+\begin{proof}
+Firstly, since $s$ is balanced, its length must be three times the number of $b$s in it, so it is at least 3 characters long.
+We shall suppose that $s$ can not be partitioned into 2 balanced strings and then show that $s$
+must have $aa$ as its suffix using proof by contradiction.\\
+
+Suppose $s$ also does not end in $aa$. Let length of $s$ be $n$.
+Now, note that
+\begin{enumerate}
+    \item $C(s[1 \ldots 1]) = C(b) = -2$
+    \item $C(s[1 \ldots n-2]) = - C(s[n-1 \ldots n])$ and hence $> 0$ (since there is at least one $b$ in the last two characters by assumption).
+\end{enumerate}
+Thus, if we consider the sequence of values $C(s[1 \ldots i])$ for $i \in [1, n-2]$
+we shall find that it starts with an initial value of $-2$, and terminates at a positive
+value. Since by definition the only possible positive increase in the $C-$value is $1$, it must be the case that
+at some point $C$ value must have become zero. In other words, $C(s[1 \ldots k]) = 0$ for
+some $1 < k < n-2$. But this is a contradiction because then we can partition $s$ into 2
+substrings $s[1 \ldots k]$ and $s[k+1 \ldots n]$ both of which must be balanced. Hence
+our supposition that $s$ does not end in $aa$ must be incorrect.
+\end{proof}
+
+\begin{cor}
+Let $s$ be a non-empty balanced string. If $s$ ends with $b$ then either $aa$ is a prefix of $s$, or,
+$s$ can be partitioned into 2 (non-empty) substrings $s_1, s_2$ such that $s = s_1 s_2$ and
+both $s_1, s_2$ are balanced.
+\end{cor}
+\begin{proof}
+The corollary follows from the lemma above by observing that if $s$ is balanced then so is $rev(s)$,
+and since then $b$ becomes the first character of $rev(s)$ the corollary follows.
+\end{proof}
+
+Now, we need to show that if $s$ is a \textbf{balanced} string then $S \derives s$.
+We shall show by induction on length of $s$.
+
+\paragraph{Base Case} $|s| = 0$. That is, $s = \varepsilon$. Then by rule 5 we have $S \produces s$
+
+\paragraph{Inductive Case}
+We will do case analysis on string $s$
+\begin{enumerate}
+    \item \textbf{Case 1}. $s$ can be partitioned into 2 (non-empty) substrings $s_1, s_2$
+    such that $s = s_1 s_2$ and both $s_1, s_2$ are balanced.
+    By inductive hypothesis we must have $S \derives s_1$ and $S \derives s_2$. Thus, we can write
+    $SS \derives s_1 s_2$, or in other words, $SS \derives s$. But by rule 1 we have $S \produces SS$.
+    Therefore we have that $S \produces SS \derives s$.
+    
+    \item \textbf{Case 2}. $s$ does not belong to above case and $s$ begins with character $b$.
+    Then, by our lemma we know that $s$ must end in suffix $aa$.
+    Thus, $s$ must be of form $bs'aa$ and clearly $s'$ is also a balanced string whose length is less than $|s|$.
+    So by induction hypothesis $S \derives s'$ which gives $bSaa \derives bs'aa$. Combined with rule 3 this
+    results in $S \produces bSaa \derives bs'aa = s$.
+    
+    \item \textbf{Case 3}. $s$ does not belong to above case(s) and $s$ ends in character $b$.
+    Then, by our corollary to the lemma we know that $s$ must begin with prefix $aa$.
+    Thus, $s$ must be of form $aas'b$ and clearly $s'$ is also a balanced string whose length is less than $|s|$.
+    So by induction hypothesis $S \derives s'$ which gives $aaSb \derives aas'b$.
+    Combined with rule 2 this results in $S \produces aaSb \derives aas'b = s$.
+    
+    \item \textbf{Case 4}. $s$ does not belong to any of the above cases. This means that $s$ must begin with, and end in character $a$ as well as $s$ can not be suitably partitioned into balanced strings.
+    So, let $s$ be of form $as'a$. Then, note that because $s$ is balanced $C(s) = 0$ which implies
+    $C(as') = -1$. Further, $C(a) = 1$. Note that $C(.)$ value of a prefix of $s$ can only decrease by
+    $2$ at a time (and that too at an occurrence of $b$), and it transitioned from a positive value for $C(s[1\ldots 1])$ to a non-negative value for $C(s[1\ldots n - 1])$, so there must exist an index $i > 1$ such that $s[i] = b$ and $C(s[1 \ldots i-1]) = 1$ (the other case with the transition from a balance of 2 to a balance of 0 is impossible, since it would contradict the fact that $s$ can't be partitioned into two balanced substrings).\nl
+    Hence the substrings $s[2 \ldots i-1]$ and $s[i+1 \ldots n-1]$ must be balanced ($C(.) = 0$).
+    So we have reduced $s$ into the form $s = a s_1 b s_2 a$ where $s_1$ and $s_2$ are balanced.
+    By induction, $S \derives s_1$ and $S \derives s_2$. Further, $S \produces a S b S a$ by rule 4.
+    So together we have $S \produces a S b S a \derives a s_1 b s_2 a = s$.
+\end{enumerate}
+This completes our inductive step, establishing the inductive hypothesis.\\
+
+By the inductive hypothesis we have proved that all balanced strings are generated by the given grammar.
+\end{soln}

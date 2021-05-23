@@ -1,0 +1,66 @@
+\begin{soln}
+	Since the language $L$ is regular then there must be DFA, $D = (Q, \Gamma, \delta, q_0, A)$ that recognizes $L$.
+	Consider the following construction for the DFA of the language $f^{-1}(L)$:
+	$$
+		D' = (Q, \Sigma, \delta', q_0, A)
+	$$
+	Where
+	$$
+		\delta'(q,a)=\hat{\delta}(q,f(a)) \text{ where }a \in \Sigma, q \in Q
+	$$
+
+	Consider any $x \in f^{-1}(L)$. Then by definition of $f^{-1}$, we have $f(x) \in L$, and we claim that
+
+	\begin{claim}
+		$\hat\delta'(q_0,x) = \hat\delta(q_0,f(x))$
+	\end{claim}
+	\begin{proof}
+		\newline Let $x=x[1]\cdot x[2]\cdot x[3] \cdots x[n]$, where $x[i] \in \Sigma$, Now using the homomorphism property of $f$ we get $f(x)=f(x[1])\cdot f(x[2])\cdot \cdots f(x[n])$  We shall now prove
+		the claim by induction on $n$.
+
+		\paragraph{Induction Hypothesis} $P(n)$ : For all $x\in \Sigma^*$ which can be written as $x=x[1]\cdot x[2]\cdot x[3] \cdots x[n]$, where $x[i] \in \Sigma$. We have, $\hat\delta(q_0,f(x))=\hat\delta'(q_0,x)$
+
+		\paragraph{Base Case}
+		When $n=0$, this means $x=\epsilon$ and therefore $f(x)=\epsilon$, so for both $\hat\delta(q_0,f(x))=\delta'(q_0,x)=q_0$. \newline
+		When $n=1$, this is trivially true as $\hat\delta(q_0,f(x[1]))=\delta'(q_0,x[1])$ from definition of $\delta'$ and $\hat\delta'(q_0,x[1])=\delta'(q_0,x[1])$ as $x[1]\in \Sigma$.
+
+		\paragraph{Inductive case} Let us assume that $P(k)$ is true for all $1 \leq k \leq n-1$, Now we will show then that $P(n)$ holds true.
+		\begin{align*}
+			\hat\delta(q_0,f(x)) & =\hat\delta(q_0,f(x[1])\cdot f(x[2]) \cdots f(x[n]) )                                                                                                                        \\
+                                 & =\hat\delta( \hat\delta(q_0,f(x[1])\cdot f(x[2])\cdots f(x[n-1])), f(x[n]) ) \text{\hspace*{2cm} (Using lemma 2.1}) \\
+			                     & = \delta'( \hat\delta(q_0,f(x[1])\cdot f(x[2])\cdots f(x[n-1])), x[n] ) \text{\hspace*{2.2cm}(Using definition of }\delta')                                                  \\
+			                     & =  \delta' ( \hat \delta'(q_0,x[1]\cdot x[2] \cdots x[n-1]),x[n]) \text{    \hspace*{3.2cm}             (Using $P(n-1)$ is true)}                                            \\
+                                 & = \hat\delta'(q_0,x[1] \cdot x[2] \cdots x[n])\hspace*{5.3cm} \text{ (Using definition of $\hd'$)}                                                                                                                              \\
+			                     & = \hat\delta'(q_0,x)
+		\end{align*}
+		Hence the induction is established and claim is proved.
+	\end{proof}
+	\begin{claim}
+		$\mathcal{L}(D') = f^{-1}(L)$
+	\end{claim}
+	We will show this in following two claims
+
+	\begin{claim}
+		$f^{-1}(L) \subseteq \L(D')$
+	\end{claim}
+	\begin{proof}
+		Let $x \in f^{-1}(L)$, then by definition of $f$, $f(x) \in L$. Now as $f(x) \in L$, the DFA $D$ recognizes it, that is, 
+		$$ \hat\delta(q_0,f(x)) \in A $$
+		From Claim 3.1 this translates to
+		$$ \hat\delta'(q_0,x) \in A $$
+		which implies $x$ is accepted in $D'$, and hence $x \in \L(D')$, which further implies $f^{-1}(L) \subseteq \L(D')$ and hence our claim is proved
+	\end{proof}
+
+	\begin{claim}
+		$\L(D') \subseteq f^{-1}(L)$
+	\end{claim}
+	\begin{proof}
+		Let $x\in \L(D')$, then it implies that on running $x$ on DFA $D'$ it ends in $A$, we have to show that if we run $f(x)$ on $D$ then it should be accepted that it should also end in $A$,
+		\newline Now as $x\in \L(D')$ therefore
+		$$ \hat\delta'(q_0,x) \in A $$
+		From Claim 3.1 this translates to
+		$$ \hat\delta(q_0,f(x)) \in A $$
+		which implies $f(x)$ is accepted by $D$, and hence $f(x) \in L$, which further implies $ \L(D') \subseteq  f^{-1}(L)$ and hence our claim is proved
+	\end{proof}
+	From combining Claim 3.3 and 3.4, we get $\L(D')=f^{-1}(L)$ which implies that $D'$ recognises $f^{-1}(L)$, therefore $f^{-1}(L)$ is regular and one of the DFAs corresponding to it is $D'$.
+\end{soln}

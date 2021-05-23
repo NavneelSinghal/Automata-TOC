@@ -1,0 +1,20 @@
+\begin{soln}
+    We use the following algorithm to create a valid solution:
+    \begin{enumerate}
+        \item First run $B$ on the circuit once to check if the circuit is satisfiable, and if it isn't, then indicate that there is no solution and exit. Else, carry on with the next steps.
+        \item Let $A = \{\}$, and $C$ be the original circuit.
+        \item For $i \in \{1, \ldots, n\}$, do the following: For $v \in \{\texttt{true}, \texttt{false}\}$, make a copy of $C$ and for all gates with input $x_i$, replace that input with a
+            constant equal to $v$, and run $B$ on this circuit. If this fails, check the next value of $v$, else set $C$ to be this circuit, and $A \gets A \cup \{x_i = v\}$, and we go to the next
+            $i$.
+        \item Return the assignment $A$.
+    \end{enumerate}
+    In the case where we exit on step 1, there is no solution, so consider the case where there is a solution. Suppose we are at iteration $i$. Then since we have not exited on step 1, so there must exist a solution. Using induction, we can show that at the end of iteration $i$, there is an
+        assignment where the first $i$ variables are assigned according to the current $A$, as follows:
+        \begin{enumerate}
+            \item Base case ($i = 0$) is true since we haven't exited on step 1.
+            \item Now if there is a solution with the first $i - 1$ assignments, then consider such a solution. If $x_i = \texttt{false}$ in any such assignment, $B$ shall return true, so we will be
+                able to add $x_i = \texttt{false}$ to the assignment $A$ and move on. In the other case, it must happen that $x_i = \texttt{true}$, so we will be able to add this to the
+                assignment $A$ and move on.
+        \end{enumerate}
+    Now using this invariant for $i = n$, we are done.
+\end{soln}

@@ -1,0 +1,36 @@
+\begin{soln}
+    Consider the following reduction, where we convert an input 3CNF formula $\phi$ for the \texttt{3SAT} problem to an input struct 3CNF formula $\varphi$ for the \texttt{Strict3SAT} problem. Here, $x, y, z$ are extra \emph{dummy} variables. Instantiation of a variable $x$ is either $x$ or $\overline x$.
+    \begin{enumerate}
+        \item Let $\varphi$ be initially empty (and-ing a clause with an empty clause leads to replacement of the empty clause with that clause).
+        \item Break $\phi$ into clauses, and do the next 3 steps for each clause.
+        \item If the clause is of the form $(a \lor b \lor c)$, set $\varphi \gets \varphi \land (a \lor b \lor c)$.
+        \item Else if the clause is of the form $(a \lor b)$, set $\varphi \gets \varphi \land (a \lor b \lor x)$.
+        \item Else, the clause is of the form $(a)$, so set $\varphi \gets \varphi \land (a \lor x \lor y)$.
+        \item Finally, add the following $2^3 - 1$ extra clauses to $\varphi$ : For each possible \emph{instantiation} of variables $x, y, z$ $(x', y', z')$ except the instance $(x, y, z)$,  set $\varphi \gets \varphi \land (x' \lor y' \lor z')$.
+    \end{enumerate}
+    Clearly, this reduction takes time polynomial in the input size. So it suffices to show that this is a valid reduction.\nl
+    \begin{claim}
+        $\phi \in \texttt{3SAT} \implies \varphi \in \texttt{Strict3SAT}$.
+    \end{claim}
+    \begin{proof}
+        For any clause $C$ in $\phi$, the corresponding clause in $\varphi$ is of the form $C$ or $C \lor x$ or $C \lor x \lor y$. Since $\phi$ is satisfiable, $C$ must evaluate to true, and hence
+        since or-ing true with anything gives true, the corresponding clause in $\varphi$ must also be satisfiable. The only remaining clauses in $\varphi$ that need to be satisfied are those of form $x' \lor y' \lor z'$. But these clauses can be satisfied by selection $x, y, z = 0$ as each of these clause contains at least one of either $\overline x$ or $\overline y$ or $\overline z$. Hence we are done.
+    \end{proof}
+    \begin{claim}
+        $\phi \in \texttt{3SAT} \impliedby \varphi \in \texttt{Strict3SAT}$.
+    \end{claim}
+    \begin{proof}
+        Consider a satisfying assignment for literals in $\varphi$. First we claim that in any satisfying assignment the values of $x, y, z$ must be all $0$. Suppose not, and atleast one of them has value $1$. Then, one of the additional $2^3-1$ clauses will become false, hence this is a contradiction.\\
+        
+        Now, consider any clause $C$ in $\phi$, and let $C'$ be the corresponding clause in $\varphi$. Note that $C'$ evaluates to true.
+        Then we have one of the following
+        three cases:
+        \begin{enumerate}
+            \item $C = (a \lor b \lor c)$: in this case, since $C' = C$, $C$ evaluates to true as well.
+            \item $C = (a \lor b)$: in this case, we have $C' = (a \lor b \lor x)$. Since $C'$ evaluates to true and $x$ is false as established before, at least one of $a, b$ are true, so $C$ evaluates to true as well.
+            \item $C = (a)$: in this case, we have $C' = (a \lor x \lor y)$. Since $C'$ evaluate to true and both $x$ and $y$ are false, $a$ must be true, so $C$ evaluates to true as well.
+        \end{enumerate}
+        In all cases, $C$ evaluates to true, so each clause in $\phi$ evaluates to true, and thus $\phi$ is satisfiable using the same assignment.
+    \end{proof}
+    These two claims show that this is indeed a valid reduction.
+\end{soln}

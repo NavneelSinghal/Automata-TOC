@@ -1,0 +1,56 @@
+% Hint: choose a^{p!} b^{(2(p!))!} and make cases on whether uvy is completely on the left side, the right side or in the middle, and pump in two ways appropriately -- arbitrarily large number of times when you want the left side to blow up in size and one time when you want the right side to not be divisible by the left side (keep in mind |vy| > 0 doesn't imply both |v| > 0 and |y| > 0)
+
+\begin{soln}
+\begin{claim}
+$L_1$ is not context-free
+\end{claim}
+\begin{proof}
+Suppose $L$ is context-free. Then it must satisfy the pumping lemma for context-free languages.
+But as we will show in the claim below $L$ does not satisfy the pumping lemma. Hence $L$ can
+not be context-free.\nl
+\begin{claim}
+For all $p \in \mathbb{N}$ there exists a string $w \in L$ such that $|w| \geq p$ and
+for all strings $u, v, x, y, z \in \Sigma^*$ such that $w = uvxyz$  and one of the following does 
+not hold
+\begin{enumerate}
+    \item  $|vy| > 0$
+    \item $|vxy| \leq p$
+    \item  $uv^ixy^iz \in L$ for all $i \in \mathbb{N} \cup \{0\}$.
+\end{enumerate}
+\end{claim}
+\begin{proof}
+For any $p \in \mathbb{N}$ take $p'$ as $p^{th}$ prime. consider the string $w = a^{2p'} b^{4{p'}^2}$ and its partition $w = uvxyz$.
+Now consider the string $vy$ -- it can be represented as $a^rb^s$, where $0\leq r \leq p$, $0 \leq s \leq p$ but both are not 0 at the same time if the property 1 and 2 are to be satisfied.
+
+Then we have 3 cases
+\begin{enumerate}
+    \item $r=0$ -- in this case take $i=2$, then the string  $uv^2xy^2z \notin L$ as \# of $b$ would be $4{p'}^2+s$ and \# of $a$ would be remain same that is $2p'$. Now $0 \leq s \leq p < p'$ and also as $r$ is $0$, therefore $s$ cannot be $0$, so \# of $b$ is not divisible by \# of $a$.
+    Hence property $3$ is violated here.
+    \[
+    4p'^2 + s \neq 0 \mod 2p'
+    \]
+    
+    \item $s=0$ -- in this case take $i = 4{p'}^2+1$, then the string  $uv^{4{p'}^2+1}xy^{4{p'}^2+1}z \notin L$ as \# of $a$ would be $2p'+4{p'}^2 \cdot r$ and \# of $b$ would remain the same, that is, $4{p'}^2$. Now $0 \leq r \leq p$ and also as $s$ is $0$, therefore $r$ cannot be $0$, so \# of $a$ $\geq 2p'+4{p'}^2$ and hence \# of $b$ is not divisible by \# of $a$.
+    Hence property $3$ is violated here.
+     
+    \item $s \neq 0$, $r \neq 0$, In this case take $i=4{p'}^2+1$, then the string  $uv^{4{p'}^2+1}xy^{4{p'}^2+1}z \notin L$ as \# of a would be $2p'+4{p'}^2 \cdot r$ and \# of a would be that is $4{p'}^2 +4{p'}^2 \cdot s$.
+    \newline Now let say \# of b is divisible by \# of a. i.e.,
+    \[
+    (4{p'}^2 +4{p'}^2 \cdot s) \equiv 0 \mod (2p'+4{p'}^2 \cdot r)
+    \]
+    Dividing $2p'$ from both sides
+    \[
+    (2p'(1 + s)) \equiv 0 \mod (1+ 2p' \cdot r)
+    \]
+    Now note that $(1+2p' \cdot r)$ does not have either $2$ or $p'$ as a factor therefore for the above equivalence to hold we must have
+    \[
+    (1 + s) \equiv 0 \mod (1+ 2p' \cdot r)
+    \]
+    But $(1+2p' \cdot r) \geq 1+2p' > 1+p' > 1+s$ this is a contradiction. Hence our assumption was wrong and \# of b is divisible by
+    \# of a.
+    Hence property 3 is again violated here.
+\end{enumerate}
+\end{proof}
+Hence $L$ can not be context-free.
+\end{proof}
+\end{soln}

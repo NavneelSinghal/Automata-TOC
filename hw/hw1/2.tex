@@ -1,0 +1,61 @@
+\begin{soln}
+
+    Since the language $L_1$ is regular, there must be a DFA $D = (Q, \Sigma, \delta, q_0, A)$ that recognizes $L_1$.
+
+    Consider the following construction for the DFA of the language $L$:
+    $$
+    D' = (Q, \Sigma, \delta, q_0, S)
+    $$
+    Where 
+    $$
+    S = \{q \in Q \mid \exists y \in L_2 \text{ such that } \hat{\delta}(q, y) \in A\}
+    $$
+    It is easy to see that this is indeed a DFA, as $S \subseteq Q$, and the rest of the properties follow from $D$ being a DFA.
+    We claim that this DFA accepts $L$.\\
+
+
+        We begin the proof with a lemma that shall be repeatedly used in the following claims.\\
+
+        \begin{lemma}
+            Let $D = (Q, \Sigma, \delta, q_0, A)$ be any DFA. For strings $x, y \in \Sigma^*$, and a state $q \in Q$, we have $\hat{\delta}(\hat{\delta}(q, x), y) = \hat{\delta}(q, x \cdot y)$
+        \end{lemma}
+
+        \begin{proof}
+            The proof proceeds by induction on the length of $y$, say $n$.\\
+            The base cases are when $n = 0, 1$.\\
+
+            $n = 0$: in this case, we have $\hat{\delta}(q, x \cdot y) = \hat{\delta}(q, x \cdot \epsilon) = \hat{\delta}(q, x) = \hat{\delta}(\hat{\delta}(q, x), \epsilon) =
+            \hat{\delta}(\hat{\delta}(q, x), y)$, as needed.\\
+            $n = 1$: in this case, we have $\hat{\delta}(q, x \cdot y) = \delta(\hat{\delta}(q, x), y) = \hat{\delta}(\hat{\delta}(q, x), y)$, since $y$ is a single character.\\
+
+            $n > 1$: in this case, let $y = z \cdot a$ for some $a$ of length $1$. Then we have $\hat{\delta}(q, x \cdot y) = \hat{\delta}(q, (x \cdot z) \cdot a) = \hat{\delta}(\hat{\delta}(q, x
+            \cdot z), a) = \hat{\delta}(\hat{\delta}(\hat{\delta}(q, x), z), a) = \hat{\delta}(\hat{\delta}(q, x), z \cdot a) = \hat{\delta}(\hat{\delta}(q, x), y)$, as required. The first equality
+            follows by associativity of concatenation, the second by the base case applied on $y$ replaced by $a$, the third by the inductive hypothesis applied on $y$ replaced by $z$, the fourth by the base
+            case applied on $q$ replaced by $\hat{\delta}(q, x)$ and $x, y$ replaced by $z, a$, and the fifth by the equality of $y$ and $z \cdot a$.\\
+
+            Hence, we are done by induction and the result is established.
+        \end{proof}
+
+        We divide the rest of the proof into two claims, both when combined shall give $L = \L(D')$, after which we shall be done, since $D'$ would be a DFA recognizing $L$, implying that $L$ is regular.\\
+
+        \begin{claim}
+            $\L(D') \subseteq L$
+        \end{claim}
+
+        \begin{proof}
+            Consider any string $x \in \L(D')$. Then, $x = x[1] x[2] \ldots x[n]$ for some $n$, and $\hat{\delta}(q_0, x) \in S$. Suppose $\hat{\delta}(q_0, x) = q \in S$. Then by definition of $S$,
+            we must have $\hat{\delta}(q, y) \in A$ for some $y \in L_2$. Hence, we have $\hat{\delta}(\hat{\delta}(q_0, x), y) \in A \implies \hat{\delta}(q_0, x \cdot y) \in A \implies
+            x \cdot y \in L_1 \implies x \in L$.
+        \end{proof}
+
+        \begin{claim}
+            $L \subseteq \L(D')$
+        \end{claim}
+        \begin{proof}
+            Consider any string $x \in L$. Then we have a string $y \in L_2$ such that $x \cdot y \in L_1$. We have $\hat{\delta}(\hat{\delta}(q_0, x), y) = \hat{\delta}(q_0, x \cdot y) \in A$, so
+            by the definition of $S$, we must have $\hat{\delta}(q_0, x) \in S$. Hence this implies that $D'$ accepts $x$, so $x \in \L(D')$, whence we are done.
+        \end{proof}
+
+        %By these two claims, we can see that $\L(D') = L$, so $D'$ is a DFA that recognizes $L$, implying that $L$ is a regular language, as required.
+
+\end{soln}

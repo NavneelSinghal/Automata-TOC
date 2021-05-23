@@ -1,0 +1,233 @@
+\documentclass[10pt,addpoints]{exam}
+\usepackage[english]{babel}
+\usepackage[a4paper,top=2cm,bottom=2cm,left=2cm,right=2cm,marginparwidth=1.75cm]{geometry}
+\usepackage{boites}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+% \usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+\usepackage{import}
+\usepackage{pdfpages}
+\usepackage{transparent}
+\usepackage{xcolor}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+
+\usepackage{thmtools}
+\usepackage{enumitem}
+\usepackage[framemethod=TikZ]{mdframed}
+
+\usepackage{xpatch}
+
+\makeatletter
+\xpatchcmd{\endmdframed}
+{\aftergroup\endmdf@trivlist\color@endgroup}
+{\endmdf@trivlist\color@endgroup\@doendpe}
+{}{}
+\makeatother
+
+%\usepackage[poster]{tcolorbox}
+%\allowdisplaybreaks
+%\sloppy
+
+\usepackage[many]{tcolorbox}
+
+%\xpatchcmd{\proof}{\itshape}{\bfseries\itshape}{}{}
+
+\setlength{\parindent}{0pt}
+
+\setlength{\fboxsep}{1em}
+\def\breakboxskip{7pt}
+\def\breakboxparindent{0em}
+
+\newenvironment{proof}{\begin{breakbox}\textit{Proof.}}{\hfill$\square$\end{breakbox}}
+\newenvironment{ans}{\begin{breakbox}\textit{Answer.}}{\end{breakbox}}
+\newenvironment{soln}{\begin{breakbox}\textit{Solution.}}{\end{breakbox}}
+
+% \tcolorboxenvironment{proof}{
+%     blanker,
+%     before skip=\topsep,
+%     after skip=\topsep,
+%     borderline={0.4pt}{0.4pt}{black},
+%     enforce breakable,
+%     left=12pt,
+%     right=12pt,
+%     top=12pt,
+%     bottom=12pt,
+% }
+% 
+% \tcolorboxenvironment{ans}{
+%     blanker,
+%     before skip=\topsep,
+%     after skip=\topsep,
+%     borderline={0.4pt}{0.4pt}{black},
+%     enforce breakable,
+%     left=12pt,
+%     right=12pt,
+%     top=12pt,
+%     bottom=12pt,
+% }
+
+\mdfdefinestyle{enclosed}{
+    linecolor=black
+    ,backgroundcolor=none
+    ,apptotikzsetting={\tikzset{mdfbackground/.append style={fill=gray!100,fill opacity=.3}}}
+    ,frametitlefont=\sffamily\bfseries\color{black}
+    ,splittopskip=.5cm
+    ,frametitlebelowskip=.0cm
+    ,topline=true
+    ,bottomline=true
+    ,rightline=true
+    ,leftline=true
+    ,leftmargin=0.01cm
+    ,linewidth=0.02cm
+    ,skipabove=0.01cm
+    ,innerbottommargin=0.1cm
+    ,skipbelow=0.1cm
+}
+
+\mdfdefinestyle{proofstyle}{
+    linecolor=black
+    ,backgroundcolor=none
+    ,apptotikzsetting={\tikzset{mdfbackground/.append style={fill=gray!100,fill opacity=.3}}}
+    ,frametitlefont=\sffamily\bfseries\color{black}
+    ,splittopskip=.5cm
+    ,frametitlebelowskip=.0cm
+    ,topline=true
+    ,bottomline=true
+    ,rightline=true
+    ,leftline=true
+    ,leftmargin=0.01cm
+    ,linewidth=0.02cm
+    ,skipabove=0.01cm
+    ,innerbottommargin=0.1cm
+    ,skipbelow=0.1cm
+    ,ntheorem=false
+}
+
+\mdfsetup{%
+    middlelinecolor=black,
+    middlelinewidth=1pt,
+roundcorner=4pt}
+
+
+\mdtheorem[style=enclosed]{theorem}{Theorem}
+\mdtheorem[style=enclosed]{ques}{Question}
+\mdtheorem[style=enclosed]{prob}{Problem}
+\mdtheorem[style=enclosed]{lemma}{Lemma}[prob]
+\mdtheorem[style=enclosed]{claim}{Claim}[prob]
+\mdtheorem[style=enclosed]{defn}{Definition}
+\mdtheorem[style=enclosed]{notn}{Notation}
+\mdtheorem[style=enclosed]{obs}{Observation}
+\mdtheorem[style=enclosed]{eg}{Example}
+\mdtheorem[style=enclosed]{cor}{Corollary}
+\mdtheorem[style=enclosed]{note}{Note}
+%\mdtheorem[style=proofstyle]{proof}{Proof.}
+% \mdtheorem[style=proofstyle]{ans}{Answer.}
+
+% \let\theproof=\false
+% \let\theans=\false
+% \let\thetheorem=\relax
+% \let\thelemma=\relax
+% \let\theclaim=\relax
+% \let\theques=\relax
+% \let\thedefn=\relax
+% \let\thenotn=\relax
+% \let\theobs=\relax
+% \let\thecor=\relax
+\let\thenote=\relax
+
+%\renewcommand\qedsymbol{$\blacksquare$}
+\newcommand{\nl}{\vspace{0.2cm}\\}
+\newcommand{\mc}{\mathcal}
+\newcommand{\mi}{\mathit}
+\newcommand{\mf}{\mathbf}
+\newcommand{\mb}{\mathbb}
+\renewcommand{\L}{\mc{L}}
+\newcommand{\hd}{\hat{\delta}}
+\DeclareMathOperator{\takelast}{last}
+\DeclareMathOperator{\xor}{xor}
+
+\newcommand{\incfig}[1]{%
+    \def\svgwidth{\columnwidth}
+    \import{./figures/}{#1.pdf_tex}
+}
+\pdfsuppresswarningpagegroup=1
+
+\usepackage{tfrupee}
+
+\pagestyle{head}
+
+\firstpageheader{COL352\vspace{5mm}\\ Release date: March 6, 2021}{}{Homework 2\\ \vspace{5mm}Deadline: March 13, 2021: 23:00}
+\firstpageheadrule
+
+\begin{document}
+
+%\noindent\href{https://moodle.iitd.ac.in/mod/forum/discuss.php?d=19210#p26977}{\textbf{Read the instructions carefully.}}
+%
+%\vspace{0.5cm}
+%
+\noindent This homework is primarily about proving that certain languages $L$ are not regular. For this, we have the Pumping Lemma and the Myhill-Nerode Theorem at our disposal. Recall that the Pumping Lemma merely gives a sufficient condition for non-regularity. In some cases, using closure properties might give a much cleaner proof: assume that $L$ is regular, then argue that some other language $L'$ must also be regular, then apply Pumping Lemma to show that $L'$ is, in fact, not regular. Remember that you can use any claim proven in class and in the previous quizzes and homeworks without reproducing its proof.
+
+
+\begin{prob}
+Prove that the language $\{x\text{ }|\text{ }x\text{ is the binary representation of }3^{n^2}\text{ for some }n\in\mathbb{N}\}$ is not regular.
+\end{prob}
+
+\input{1.tex}
+
+\newpage
+\begin{prob}
+Prove that the language $\{0^m1^n\text{ }|\text{ }m\neq n\}\subseteq\{0,1\}^*$ is not regular.
+As a challenge, construct a clean proof using the pumping lemma only. However, no extra credit will be given for this.
+\end{prob}
+
+\input{2.tex}
+
+\newpage
+%Prove that the language $\{1^{n_1}01^{n_2}0\cdots01^{n_k}\text{ }|\text{ }k\geq2\text{, and }n_1,\ldots,n_k\in\mathbb{N}\cup\{0\}\text{ are distinct}\}$ is not regular.
+
+\begin{prob}
+Construct the minimal DFA $D=(Q,\{0,1\},\delta,q_0,A)$ that recognizes the language
+\[\{x\in\{0,1\}^*\text{ }|\text{ }x\text{ is the binary representation of a number coprime with }6\}\text{.}\]
+Prove its minimality by giving a string $z_{q,q'}$ for each pair of distinct states $q,q'\in Q$ such that exactly one of $\widehat{\delta}(q,z_{q,q'})$ and $\widehat{\delta}(q',z_{q,q'})$ is in $A$. (Proof of correctness of your automaton is not required.)
+\end{prob}
+
+\input{3.tex}
+
+\newpage
+\begin{prob}
+Let $L_k\subseteq\{0,1\}^*$ be the language defined as $L_k=\{x\text{ }|\text{ }|x|\geq k\text{ and the EXOR of the last }k\text{ bits of }x\text{ is }1\}$. Prove that any DFA that recognizes $L_k$ has at least $2^k$ states. (By the way, observe that $L_k$ is recognized by an NFA with $O(k)$ states.)
+\end{prob}
+\input{4.tex}
+
+\newpage
+\begin{prob}
+We all know that the set of strings over the alphabet $\{a,b\}$ containing an equal number of occurrences of $ab$ and $ba$ is regular. However, what if the alphabet is $\{a,b,c\}$? Prove that the language
+\[\{x\in\{a,b,c\}^*\text{ }|\text{ }x\text{ contains an equal number of occurrences of }ab\text{ and }ba\}\]
+is not regular. Here are some hints.
+\begin{enumerate}
+\item Take help of the regular expression $(abc\cup bac)^*$.
+\item Use closure under inverse homomorphisms from Homework 1.
+\end{enumerate}
+\end{prob}
+
+\input{5.tex}
+
+\newpage
+\begin{prob}
+Prove that for any infinite regular language $L$, there exist two infinite regular languages $L_1,L_2$ such that $L=L_1\cup L_2$ and $L_1\cap L_2=\emptyset$. Here are some hints.
+\begin{enumerate}
+\item Let $D$ be any DFA and $q$ be any one of its states. Prove informally that the language
+\[L_q=\{x\text{ }|\text{ }x\in\mathcal{L}(D)\text{ and the run of }D\text{ on }x\text{ visits }q\text{ an odd number of times}\}\]
+is regular.
+\item Recall the proof of the pumping lemma.
+\end{enumerate}
+\end{prob}
+
+\input{6.tex}
+
+\end{document}

@@ -1,0 +1,54 @@
+\begin{soln}
+    We use the pumping lemma to show that this language is not regular. Firstly, a note about an ambiguity in the problem statement is in order.\nl
+
+    \begin{note}
+        Note that there are two interpretations of the problem, one where the binary representation has leading zeroes and the other one where leading zeroes are not allowed. Call those
+        languages $L_0$ and $L_1$ respectively. We claim that if we show that $L_0$ is not regular, then it implies that $L_1$ is not regular too, and this would show that to cover both
+        interpretations, it is enough to show that $L_0$ is not regular.
+        \begin{claim}
+            $L_1$ is regular $\implies$ $L_0$ is regular.
+        \end{claim}
+        \begin{proof}
+            If $L_1$ is regular, then it has a regular expression $R$ corresponding to it. The language of the regular expression $0^* R$ is precisely $L_0$, from where it follows that $L_0$ is
+            regular.
+        \end{proof}
+        \begin{claim}
+            $L_0$ is not regular $\implies$ $L_1$ is not regular.
+        \end{claim}
+        \begin{proof}
+            This follows directly from the contrapositive of the previous claim.
+        \end{proof}
+    \end{note}
+
+    Now we use the pumping lemma to show that $L_0$ is not regular.\nl
+    Note that the length of the binary representation of $3^{n^2}$ (when there are no leading zeroes) is $1 + \lfloor n^2 \log_2 3 \rfloor$, and such a representation is unique.\nl
+    Choose any $p \in \mb{N}$. Consider the binary representation $r$ of $3^{p^2}$ without leading zeros. Note that $|r| = 1 + \lfloor p^2 \log_2 3 \rfloor \ge p$. Choose any $x, y, z$ such that $|xy| \le p$ and $|y| > 0$ and
+    $r = xyz$. Then consider the string $s = xy^2z$.\nl
+    Firstly we show that this is a string whose first character is $1$.
+    \begin{enumerate}
+        \item If $x$ is non-empty, then the first character is the same as that of $x$, i.e., the same as that of $xyz = r$, which is $1$ by definition of $r$.
+        \item If $x$ is empty, then $r = yz$ and $s = y^2z$. Now since $y$ is non-empty, the first character of $r$ and $s$ should be the same, and they equal $1$.
+    \end{enumerate}
+
+    To show that $L_0$ is not regular, it suffices to show that $xy^2z \not\in L_0$. Suppose, for the sake of contradiction, that this string is in $L_0$.\nl
+    Note that the length of $xy^2z$ equals $|y| + |xyz| = |y| + 1 + \lfloor p^2 \log_2 3 \rfloor$. Since $xy^2z \in L$, $xy^2z$ must be \underline{the} binary representation of
+    $3^{q^2}$ without leading zeroes, for some $q \in \mb{N}$.\nl
+    Note that if $q \le p$, then $|y| + 1 + \lfloor p^2 \log_2 3 \rfloor = 1 + \lfloor q^2 \log_2 3 \rfloor \le 1 + \lfloor p^2 \log_2 3\rfloor$, which contradicts $|y| > 0$. Hence we must have $q >
+    p$, and since both are natural numbers, we have $q \ge p + 1$. This gives us the following chain of inequalities.
+    \begin{align*}
+        |xy^2z| &= 1 + \lfloor q^2 \log_2 3 \rfloor\\
+                &\ge 1 + q^2 \log_2 3 - 1\\
+                &= q^2 \log_2 3\\
+                &\ge (p + 1)^2 \log_2 3\\
+                &= p^2 \log_2 3 + 2p \log_2 3 + \log_2 3\\
+                &> p^2 \log_2 3 + p + 1\\
+                &\ge 1 + p + \lfloor p^2 \log_2 3 \rfloor\\
+                &= p + |xyz|\\
+                &\ge |xy| + |xyz|\\
+                &= |x| + |y| + |xyz|\\
+                &\ge |y| + |xyz|\\
+                &= |xy^2z|
+    \end{align*}
+    This implies that $|xy^2z| > |xy^2z|$, which is a contradiction.\nl
+    Hence our assumption that $L_0$ is regular was wrong, which completes the proof.
+\end{soln}

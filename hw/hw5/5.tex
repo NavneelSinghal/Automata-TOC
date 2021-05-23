@@ -1,0 +1,39 @@
+\begin{soln}
+    We first show that this task is in \texttt{NP}. For this, it is easy to non-deterministically choose an assignment of $x[1\ldots n]$ and check all the conditions in
+    polynomial time.\nl
+    Now we show that 3SAT is reducible to this problem (we shall call the language of this problem \texttt{LP}).\nl
+    Consider the following algorithm which takes as input a 3CNF formula $\phi$ and outputs $(A[][], b[])$.
+    \begin{enumerate}
+        %\item Simplify the clauses using the identities $x \lor x = x$ as much as possible, and remove all clauses which have $x \lor \comp{x}$ for some literal $x$. Now we are guaranteed that
+        %    each clause has at most one occurence of a member of the set $\{x_i, \comp{x_i}\}$ for each $i$.
+        \item Let $n$ be the number of boolean variables featuring in the formula.
+        \item Let $m$ be the number of clauses.
+        \item Set $b[i] = 1$ for all $1 \le i \le m$.
+        \item Set $A[i][j] = 0$ for all $1 \le i \le m$, $1 \le j \le n$.
+        \item For each literal $X$ in the $i^\mathrm{th}$ clause, if $X = x_j$ for some $j$, then increment $A[i][j]$ by $1$, else if $X = \comp{x_j}$ for some $j$, then decrement $A[i][j]$
+            by $1$ and decrement $b[i]$ by $1$.
+    \end{enumerate}
+    This can be done in polynomial time. Now we show that this is indeed a valid reduction.\nl
+    \begin{claim}
+        $\phi \in \texttt{3SAT} \implies (A, b) \in \texttt{LP}$.
+    \end{claim}
+    \begin{proof}
+        Let $x_i = x_i^*$ be a satisfying assignment for $\phi$. Now we claim that $x[i] = x_i^*$ satisfies $\sum_{j = 1}^n A[i][j]
+        \times x[j] \ge b[i]$ for all $1 \le i \le m$.\nl
+        Fix $i$. Now we look at the $i^\mathrm{th}$ clause in $\phi$. For the sake of convenience, we shall assume wlog that the clause has 3 literals $X, Y, Z$ (the rest can be done
+        analogously). Let $rep(x_i) = x[i]$, and $rep(\comp{x_i}) = 1 - x[i]$. Then, since the reduced clause evaluates to true, we get that at least one of $rep(X), rep(Y), rep(Z)$ is 1. The
+        others can be at most 0. Adding them up, we get that $rep(X) + rep(Y) + rep(Z) \ge 1$. Now opening up and rearranging gives us the equation $\sum_{j=1}^n A[i][j] \times x[j] \ge b[i]$,
+        as needed. Since all such equations arise from clauses, this shows that $(A, b) \in \texttt{LP}$, which completes the proof of this claim.
+    \end{proof}
+    \begin{claim}
+        $\phi \in \texttt{3SAT} \impliedby (A, b) \in \texttt{LP}$.
+    \end{claim}
+    \begin{proof}
+        Suppose there exists a solution $x[1\ldots n]$ to $\sum_{j=1}^n A[i][j] \times x[j] \ge b[i]$ for all $1 \le i \le m$ where $0 \le x[i] \le 1$ for all $1 \le i \le n$. Then consider the $i^\mathrm{th}$ clause. Wlog assume that there are
+        exactly 3 $j$ such that $A[i][j]$ are non-zero (there can be at most 3, and the other cases are completely analogous). The corresponding clause has 3 literals in this case, say $X, Y, Z$.
+        Using the notation and the argument in the previous claim, the equation reduces to $rep(X) + rep(Y) + rep(Z) \ge 1$, so since $rep(\cdot)$ when evaluated at $0, 1$ always gives
+        something non-negative, at least one of them is $\ge 1$. Note that $rep$ is a function that evaluates a literal and if the result is true, returns 1 and 0 otherwise. So at least one literal
+        in the clause is true, so the clause itself evaluates to true. Since this is true for all clauses, all clauses evaluate to true, so we have $\phi \in \texttt{3SAT}$, as needed.
+    \end{proof}
+    From these two claims, it follows that \texttt{LP} is \texttt{NP}-hard, and combining this with the first observation gives that it is \texttt{NP}-complete.
+\end{soln}

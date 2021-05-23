@@ -1,0 +1,35 @@
+\begin{soln}
+    We give a polynomial time reduction from the \texttt{Clique} problem to this problem, and then exhibiting a non-deterministic algorithm that solves \texttt{SubgraphIsomorphism} in
+    polynomial time.\nl
+    \begin{claim}
+        \texttt{Clique} $\le_P$ \texttt{SubgraphIsomorphism}
+    \end{claim}
+    \begin{proof}
+        Consider the reduction as follows. Denote by $K_r$ the complete graph of size $r$ (by size we mean the number of vertices here). Then for input $(G, k)$ to \texttt{Clique}, let $(G, K_k)$ be the corresponding input to
+        \texttt{SubgraphIsomorphism}.\nl 
+        \begin{note}
+            We assume that for $(G, k)$ is a non-trivial input to the \texttt{Clique} problem, i.e., $k \le |V(G)|$ (other inputs are necessarily not in \texttt{Clique} due to size reasons). This is
+            necessary, else our reduction won't be polynomial time for large $k$.
+        \end{note}
+        Now that we have $k \le V(G)$, we can build a clique in time polynomial in $k$, which is at most polynomial in $|V(G)|$, and thus at most polynomial in the input size. Hence, this
+        reduction (including the copying of the graph $G$) is polynomial-time. Now we show that it is indeed a valid reduction.\nl
+        \begin{claim}
+            $(G, k) \in \texttt{Clique} \iff (G, K_k) \in \texttt{SubgraphIsomorphism}$.
+        \end{claim}
+        \begin{proof}
+            First, suppose that $(G, k) \in \texttt{Clique}$. Then there is a clique of size $\ge k$ in $G$, and hence there is also a clique of size $k$ in $G$ (removing the extra vertices
+            gives rise to a clique too). Hence, there is a subgraph of $G$ which is a complete graph of size $k$. Since all complete graphs of size $k$ are isomorphic, there exists a subgraph of $G$
+            isomorphic to $K_k$, from where we have that $(G, K_k) \in \texttt{SubgraphIsomorphism}$.\nl
+            Now suppose that $(G, K_k) \in \texttt{SubgraphIsomorphism}$. Then there exists a subgraph which is isomorphic to the complete graph of size $k$. Hence, there exists a clique in the
+            graph of size $\ge k$ (formed by the vertices of this subgraph), which implies that $(G, k) \in \texttt{Clique}$, as needed.
+        \end{proof}
+        This shows that this reduction is indeed valid, and hence we have proven the claim.
+    \end{proof}
+    Now we exhibit a non-deterministic algorithm that solves \texttt{SubgraphIsomorphism} in polynomial time. Consider the following algorithm:
+    \begin{enumerate}
+        \item Non-deterministically choose a subset $V'$ of $V$ and a subset $E'$ of $E$, and remove the edges from $E'$ that are incident to a vertex not in $V'$.
+        \item Now call the non-deterministic Turing machine that solves the graph isomorphism problem for the graphs $(G', (V', E'))$.
+    \end{enumerate}
+    This clearly works in non-deterministic polynomial time, so \texttt{SubgraphIsomorphism} is in NP, which when combined with the first claim (which implies that
+    \texttt{SubgraphIsomorphism} is \texttt{NP}-hard), implies that \texttt{SubgraphIsomorphism} is \texttt{NP}-complete.
+\end{soln}

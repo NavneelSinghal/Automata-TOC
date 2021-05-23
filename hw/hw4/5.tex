@@ -1,0 +1,24 @@
+\begin{soln}
+$DIAG$ is an example of a language which is unrecognizable in a real-life TM but is \emph{decidable} by a WTM. As we may simply copy the input of the WTM into its query tape and immediately goto the state $q_{query}$. If we transition into state $q_{yes}$ then we \emph{accept} the string, else we reject it. This, WTM decides the language $DIAG$.
+
+Interestingly, the language $DIAG^{WTM}$ defined as
+\[
+    DIAG^{WTM} = \{ w \; | \; w \notin \mathcal{L}(W_w) \}
+\]
+is unrecognizable. Where $W_w$ denotes the wonderland turning machine whose encoding is $w$ (in case $w$ is not a valid encoding, $W_w$ is a WTM which rejects all strings).
+
+\begin{proof}
+To prove this, we will use the proof very similar to the proof of unrecognizability of $DIAG$ in real-life.
+Suppose, $DIAG^{WTM}$ is recognizable in wonderland. Then let $W_w$ be the WTM that recognizes $DIAG^{WTM}$.
+Then consider the string $w$. Two cases arise :
+\begin{enumerate}
+    \item $W_w$ \emph{accepts} $w$. Since $\mathcal{L}(W_w) = DIAG^{WTM}$, this implies that $w \in DIAG^{WTM}$.
+    But $w \in DIAG^{WTM}$ implies that $w \notin \mathcal{L}(W_w)$ by definition of $DIAG^{WTM}$ which is a contradiction.
+    
+    \item $W_w$ does not \emph{accept} $w$. Since $w \notin \mathcal{L}(W_w)$ this implies that $w \in DIAG^{WTM}$,
+    and since $W_w$ recognizes $DIAG^{WTM}$ it must also accept $w$ which is again a contradiction.
+\end{enumerate}
+Therefore it can not be the case that such a WTM $W_w$ exists which recognizes $DIAG^{WTM}$.
+Hence it is proved that $DIAG^{WTM}$ is unrecognizable even in the wonderland.
+\end{proof}
+\end{soln}
